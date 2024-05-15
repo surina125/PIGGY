@@ -2,10 +2,11 @@
   <div class="container">
     <header class="d-flex align-center mb-7">
       <RouterLink :to="{ name: 'depositList'}" exact-active-class="active">정기예금</RouterLink>
-      <p>|</p>
+      <!-- <p>|</p> -->
       <RouterLink :to="{ name: 'savingList'}" exact-active-class="active">정기적금</RouterLink>
-      <p>|</p>
-      <RouterLink :to="{ name: 'loanList'}" exact-active-class="active">주택담보대출</RouterLink>
+      <!-- <p>|</p> -->
+      <!-- <RouterLink :to="{ name: 'loanList'}" exact-active-class="active">주택담보대출</RouterLink> -->
+      <RouterLink :to="{ name: 'loanList'}" exact-active-class="active">.</RouterLink>
     </header>
     <RouterView />
   </div>

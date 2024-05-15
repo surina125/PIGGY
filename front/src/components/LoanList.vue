@@ -1,7 +1,8 @@
 <template>
   <div>
     <header class="d-flex justify-space-between">
-      <h1><span class="color">주택담보대출</span> 검색하기</h1>
+      <!-- <h1><span class="color">주택담보대출</span> 검색하기</h1> -->
+      <h1><span class="color">.</span> 검색하기</h1>
       <div class="w-50 d-flex align-center">
         <v-btn-toggle
           v-model="selectedTypeMrtg"

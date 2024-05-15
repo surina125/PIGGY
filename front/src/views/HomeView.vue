@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <div class="carousel">
-      <v-carousel
+  <!-- <div> -->
+    <!-- <div class="carousel"> -->
+      <!-- <v-carousel
         cycle
         hide-delimiters
         show-arrows="hover"
@@ -24,7 +24,7 @@
             >회원가입하고 추천받기</v-btn>
           </div> 
           <!-- C:\Users\82109\OneDrive - UOS\바탕 화면\test\Financial-project\front\src\assets\carousel-1.png -->
-          <img src="@/assets\carousel-1.png" class="caro-item-img" width="400">
+          <!-- <img src="@/assets\carousel-1.png" class="caro-item-img" width="400">
         </v-carousel-item>
 
         <v-carousel-item>
@@ -65,9 +65,9 @@
         </v-carousel-item>
       </v-carousel>
     </div>
-  </div>
+  </div> --> 
 
-  <div class="container d-flex justify-space-between align-center">
+  <!-- <div class="container d-flex justify-space-between align-center">
     <div class="d-flex flex-column w-100">
 
       <div>
@@ -87,22 +87,22 @@
           class="mb-5 ml-3"
           elevation="5"
         />
-      </div>
+      </div> -->
 
-      <div class="calculater">
+      <!-- <div class="calculater">
         <h1><span class="color">환율</span> 계산기</h1>
         <ExchangeCalculater class="elevation-4"/>
       </div>
       
     </div>
+     -->
     
-    
-    <Map 
+    <!-- <Map 
       :width="350"
       :height="600"
       class="mt-5"
     />
-  </div>
+  </div> -->
 
   
 </template>

@@ -4,6 +4,8 @@
       <RouterLink :to="{ name: 'exchange'}" exact-active-class="active">환율 조회</RouterLink>
       <p>|</p>
       <RouterLink :to="{ name: 'bankMap'}" exact-active-class="active">주변은행 조회</RouterLink>
+      <p>|</p>
+      <RouterLink :to="{ name: 'bankMap'}" exact-active-class="active">재태크 정보</RouterLink>
     </header>
     <RouterView />
   </div>
