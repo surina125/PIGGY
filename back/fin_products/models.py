@@ -50,6 +50,7 @@ class SavingOption(models.Model):
     saving = models.ForeignKey(Saving, on_delete=models.CASCADE)                                        # 금융상품코드
     intr_rate_type = models.CharField(max_length=2)                                                     # 저축금리유형
     intr_rate_type_nm = models.CharField(max_length=10)                                                 # 저축금리유형명
+    rsrv_type_nm = models.CharField(max_length=10)                                                      # 적립유형명
     save_trm = models.CharField(max_length=3)                                                           # 저축기간[단위:개월]
     intr_rate = models.FloatField(null=True)                                                            # 저축금리 [소수점 2자리]
     intr_rate2 = models.FloatField(null=True)                                                           # 최고 우대금리[소수점 2자리]

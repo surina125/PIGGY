@@ -74,6 +74,7 @@ def financial_products(request):
     saving_info = requests.get(SAVING_API_URL).json()   
     saving_baseList = saving_info.get('result').get('baseList')
     saving_optionList = saving_info.get('result').get('optionList')
+    # return Response(saving_optionList)
 
 
     for saving_base in saving_baseList:
@@ -108,6 +109,7 @@ def financial_products(request):
         save_option = {
             'intr_rate_type': save_option.get('intr_rate_type', '-1'),
             'intr_rate_type_nm': save_option.get('intr_rate_type_nm', '-1'),
+            'rsrv_type_nm' : save_option.get('rsrv_type_nm', '-1'),
             'intr_rate': save_option.get('intr_rate', -1),
             'intr_rate2': save_option.get('intr_rate2', -1),
             'save_trm': save_option.get('save_trm', -1),
@@ -176,11 +178,11 @@ def deposit_list(request):
 @api_view(['GET'])
 def deposit_detail(request, deposit_code):
     deposit = get_object_or_404(Deposit, fin_prdt_cd=deposit_code)
-    if request.method == 'GET':
-        serializer = DepositSerializer(deposit)
-        return Response(serializer.data)    
+    # if request.method == 'GET':
+    serializer = DepositSerializer(deposit)
+    return Response(serializer.data)    
     
-# 단일 예금상품 금리 조회
+# 단일 예금상품 금리 목록 조회
 @api_view(['GET'])
 def depositOption_list(request, deposit_code):
     deposit = get_object_or_404(Deposit, fin_prdt_cd=deposit_code)
@@ -190,48 +192,48 @@ def depositOption_list(request, deposit_code):
     serializer = DepositOptionSerializer(deposit_options, many=True)
     return Response(serializer.data)
 
+# 단일 예금상품 금리 조회
+@api_view(['GET'])
+def depositOption_detail(request, deposit_code, depositOption_pk):
+    deposit = get_object_or_404(Deposit, fin_prdt_cd=deposit_code)
+    deposit_option = get_object_or_404(DepositOption, pk=depositOption_pk, deposit=deposit)
 
-# @api_view(['GET'])
-# def depositOption_detail(request, deposit_code, depositOption_pk):
-#     deposit = get_object_or_404(Deposit, deposit_code=deposit_code)
-#     deposit_option = get_object_or_404(DepositOption, pk=depositOption_pk, deposit=deposit)
-
-#     if request.method == 'GET':
-#         serializer = DepositOptionSerializer(deposit_option)
-#         return Response(serializer.data)
+    # if request.method == 'GET':
+    serializer = DepositOptionSerializer(deposit_option)
+    return Response(serializer.data)
     
+# 전체 적금 목록 조회
+@api_view(['GET']) 
+def saving_list(request):
+    savings = Saving.objects.all()
+    serializer = SavingSerializer(savings, many=True)
+    return Response(serializer.data)
 
-# @api_view(['GET']) # id 순
-# def saving_list(request):
-#     savings = Saving.objects.all()
-#     serializer = SavingSerializer(savings, many=True)
-#     return Response(serializer.data)
+# 단일 적금상품 조회
+@api_view(['GET'])
+def saving_detail(request, saving_code):
+    saving = get_object_or_404(Saving, fin_prdt_cd=saving_code)
+    # if request.method == 'GET':
+    serializer = SavingSerializer(saving)
+    return Response(serializer.data)
 
+# 단일 적금상품 금리 목록 조회    
+@api_view(['GET'])
+def savingOption_list(request, saving_code):
+    saving = get_object_or_404(Saving, fin_prdt_cd=saving_code)
+    saving_options = SavingOption.objects.filter(saving=saving)
 
-# @api_view(['GET'])
-# def saving_detail(request, saving_code):
-#     saving = get_object_or_404(Saving, saving_code=saving_code)
-#     if request.method == 'GET':
-#         serializer = SavingSerializer(saving)
-#         return Response(serializer.data)
+    # if request.method == 'GET':
+    serializer = SavingOptionSerializer(saving_options, many=True)
+    return Response(serializer.data)
 
-    
-# @api_view(['GET'])
-# def savingOption_list(request, saving_code):
-#     saving = get_object_or_404(Saving, saving_code=saving_code)
-#     saving_options = SavingOption.objects.filter(saving=saving)
-
-#     if request.method == 'GET':
-#         serializer = SavingOptionSerializer(saving_options, many=True)
-#         return Response(serializer.data)
-
-
-# @api_view(['GET'])
-# def savingOption_detail(request, saving_code, savingOption_pk):
-#     savingOption = get_object_or_404(SavingOption, pk=savingOption_pk)
-#     if request.method == 'GET':
-#         serializer = SavingOptionSerializer(savingOption)
-#         return Response(serializer.data)
+# 단일 적금상품 금리 조회
+@api_view(['GET'])
+def savingOption_detail(request, saving_code, savingOption_pk):
+    savingOption = get_object_or_404(SavingOption, pk=savingOption_pk)
+    # if request.method == 'GET':
+    serializer = SavingOptionSerializer(savingOption)
+    return Response(serializer.data)
     
 
 # # 6개월~36개월
