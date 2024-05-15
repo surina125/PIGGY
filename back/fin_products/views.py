@@ -16,6 +16,7 @@ from .models import *
 
 
 # 금융상품 데이터 DB 저장
+# @api_view(['GET'])
 def financial_products(request):
 
     DEPOSIT_API_URL = f'http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json?auth={settings.API_KEY}&topFinGrpNo=020000&pageNo=1'
@@ -153,7 +154,8 @@ def financial_products(request):
         product = Loan.objects.get(fin_prdt_cd=option_prdt_cd)
    
         loan_option = {
-            'imrtg_type_nm': loan_option.get('imrtg_type_nm', '-1'),
+            'mrtg_type': loan_option.get('mrtg_type', '-1'),
+            'mrtg_type_nm' : loan_option.get('mrtg_type_nm', '-1'),
             'rpay_type_nm': loan_option.get('rpay_type_nm', -1), 
             'lend_rate_type_nm': loan_option.get('lend_rate_type_nm', -1), 
             'lend_rate_min': loan_option.get('lend_rate_min', -1), 
@@ -268,36 +270,93 @@ def loanOption_detail(request, loan_code, loanOption_pk):
     serializer = LoanOptionSerializer(loan_option)
     return Response(serializer.data)
     
-# # 6개월~36개월
-# @api_view(['GET'])
-# def get_deposits(request, save_trm):
-#     deposits = Deposit.objects.filter(depositoption__save_trm=save_trm).order_by('depositoption__intr_rate')
+# 예금 금리 오름차순 (6개월~36개월)
+@api_view(['GET'])
+def get_deposits(request, save_trm):
+    deposits = Deposit.objects.filter(depositoption__save_trm=save_trm).order_by('depositoption__intr_rate')
 
-#     serializer = DepositSerializer(deposits, many=True)
+    serializer = DepositSerializer(deposits, many=True)
+    return Response(serializer.data)
+
+# 예금 금리 내림차순 (6개월~36개월)
+@api_view(['GET'])
+def get_reverse_deposits(request, save_trm):
+    deposits = Deposit.objects.filter(depositoption__save_trm=save_trm).order_by('-depositoption__intr_rate')
+
+    serializer = DepositSerializer(deposits, many=True)
+    return Response(serializer.data)
+
+# 적금 금리 오름차순 (6개월~36개월)
+@api_view(['GET'])
+def get_savings(request, save_trm):
+    savings = Saving.objects.filter(savingoption__save_trm=save_trm).order_by('savingoption__intr_rate')
+
+    serializer = SavingSerializer(savings, many=True)
+    return Response(serializer.data)
+
+
+# 적금 금리 내림차순(6개월~36개월)
+@api_view(['GET'])
+def get_reverse_savings(request, save_trm):
+    savings = Saving.objects.filter(savingoption__save_trm=save_trm).order_by('-savingoption__intr_rate')
+
+    serializer = SavingSerializer(savings, many=True)
+    return Response(serializer.data)
+
+# 최저 대출 금리 오름차순(담보유형)
+@api_view(['GET'])
+def get_min_loans(request, mrtg_type):
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_min')
+    serializer = LoanSerializer(loans, many=True)
+    return Response(serializer.data)
+
+# 최저 대출 금리 내림차순(담보유형)
+@api_view(['GET'])
+def get_reverse_min_loans(request, mrtg_type):
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_min')
+    serializer = LoanSerializer(loans, many=True)
+    return Response(serializer.data)
+
+# 최대 대출 금리 오름차순(담보유형)
+@api_view(['GET'])
+def get_max_loans(request, mrtg_type):
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_max')
+    serializer = LoanSerializer(loans, many=True)
+    return Response(serializer.data)
+
+# 최대 대출 금리 내림차순(담보유형)
+@api_view(['GET'])
+def get_reverse_max_loans(request, mrtg_type):
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_max')
+    serializer = LoanSerializer(loans, many=True)
+    return Response(serializer.data)
+
+# 평균 대출 금리 오름차순(담보유형)
+@api_view(['GET'])
+def get_avg_loans(request, mrtg_type):
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_avg')
+    serializer = LoanSerializer(loans, many=True)
+    return Response(serializer.data)
+
+# 평균 대출 금리 내림차순(담보유형)
+@api_view(['GET'])
+def get_reverse_avg_loans(request, mrtg_type):
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_avg')
+    serializer = LoanSerializer(loans, many=True)
+    return Response(serializer.data)
+
+
+# @api_view(['GET'])
+# def get_min_loans(request, mrtg_type):
+#     loans = Loan.objects.all().order_by('loanoption__lend_rate_min')
+#     serializer = LoanSerializer(loans, many=True)
 #     return Response(serializer.data)
 
 
 # @api_view(['GET'])
-# def get_savings(request, save_trm):
-#     savings = Saving.objects.filter(savingoption__save_trm=save_trm).order_by('savingoption__intr_rate')
-
-#     serializer = SavingSerializer(savings, many=True)
-#     return Response(serializer.data)
-
-
-# @api_view(['GET'])
-# def get_reverse_deposits(request, save_trm):
-#     deposits = Deposit.objects.filter(depositoption__save_trm=save_trm).order_by('-depositoption__intr_rate')
-
-#     serializer = DepositSerializer(deposits, many=True)
-#     return Response(serializer.data)
-
-
-# @api_view(['GET'])
-# def get_reverse_savings(request, save_trm):
-#     savings = Saving.objects.filter(savingoption__save_trm=save_trm).order_by('-savingoption__intr_rate')
-
-#     serializer = SavingSerializer(savings, many=True)
+# def get_reverse_min_loans(request):
+#     loans = Loan.objects.all().order_by('-loanoption__lend_rate_min')
+#     serializer = LoanSerializer(loans, many=True)
 #     return Response(serializer.data)
 
 

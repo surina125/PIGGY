@@ -72,6 +72,7 @@ class Loan(models.Model):
 
 class LoanOption(models.Model):
     loan = models.ForeignKey(Loan, on_delete=models.CASCADE)                                            # 금융상품코드
+    mrtg_type = models.CharField(max_length=20, blank=True)                                             # 담보유형코드
     mrtg_type_nm = models.CharField(max_length=20, blank=True)                                          # 담보유형
     rpay_type_nm = models.CharField(max_length=20)                                                      # 대출상환유형
     lend_rate_type_nm = models.CharField(max_length=20)                                                 # 대출금리유형
