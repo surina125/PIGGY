@@ -16,6 +16,7 @@ from .models import *
 
 
 # 금융상품 데이터 DB 저장
+@api_view(['GET'])
 def financial_products(request):
 
     DEPOSIT_API_URL = f'http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json?auth={settings.API_KEY}&topFinGrpNo=020000&pageNo=1'
