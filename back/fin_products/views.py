@@ -16,7 +16,6 @@ from .models import *
 
 
 # 금융상품 데이터 DB 저장
-@api_view(['GET'])
 def financial_products(request):
 
     DEPOSIT_API_URL = f'http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json?auth={settings.API_KEY}&topFinGrpNo=020000&pageNo=1'
@@ -182,7 +181,7 @@ def deposit_detail(request, deposit_code):
     serializer = DepositSerializer(deposit)
     return Response(serializer.data)    
     
-# 단일 예금상품 금리 목록 조회
+# 단일 예금상품 옵션 목록 조회
 @api_view(['GET'])
 def depositOption_list(request, deposit_code):
     deposit = get_object_or_404(Deposit, fin_prdt_cd=deposit_code)
@@ -192,7 +191,7 @@ def depositOption_list(request, deposit_code):
     serializer = DepositOptionSerializer(deposit_options, many=True)
     return Response(serializer.data)
 
-# 단일 예금상품 금리 조회
+# 단일 예금상품 옵션 조회
 @api_view(['GET'])
 def depositOption_detail(request, deposit_code, depositOption_pk):
     deposit = get_object_or_404(Deposit, fin_prdt_cd=deposit_code)
@@ -217,7 +216,7 @@ def saving_detail(request, saving_code):
     serializer = SavingSerializer(saving)
     return Response(serializer.data)
 
-# 단일 적금상품 금리 목록 조회    
+# 단일 적금상품 옵션 목록 조회    
 @api_view(['GET'])
 def savingOption_list(request, saving_code):
     saving = get_object_or_404(Saving, fin_prdt_cd=saving_code)
@@ -227,7 +226,7 @@ def savingOption_list(request, saving_code):
     serializer = SavingOptionSerializer(saving_options, many=True)
     return Response(serializer.data)
 
-# 단일 적금상품 금리 조회
+# 단일 적금상품 옵션 조회
 @api_view(['GET'])
 def savingOption_detail(request, saving_code, savingOption_pk):
     savingOption = get_object_or_404(SavingOption, pk=savingOption_pk)
@@ -235,7 +234,40 @@ def savingOption_detail(request, saving_code, savingOption_pk):
     serializer = SavingOptionSerializer(savingOption)
     return Response(serializer.data)
     
+# 전체 대출 목록 조회
+@api_view(['GET']) 
+def loan_list(request):
+    loans = Loan.objects.all()
+    serializer = LoanSerializer(loans, many=True)
+    return Response(serializer.data)
 
+# 단일 대출상품 조회
+@api_view(['GET'])
+def loan_detail(request, loan_code):
+    loan = get_object_or_404(Loan, fin_prdt_cd=loan_code)
+    serializer = LoanSerializer(loan)
+    return Response(serializer.data) 
+
+# 단일 대출상품 옵션 목록 조회
+@api_view(['GET'])
+def loanOption_list(request, loan_code):
+    loan = get_object_or_404(Loan, fin_prdt_cd=loan_code)
+    loan_options = LoanOption.objects.filter(loan=loan)
+
+    # if request.method == 'GET':
+    serializer = LoanOptionSerializer(loan_options, many=True)
+    return Response(serializer.data)
+
+# 단일 대출상품 옵션 조회
+@api_view(['GET'])
+def loanOption_detail(request, loan_code, loanOption_pk):
+    loan = get_object_or_404(Loan, fin_prdt_cd=loan_code)
+    loan_option = get_object_or_404(LoanOption, pk=loanOption_pk, loan=loan)
+
+    # if request.method == 'GET':
+    serializer = LoanOptionSerializer(loan_option)
+    return Response(serializer.data)
+    
 # # 6개월~36개월
 # @api_view(['GET'])
 # def get_deposits(request, save_trm):
