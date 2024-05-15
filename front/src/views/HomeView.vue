@@ -1,67 +1,70 @@
 <template>
   <div>
-    <v-carousel
-      cycle
-      hide-delimiters
-      show-arrows="hover"
-      height="400"
-    >
-      <v-carousel-item>
-        <div class="caro-item-text">
-          <p><span class="color">예 ∙ 적금 금리</span>를 쉽게 비교하고</p>
-          <div class="title">
-            <p>나에게 맞는</p>
-            <p><span class="color">금융상품</span>을 <span class="color">추천</span> 받자!</p>
-          </div>
-          <v-btn
-            block
-            rounded="xl"
-            size="x-large"
-            color="#1089FF"
-            class="caro-item-btn"
-            :to="userStore.isLogin ? { name: 'productRecommend', params: { username: userStore.userInfo.username }} : { name: 'signUp'}"
-          >회원가입하고 추천받기</v-btn>
-        </div> 
-        <img src="@/assets/carousel-1.jpeg" class="caro-item-img" width="400">
-      </v-carousel-item>
+    <div class="carousel">
+      <v-carousel
+        cycle
+        hide-delimiters
+        show-arrows="hover"
+        height="400"
+      >
+        <v-carousel-item>
+          <div class="caro-item-text">
+            <p><span class="color">예 ∙ 적금 금리</span>를 쉽게 비교하고</p>
+            <div class="title">
+              <p>내게 딱─ 맞는</p>
+              <p><span class="color">금융상품</span> <span class="color">추천</span> 받자!</p>
+            </div>
+            <v-btn
+              block
+              rounded="xl"
+              size="x-large"
+              color="#1089FF"
+              class="caro-item-btn"
+              :to="userStore.isLogin ? { name: 'productRecommend', params: { username: userStore.userInfo.username }} : { name: 'signUp'}"
+            >회원가입하고 추천받기</v-btn>
+          </div> 
+          <!-- C:\Users\82109\OneDrive - UOS\바탕 화면\test\Financial-project\front\src\assets\carousel-1.png -->
+          <img src="@/assets\carousel-1.png" class="caro-item-img" width="400">
+        </v-carousel-item>
 
-      <v-carousel-item>
-        <div class="caro-item-text">
-          <p>금융상품에 관한 이야기 어디서 할 수 있을까?</p>
-          <div class="title">
-            <p><span class="color">금융상품 자유 게시판</span>으로</p>
-            <p>오세요!</p>
+        <v-carousel-item>
+          <div class="caro-item-text">
+            <p>금융상품에 관한 이야기 어디서 할 수 있을까?</p>
+            <div class="title">
+              <p><span class="color">금융상품 자유 게시판</span>으로</p>
+              <p>오세요!</p>
+            </div>
+            <v-btn
+              block
+              rounded="xl"
+              size="x-large"
+              color="#1089FF"
+              class="caro-item-btn"
+              :to="{ name: 'postList'}"
+            >금융상품 자유 게시판 바로가기</v-btn>
           </div>
-          <v-btn
-            block
-            rounded="xl"
-            size="x-large"
-            color="#1089FF"
-            class="caro-item-btn"
-            :to="{ name: 'postList'}"
-          >금융상품 자유 게시판 바로가기</v-btn>
-        </div>
-        <img src="@/assets/carousel-2.jpeg" class="caro-item-img" width="500">
-      </v-carousel-item>
+          <img src="@/assets/carousel-2.jpeg" class="caro-item-img" width="500">
+        </v-carousel-item>
 
-      <v-carousel-item>
-        <div class="item3">
-          <p><span class="color">금융</span>과 <span class="color">나</span>를 잇다.</p>
-          <div class="title">
-            <p><span class="color text-h1 font-weight-bold">MYFI</span></p>
-          </div>
-          <v-btn
-            block
-            rounded="xl"
-            size="x-large"
-            color="#1089FF"
-            class="caro-item-btn"
-            :to="userStore.isLogin ? { name: 'productRecommend', params: { username: userStore.userInfo.username }} : { name: 'signUp'}"
-          >회원가입하고 추천받기</v-btn>
-        </div> 
-        <img src="@/assets/carousel-3.jpeg" class="caro-item-img" width="400">
-      </v-carousel-item>
-    </v-carousel>
+        <v-carousel-item>
+          <div class="item3">
+            <p><span class="color">금융</span>과 <span class="color">나</span>를 잇다.</p>
+            <div class="title">
+              <p><span class="color text-h1 font-weight-bold">MYFI</span></p>
+            </div>
+            <v-btn
+              block
+              rounded="xl"
+              size="x-large"
+              color="#1089FF"
+              class="caro-item-btn"
+              :to="userStore.isLogin ? { name: 'productRecommend', params: { username: userStore.userInfo.username }} : { name: 'signUp'}"
+            >회원가입하고 추천받기</v-btn>
+          </div> 
+          <img src="@/assets/carousel-3.jpeg" class="caro-item-img" width="400">
+        </v-carousel-item>
+      </v-carousel>
+    </div>
   </div>
 
   <div class="container d-flex justify-space-between align-center">
@@ -116,7 +119,8 @@ const userStore = useUserStore()
 
 <style scoped>
 .v-carousel {
-  border-bottom: 1px solid #DBDBDB;
+  /* border-bottom: 1px solid #DBDBDB; */
+  background-color: #f1f5ff;
 }
 
 .calculater {

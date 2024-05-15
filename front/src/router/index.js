@@ -5,6 +5,7 @@ import NotFound from '@/components/NotFound.vue'
 import CompareListView from '@/views/CompareListView.vue'
 import DepositList from '@/components/DepositList.vue'
 import SavingList from '@/components/SavingList.vue'
+import LoanList from '@/components/LoanList.vue'
 import ServiceView from '@/views/ServiceView.vue'
 import ExchangeView from '@/views/ExchangeView.vue'
 import BankMapView from '@/views/BankMapView.vue'
@@ -41,6 +42,11 @@ const router = createRouter({
           name: 'savingList',
           component: SavingList,
         },
+        {
+          path: 'loan',
+          name: 'loanList',
+          component: LoanList,
+        },
       ]
     },
     {
@@ -73,60 +79,60 @@ const router = createRouter({
       path: '/posts/write',
       name: 'postCreate',
       component: PostCreateView,
-      beforeEnter: (to, from) => {
-        const userStore = useUserStore()
-        if (!userStore.isLogin) {
-          alert('로그인 후 이용 가능합니다.')
-          return { name: 'signIn'}
-        }
-      }
+      // beforeEnter: (to, from) => {
+      //   const userStore = useUserStore()
+      //   if (!userStore.isLogin) {
+      //     alert('로그인 후 이용 가능합니다.')
+      //     return { name: 'signIn'}
+      //   }
+      // }
     },
     {
       path: '/posts/:id/update',
       name: 'postUpdate',
       component: PostUpdateView,
-      beforeEnter: (to, from) => {
-        const userStore = useUserStore()
-        if (!userStore.isLogin) {
-          alert('로그인 후 이용 가능합니다.')
-          return { name: 'signIn'}
-        }
-      }
+      // beforeEnter: (to, from) => {
+      //   const userStore = useUserStore()
+      //   if (!userStore.isLogin) {
+      //     alert('로그인 후 이용 가능합니다.')
+      //     return { name: 'signIn'}
+      //   }
+      // }
     },
     {
       path: '/signup',
       name: 'signUp',
       component: SignUpView,
-      beforeEnter: (to, from) => {
-        const userStore = useUserStore()
-        if (userStore.isLogin) {
-          alert('이미 로그인 되어있습니다.')
-          return false
-        }
-      }
+      // beforeEnter: (to, from) => {
+      //   const userStore = useUserStore()
+      //   if (userStore.isLogin) {
+      //     alert('이미 로그인 되어있습니다.')
+      //     return false
+      //   }
+      // }
     },
     {
       path: '/signin',
       name: 'signIn',
       component: SignInView,
-      beforeEnter: (to, from) => {
-        const userStore = useUserStore()
-        if (userStore.isLogin) {
-          alert('이미 로그인 되어있습니다.')
-          return false
-        }
-      }
+      // beforeEnter: (to, from) => {
+      //   const userStore = useUserStore()
+      //   if (userStore.isLogin) {
+      //     alert('이미 로그인 되어있습니다.')
+      //     return false
+      //   }
+      // }
     },
     {
       path: '/mypage/:username*',
       component: MyPageView,
-      beforeEnter: (to, from) => {
-        const userStore = useUserStore()
-        if (!userStore.isLogin) {
-          alert('로그인 후 이용 가능합니다.')
-          return { name: 'signIn'}
-        }
-      },
+      // beforeEnter: (to, from) => {
+      //   const userStore = useUserStore()
+      //   if (!userStore.isLogin) {
+      //     alert('로그인 후 이용 가능합니다.')
+      //     return { name: 'signIn'}
+      //   }
+      // },
       children: [
         {
           path: '',

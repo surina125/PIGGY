@@ -2,24 +2,29 @@
   <div class="nav">
     <RouterLink class="logo" :to="{ name: 'home' }">
       <img src="@/assets/logo.png" alt="logo" />
-      MYFI
+      PIGGY
     </RouterLink>
     
     <div class="menus">
       <RouterLink :to="{ name: 'productRecommend', params: {username: username} }">
-        상품추천
+        <div class="menu-link">
+          상품추천
+        </div>
       </RouterLink>
-      <p>|</p>
       <RouterLink :to="{ name: 'depositList' }">
-        상품조회
+        <div class="menu-link">
+          상품조회
+        </div>
       </RouterLink>
-      <p>|</p>
       <RouterLink :to="{ name: 'exchange' }">
-        부가서비스
+        <div class="menu-link">
+          부가서비스
+        </div>
       </RouterLink>
-      <p>|</p>
       <RouterLink :to="{ name: 'postList', query: { page: 1 } }">
-        커뮤니티
+        <div class="menu-link">
+          커뮤니티
+        </div>
       </RouterLink>
     </div>
 
@@ -110,17 +115,18 @@ const userStore = useUserStore()
   height: 80px;
   display: flex;
   align-items: center;
+  margin: 0 3rem;
 }
 
 .logo {
   display: flex;
   align-items: center;
   gap: 5px;
-  color: #1089FF !important;
-  font-size: 30px;
+  color: #393939 !important;
+  font-size: 25px;
   text-decoration: none;
   font-family: 'Francois One', sans-serif;
-  margin: 0 1rem;
+  margin: 0 3rem;
 }
 
 .logo img {
@@ -129,17 +135,31 @@ const userStore = useUserStore()
 
 .menus {
   display: flex;
-  gap: 10px;
-  font-size: 17px;
+  gap: 50px;
+  /* font-size: 17px; */
   margin-top: 5px;
 }
 
 .menus a {
-  font-weight: 600;
-  font-size: 20px;
+  font-weight: 900;
+  font-size: 17px;
   letter-spacing: -1px;
-  color: #222;
+  color: #393939;
   text-decoration: none;
+  /* padding: 10px 0;  */
+}
+
+.menu-link { 
+    color: #393939; /* 일반 색상 */
+    text-decoration: none; /* 기본 밑줄 제거 */
+    transition: color 0.3s; /* 색상 변경에 대한 전환 효과 */
+    padding: 10px 0; 
+}
+
+.menu-link:hover {
+    color: #1089FF; /* 마우스 호버 시 색상 변경 */
+    padding: 6px 0; 
+    border-bottom: 4px solid #1089FF;
 }
 
 .sign {

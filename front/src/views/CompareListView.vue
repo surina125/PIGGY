@@ -4,6 +4,8 @@
       <RouterLink :to="{ name: 'depositList'}" exact-active-class="active">정기예금</RouterLink>
       <p>|</p>
       <RouterLink :to="{ name: 'savingList'}" exact-active-class="active">정기적금</RouterLink>
+      <p>|</p>
+      <RouterLink :to="{ name: 'loanList'}" exact-active-class="active">주택담보대출</RouterLink>
     </header>
     <RouterView />
   </div>

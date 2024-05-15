@@ -9,11 +9,20 @@
   </div>
 </template>
 
+<script setup>
+import Nav from '@/components/Nav.vue'
+import Footer from '@/components/Footer.vue'
+</script>
+
 <style scoped>
-.hr {
+header {
+  background-color: #f1f5ff;
+}
+
+/* .hr {
   height: 1px;
   background-color: #DBDBDB;
-}
+} */
 
 .footer {
   /* position: absolute;
@@ -24,14 +33,4 @@
 }
 </style>
 
-<script setup>
-import Nav from '@/components/Nav.vue'
-import Footer from '@/components/Footer.vue'
-</script>
 
-
-<style>
-.color {
-  color: #1089FF;
-}
-</style>

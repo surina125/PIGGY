@@ -53,7 +53,7 @@
           <v-divider class="my-3"></v-divider>
           <div class="mx-auto">
             <BarChartDetail
-              :title="selectedDepositSimple.name"
+              :title="selectedDepositSimple.fin_prdt_nm"
               :average-intr-rate="averageIntrRate"
               :intr-rate="intrRate"
               :intr-rate2="intrRate2"
@@ -79,7 +79,7 @@
       :headers="headers"
       :items-length="depositLength"
       :items="deposits"
-      item-value="deposit_code"
+      item-value="fin_prdt_cd"
       height="600"
       class="table elevation-6"
     >
@@ -87,7 +87,7 @@
         <tr @click="clickRow(item)">
           <td>{{ item['dcls_month'] }}</td>
           <td>{{ item['kor_co_nm'] }}</td>
-          <td align="center">{{ item['name'] }}</td>
+          <td align="center">{{ item['fin_prdt_nm'] }}</td>
           <td align="center">{{ item['6month'] }}</td>
           <td align="center">{{ item['12month'] }}</td>
           <td align="center">{{ item['24month'] }}</td>
@@ -117,7 +117,7 @@ import axios from 'axios'
 const headers = [
   { title: '공시 제출일', align: 'start', sortable: false, width:'10%', key: 'dcls_month' },
   { title: '금융회사명', align: 'start', sortable: false, key: 'kor_co_nm' },
-  { title: '상품명', align: 'center', sortable: false, width:'32%', key: 'name' },
+  { title: '상품명', align: 'center', sortable: false, width:'32%', key: 'fin_prdt_nm' },
   { title: '6개월 (Click to sort)', align: 'end', width:'12%', key: '6month' },
   { title: '12개월 (Click to sort)', align: 'end', width:'12%', key: '12month' },
   { title: '24개월 (Click to sort)', align: 'end', width:'12%', key: '24month' },
@@ -133,7 +133,7 @@ const selectedBank = ref('전체 보기')
 const selectedDepositSimple = ref()
 const selectedDeposit = ref()
 const selectedDepositCode = computed(() => {
-  return selectedDepositSimple.value?.['deposit_code']
+  return selectedDepositSimple.value?.['fin_prdt_cd']
 })
 const dialog = ref(false)
 
@@ -142,7 +142,7 @@ const intrRate = ref([null, null, null, null])
 const intrRate2 = ref([null, null, null, null])
 
 const isContractDeposit = computed(() => {
-  return userStore.userInfo?.contract_deposit.some(e => e['deposit_code'] === selectedDepositCode.value)
+  return userStore.userInfo?.contract_deposit.some(e => e['fin_prdt_cd'] === selectedDepositCode.value)
 })
 
 const userStore = useUserStore()
@@ -150,10 +150,10 @@ const router = useRouter()
 
 const makeItems = function (item) {
   const result = {
-    'deposit_code': item['deposit_code'],
+    'fin_prdt_cd': item['fin_prdt_cd'],
     'dcls_month': item['dcls_month'],
     'kor_co_nm': item['kor_co_nm'],
-    'name': item['name'],
+    'fin_prdt_nm': item['fin_prdt_nm'],
     '6month': null,
     '12month': null,
     '24month': null,
@@ -180,7 +180,8 @@ const makeItems = function (item) {
 const getAllDeposit = function () {
   axios({
     method: 'get',
-    url: `${userStore.API_URL}/financial/deposit_list/`
+    // url: `${userStore.API_URL}/financial/deposit_list/`
+    url: `${userStore.API_URL}/fin_products/deposit_list/`
   })
     .then((res) => {
       const results = res.data
@@ -208,7 +209,8 @@ const clickBank = function () {
   } else {
     axios({
       method: 'get',
-      url: `${userStore.API_URL}/financial/get_bank_deposit/${selectedBank.value}/`
+      // url: `${userStore.API_URL}/financial/get_bank_deposit/${selectedBank.value}/`
+      url: `${userStore.API_URL}/fin_products/get_bank_deposit/${selectedBank.value}/`
     })
       .then((res) => {
         deposits.value = []
@@ -238,7 +240,8 @@ const clickRow = function (data) {
 const getDeposit = function () {
   axios({
     method: 'get',
-    url: `${userStore.API_URL}/financial/deposit_list/${selectedDepositCode.value}/`
+    // url: `${userStore.API_URL}/financial/deposit_list/${selectedDepositCode.value}/`
+    url: `${userStore.API_URL}/fin_products/deposit_list/${selectedDepositCode.value}/`
   })
     .then((res) => {
       const data = res.data
@@ -246,7 +249,7 @@ const getDeposit = function () {
         '가입자 수 (MYFI 기준)': data.contract_user.length,
         '공시 제출월': data['dcls_month'],
         '금융 회사명': data['kor_co_nm'],
-        '금융 상품명': data['name'],
+        '금융 상품명': data['fin_prdt_nm'],
         '가입 방법': data['join_way'],
         '만기 후 이자율': data['mtrt_int'],
         '우대 조건': data['spcl_cnd'],
@@ -281,7 +284,8 @@ const getDeposit = function () {
 const addDepositUser = function () {
   axios({
     method: 'post',
-    url: `${userStore.API_URL}/financial/deposit_list/${selectedDepositCode.value}/contract/`,
+    // url: `${userStore.API_URL}/financial/deposit_list/${selectedDepositCode.value}/contract/`,
+    url: `${userStore.API_URL}/fin_products/deposit_list/${selectedDepositCode.value}/contract/`,
     headers: {
       Authorization: `Token ${userStore.token}`
     }
@@ -301,7 +305,8 @@ const addDepositUser = function () {
 const deleteDepositUser = function () {
   axios({
     method: 'delete',
-    url: `${userStore.API_URL}/financial/deposit_list/${selectedDepositCode.value}/contract/`,
+    // url: `${userStore.API_URL}/financial/deposit_list/${selectedDepositCode.value}/contract/`,
+    url: `${userStore.API_URL}/fin_products/deposit_list/${selectedDepositCode.value}/contract/`,
     headers: {
       Authorization: `Token ${userStore.token}`
     }
