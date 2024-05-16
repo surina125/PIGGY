@@ -345,19 +345,35 @@ def get_reverse_avg_loans(request, mrtg_type):
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
+# 금융기관 별 예금상품
+@api_view(['GET'])
+def get_bank_deposit(request, kor_co_nm):
+    if Deposit.objects.filter(kor_co_nm=kor_co_nm).exists():
+        deposits = Deposit.objects.filter(kor_co_nm=kor_co_nm)
+        serializer = DepositSerializer(deposits, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({ "detail": "해당 금융기관의 상품이 없습니다.." }, status=status.HTTP_204_NO_CONTENT)
 
-# @api_view(['GET'])
-# def get_min_loans(request, mrtg_type):
-#     loans = Loan.objects.all().order_by('loanoption__lend_rate_min')
-#     serializer = LoanSerializer(loans, many=True)
-#     return Response(serializer.data)
-
-
-# @api_view(['GET'])
-# def get_reverse_min_loans(request):
-#     loans = Loan.objects.all().order_by('-loanoption__lend_rate_min')
-#     serializer = LoanSerializer(loans, many=True)
-#     return Response(serializer.data)
+# 금융기관 별 적금상품
+@api_view(['GET'])
+def get_bank_saving(request, kor_co_nm):
+    if Saving.objects.filter(kor_co_nm=kor_co_nm).exists():
+        savings = Saving.objects.filter(kor_co_nm=kor_co_nm)
+        serializer = SavingSerializer(savings, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({ "detail": "해당 금융기관의 상품이 없습니다.." }, status=status.HTTP_204_NO_CONTENT)
+    
+# 금융기관 별 대출상품
+@api_view(['GET'])
+def get_bank_loan(request, kor_co_nm):
+    if Loan.objects.filter(kor_co_nm=kor_co_nm).exists():
+        loans = Loan.objects.filter(kor_co_nm=kor_co_nm)
+        serializer = LoanSerializer(loans, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({ "detail": "해당 금융기관의 상품이 없습니다.." }, status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -427,24 +443,6 @@ def get_reverse_avg_loans(request, mrtg_type):
 #             return Response({ "detail": "이미 상품이 존재합니다." }, status=status.HTTP_400_BAD_REQUEST)
         
 
-# @api_view(['GET'])
-# def get_bank_deposit(request, kor_co_nm):
-#     if Deposit.objects.filter(kor_co_nm=kor_co_nm).exists():
-#         deposits = Deposit.objects.filter(kor_co_nm=kor_co_nm)
-#         serializer = DepositSerializer(deposits, many=True)
-#         return Response(serializer.data)
-#     else:
-#         return Response({ "detail": "해당은행의 상품이 없습니다.." }, status=status.HTTP_204_NO_CONTENT)
-
-# @api_view(['GET'])
-# def get_bank_saving(request, kor_co_nm):
-#     if Saving.objects.filter(kor_co_nm=kor_co_nm).exists():
-#         savings = Saving.objects.filter(kor_co_nm=kor_co_nm)
-#         serializer = SavingSerializer(savings, many=True)
-#         return Response(serializer.data)
-#     else:
-#         return Response({ "detail": "해당은행의 상품이 없습니다.." }, status=status.HTTP_204_NO_CONTENT)
-    
 # @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 # def recommend_product_one(request):

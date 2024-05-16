@@ -45,5 +45,8 @@ urlpatterns = [
     path('loan/avg_rate_E/', views.get_avg_loans,{'mrtg_type':'E'}),
     path('loan/-avg_rate_A/', views.get_reverse_avg_loans, {'mrtg_type':'A'}),
     path('loan/-avg_rate_E/', views.get_reverse_avg_loans, {'mrtg_type':'E'}),
+    path('get_bank_deposit/<kor_co_nm>/', views.get_bank_deposit),
+    path('get_bank_saving/<kor_co_nm>/', views.get_bank_saving),
+    path('get_bank_loan/<kor_co_nm>/', views.get_bank_loan),
 
 ]
