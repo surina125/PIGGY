@@ -21,7 +21,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-const MAP_API_KEY = import.meta.env.VITE_MAP_API_KEY
+const KAKAO_MAP_API_KEY = import.meta.env.VITE_KAKAOMAP_API_KEY
 
 const props = defineProps({
   width: Number,
@@ -39,28 +39,28 @@ onMounted(() => {
     const script = document.createElement('script')
 
     script.onload = () => kakao.maps.load(initMap)
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${MAP_API_KEY}&libraries=services`
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${KAKAO_MAP_API_KEY}&libraries=services`
     document.head.appendChild(script)
   }
 })
 
 const initMap = () => {
-  // const container = document.getElementById('map')
+  const container = document.getElementById('map')
 
-  // if ("geolocation" in navigator) {
-  //   navigator.geolocation.getCurrentPosition((position) => {
-  //     const currentPosition = [ position.coords.latitude, position.coords.longitude ]
-  //     console.log(currentPosition)
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const currentPosition = [ position.coords.latitude, position.coords.longitude ]
+      console.log(currentPosition)
 
-  //     const options = {
-  //       center: new kakao.maps.LatLng(currentPosition[0], currentPosition[1]),
-  //       level: 5,
-  //     }
+      const options = {
+        center: new kakao.maps.LatLng(currentPosition[0], currentPosition[1]),
+        level: 5,
+      }
 
-  //     const map = new kakao.maps.Map(container, options)
+      const map = new kakao.maps.Map(container, options)
 
-  //   })
-  // }
+    })
+  }
 
   // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
   const infowindow = new kakao.maps.InfoWindow({zIndex:1});
@@ -86,28 +86,28 @@ const initMap = () => {
 
   // 지도의 중심좌표를 얻어옵니다 
   const latlng = map.getCenter(); 
-  // const lat = latlng.getLat()
-  // const lng = latlng.getLng()
+  const lat = latlng.getLat()
+  const lng = latlng.getLng()
   center.value = [latlng.getLat(), latlng.getLng()]
 
-  // console.log(`위도 : ${center.value[0]} 경도 : ${center.value[1]}`)
+  console.log(`위도 : ${center.value[0]} 경도 : ${center.value[1]}`)
 
-  // mapOption = {
-  //         center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
-  //         level: 3 // 지도의 확대 레벨
-  //     }; 
+  mapOption = {
+          center: new kakao.maps.LatLng(lat, lng), // 지도의 중심좌표
+          level: 3 // 지도의 확대 레벨
+      }; 
   });
 
   // 장소 검색 객체를 생성합니다
   const ps = new kakao.maps.services.Places(map); 
   
   // 키워드에 따라 은행을 검색합니다
-  // if (props.keyWord === '전체보기') {
-  //   ps.categorySearch('BK9', placesSearchCB, {useMapBounds:true}); 
-  // } else {
-  //   ps.keywordSearch(props.keyWord, placesSearchCB, {useMapBounds:true}); 
-  // }
-  // ps.keywordSearch(props.keyWord, placesSearchCB); 
+  if (props.keyWord === '전체보기') {
+    ps.categorySearch('BK9', placesSearchCB, {useMapBounds:true}); 
+  } else {
+    ps.keywordSearch(props.keyWord, placesSearchCB, {useMapBounds:true}); 
+  }
+  ps.keywordSearch(props.keyWord, placesSearchCB); 
   ps.categorySearch('BK9', placesSearchCB, {useMapBounds:true}); 
   
 

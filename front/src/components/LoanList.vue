@@ -60,25 +60,27 @@
                 :key="key"
               >
                 <td width="28%" class="font-weight-bold">{{ key }}</td>
-                <td v-if="key === '대출 한도'">{{ value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td>
-                <td v-else>{{ value }}</td>
+                <!-- <td v-if="key === '대출 한도'">{{ value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}</td> -->
+                <td>{{ value }}</td>
               </tr>
             </tbody>
           </v-table>
           <v-divider class="my-3"></v-divider>
 
           <div class="mx-auto">
-            <BarChartDetail
+            <BarChartLoanDetail
               :title="`${selectedLoanSimple.fin_prdt_nm} (아파트)`"
-              :average-intr-rate="averageIntrRate"
-              :intr-rate="intrRateF"
-              :intr-rate2="intrRate2F"
+              :lend-rate-avg="lendRateAvgA"
+              :lend-rate-max="lendRateMaxA"
+              :lend-rate-min="lendRateMinA"
             />
-            <BarChartDetail
+            <BarChartLoanDetail
               :title="`${selectedLoanSimple.fin_prdt_nm} (아파트 외)`"
-              :average-intr-rate="averageIntrRate"
-              :intr-rate="intrRateS"
-              :intr-rate2="intrRate2S"
+              :lend-rate-avg="lendRateAvgE"
+              :lend-rate-max="lendRateMaxE"
+              :lend-rate-min="lendRateMinE"
+
+
             />
             <p class="text-caption">* 개월별 평균 예금 금리는 2023년 11월 기준입니다.</p>
             <p class="text-caption">* 차트에 없는 이자율은 상품에 존재하지 않는 옵션입니다.</p>
@@ -132,7 +134,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/users'
-import BarChartDetail from '@/components/BarChartDetail.vue'
+import BarChartLoanDetail from '@/components/BarChartLoanDetail.vue'
 import axios from 'axios'
 
 const headers = [
@@ -159,11 +161,13 @@ const selectedLoanCode = computed(() => {
 })
 const dialog = ref(false)
 
-const averageIntrRate = [2.78, 3.62, 3.57, 3.52]
-const intrRateF = ref([null, null, null, null])
-const intrRate2F = ref([null, null, null, null])
-const intrRateS = ref([null, null, null, null])
-const intrRate2S = ref([null, null, null, null])
+// const averageIntrRate = [2.78, 3.62]
+const lendRateAvgA = ref([null, null])
+const lendRateMaxA = ref([null, null])
+const lendRateMinA = ref([null, null])
+const lendRateAvgE = ref([null, null])
+const lendRateMinE = ref([null, null])
+const lendRateMaxE = ref([null, null])
 
 const selectedTypeMrtg = ref('아파트')
 
@@ -180,19 +184,33 @@ const makeItems = function (item) {
     'dcls_month': item['dcls_month'],
     'kor_co_nm': item['kor_co_nm'],
     'fin_prdt_nm': item['fin_prdt_nm'],
-    'lend_rate_type_nm': null,
-    'lend_rate_min': null,
-    'lend_rate_max': null,
-    'lend_rate_avg': null,
+    // 'lend_rate_type_nm': null,
+    // 'lend_rate_min': null,
+    // 'lend_rate_max': null,
+    // 'lend_rate_avg': null,
+    'fixed_interest_rate' : null,
+    'volatility_rate' : null
   }
+  console.log('1234')
+  console.log(item)
 
   for (const option of item['loanoption_set']) {
     const mrtgTypeNm = option['mrtg_type_nm']
+    const lendRateTypeNm = option['lend_rate_type_nm']
+
     if (mrtgTypeNm === selectedTypeMrtg.value) {
-      result['lend_rate_type_nm'] = option['lend_rate_type_nm']
-      result['lend_rate_min'] = option['lend_rate_min']
-      result['lend_rate_max'] = option['lend_rate_max']
-      result['lend_rate_avg'] = option['lend_rate_avg']
+      if (lendRateTypeNm === '고정금리') {
+        result['lend_rate_type_nm'] = option['lend_rate_type_nm']
+        result['lend_rate_min'] = option['lend_rate_min']
+        result['lend_rate_max'] = option['lend_rate_max']
+        result['lend_rate_avg'] = option['lend_rate_avg']
+      } else if (lendRateTypeNm === '변동금리') {
+        result['lend_rate_type_nm'] = option['lend_rate_type_nm']
+        result['lend_rate_min'] = option['lend_rate_min']
+        result['lend_rate_max'] = option['lend_rate_max']
+        result['lend_rate_avg'] = option['lend_rate_avg']    
+      }
+
        
     }
   }
@@ -207,7 +225,7 @@ const getAllLoan = function () {
   })
     .then((res) => {
       results.value = res.data
-      console.log(results.value[0])
+      // console.log(results.value[0])
       for (const item of results.value){
         loans.value.push(makeItems(item))
         if (!banks.value.includes(item['kor_co_nm'])) {
@@ -262,10 +280,12 @@ const close = function () {
 const clickRow = function (data) {
   // router.push({ name: 'loanDetail', params: { loanCode: data['loan_code']}})
   selectedLoanSimple.value = data
-  intrRateF.value = []
-  intrRate2F.value = []
-  intrRateS.value = []
-  intrRate2S.value = []
+  lendRateAvgA.value = []
+  lendRateMaxA.value = []
+  lendRateMinA.value = []
+  lendRateAvgE.value = []
+  lendRateMinE.value = []
+  lendRateMaxE.value = []
   getLoan()
   dialog.value = true
 }
@@ -274,7 +294,7 @@ const getLoan = function () {
   const fin_prdt_cd = selectedLoanSimple.value['fin_prdt_cd']
   axios({
     method: 'get',
-    url: `${userStore.API_URL}/financial/loan_list/${selectedLoanCode.value}/`
+    url: `${userStore.API_URL}/fin_products/loan_list/${selectedLoanCode.value}/`
   })
     .then((res) => {
       const data = res.data
@@ -296,36 +316,31 @@ const getLoan = function () {
       }
 
       const optionList = res.data.loanoption_set
+      console.log(optionList)
 
       for (const option of optionList) {
+
         if (option.mrtg_type_nm === '아파트') {
-          if (option.save_trm === "6") {
-            intrRateF.value[0] = option.intr_rate
-            intrRate2F.value[0] = option.intr_rate2
-          } else if (option.save_trm === "12") {
-            intrRateF.value[1] = option.intr_rate
-            intrRate2F.value[1] = option.intr_rate2
-          } else if (option.save_trm === "24") {
-            intrRateF.value[2] = option.intr_rate
-            intrRate2F.value[2] = option.intr_rate2
-          } else if (option.save_trm === "36") {
-            intrRateF.value[3] = option.intr_rate
-            intrRate2F.value[3] = option.intr_rate2
-          }
+          if (option.lend_rate_type_nm === "고정금리") {
+            lendRateAvgA.value[0] = option.lend_rate_avg
+            lendRateMaxA.value[0] = option.lend_rate_max
+            lendRateMinA.value[0] = option.lend_rate_min
+          } else if (option.lend_rate_type_nm === "변동금리") {
+            lendRateAvgA.value[1] = option.lend_rate_avg
+            lendRateMinA.value[1] = option.lend_rate_max
+            lendRateMaxA.value[1] = option.lend_rate_min
+          } 
+
         } else {
-          if (option.save_trm === "6") {
-            intrRateS.value[0] = option.intr_rate
-            intrRate2S.value[0] = option.intr_rate2
-          } else if (option.save_trm === "12") {
-            intrRateS.value[1] = option.intr_rate
-            intrRate2S.value[1] = option.intr_rate2
-          } else if (option.save_trm === "24") {
-            intrRateS.value[2] = option.intr_rate
-            intrRate2S.value[2] = option.intr_rate2
-          } else if (option.save_trm === "36") {
-            intrRateS.value[3] = option.intr_rate
-            intrRate2S.value[3] = option.intr_rate2
-          }
+          if (option.lend_rate_type_nm === "고정금리") {
+            lendRateAvgE.value[0] = option.lend_rate_avg
+            lendRateMaxE.value[0] = option.lend_rate_max
+            lendRateMinE.value[0] = option.lend_rate_min
+          } else if (option.lend_rate_type_nm === "변동금리") {
+            lendRateAvgE.value[1] = option.lend_rate_avg
+            lendRateMinE.value[1] = option.lend_rate_max
+            lendRateMaxE.value[1] = option.lend_rate_min
+          } 
         }
       }
 

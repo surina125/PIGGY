@@ -259,6 +259,7 @@ const getDeposit = function () {
         '기타 유의사항': data['etc_note']
       }
       const optionList = res.data.depositoption_set
+      console.log(optionList)
 
       for (const option of optionList) {
         if (option.save_trm === "6") {
