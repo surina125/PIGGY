@@ -193,6 +193,7 @@ def depositOption_list(request, deposit_code):
     serializer = DepositOptionSerializer(deposit_options, many=True)
     return Response(serializer.data)
 
+
 # 단일 예금상품 옵션 조회
 @api_view(['GET'])
 def depositOption_detail(request, deposit_code, depositOption_pk):
