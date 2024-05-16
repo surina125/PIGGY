@@ -45,25 +45,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # APP
     'accounts',
     'fin_products',
     'exchange',
-
-    # DRF
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
-
-    # REST_AUTH
     'dj_rest_auth',
     'allauth',
     'allauth.account',
-
-    # social login
     'django.contrib.sites',
     'allauth.socialaccount',
-
-    'corsheaders',
     'dj_rest_auth.registration',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -90,7 +82,6 @@ MIDDLEWARE = [
 
 ]
 
-# social login
 SITE_ID = 1
 
 
@@ -176,12 +167,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-# REST-AUTH 회원가입 기본 Serailizer 재정의
-REST_AUTH = {
-    'USER_DETAILS_SERIALIZER': 'dj_rest_auth.serializers.UserDetailsSerializer',
-    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
-    'USER_DETAILS_SERIALIZER': 'accounts.serializers.CustomUserDetailsSerializer',
-}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -192,5 +177,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-ACCOUNT_ADAPTER = 'accounts.models.CustomAccountAdapter'

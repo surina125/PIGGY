@@ -63,6 +63,7 @@ class Loan(models.Model):
     kor_co_nm = models.CharField(max_length=100, blank=True)                                            # 금융회사명
     fin_prdt_cd = models.CharField(max_length=100)                                                      # 금융상품코드
     fin_prdt_nm = models.CharField(max_length=100)                                                      # 금융상품명
+    join_way = models.CharField(max_length=100)                                                         # 가입방법
     erly_rpay_fee = models.TextField()                                                                  # 중도상환수수료
     dly_rate = models.TextField()                                                                       # 연체 이자율
     loan_lmt = models.TextField()                                                                       # 대출한도

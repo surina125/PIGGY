@@ -16,7 +16,7 @@ from .models import *
 
 
 # 금융상품 데이터 DB 저장
-# @api_view(['GET'])
+@api_view(['GET'])
 def financial_products(request):
 
     DEPOSIT_API_URL = f'http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json?auth={settings.API_KEY}&topFinGrpNo=020000&pageNo=1'
@@ -36,21 +36,36 @@ def financial_products(request):
         if Deposit.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
             continue
 
-        save_deposit = {
-            'dcls_month': deposit_base.get('dcls_month','-1'), 
-            'fin_co_no': deposit_base.get('fin_co_no','-1'), 
-            'kor_co_nm': deposit_base.get('kor_co_nm','-1'), 
-            'fin_prdt_cd': deposit_base.get('fin_prdt_cd','-1'), 
-            'fin_prdt_nm': deposit_base.get('fin_prdt_nm','-1'),
-            'join_way': deposit_base.get('join_way','-1'),
-            'mtrt_int': deposit_base.get('mtrt_int','-1'),
-            'spcl_cnd': deposit_base.get('spcl_cnd','-1'), 
-            'join_deny': deposit_base.get('join_deny','-1'), 
-            'join_member': deposit_base.get('join_member','-1'), 
-            'etc_note': deposit_base.get('etc_note','-1'), 
-            'max_limit': deposit_base.get('max_limit','-1') 
-        }
+        # save_deposit = {
+        #     'dcls_month': deposit_base.get('dcls_month','-1'), 
+        #     'fin_co_no': deposit_base.get('fin_co_no','-1'), 
+        #     'kor_co_nm': deposit_base.get('kor_co_nm','-1'), 
+        #     'fin_prdt_cd': deposit_base.get('fin_prdt_cd','-1'), 
+        #     'fin_prdt_nm': deposit_base.get('fin_prdt_nm','-1'),
+        #     'join_way': deposit_base.get('join_way','-1'),
+        #     'mtrt_int': deposit_base.get('mtrt_int','-1'),
+        #     'spcl_cnd': deposit_base.get('spcl_cnd','-1'), 
+        #     'join_deny': deposit_base.get('join_deny','-1'), 
+        #     'join_member': deposit_base.get('join_member','-1'), 
+        #     'etc_note': deposit_base.get('etc_note','-1'), 
+        #     'max_limit': deposit_base.get('max_limit','-1') 
+        # }
         
+        save_deposit = {
+            'dcls_month': deposit_base.get('dcls_month'), 
+            'fin_co_no': deposit_base.get('fin_co_no'), 
+            'kor_co_nm': deposit_base.get('kor_co_nm'), 
+            'fin_prdt_cd': deposit_base.get('fin_prdt_cd'), 
+            'fin_prdt_nm': deposit_base.get('fin_prdt_nm'),
+            'join_way': deposit_base.get('join_way'),
+            'mtrt_int': deposit_base.get('mtrt_int'),
+            'spcl_cnd': deposit_base.get('spcl_cnd'), 
+            'join_deny': deposit_base.get('join_deny'), 
+            'join_member': deposit_base.get('join_member'), 
+            'etc_note': deposit_base.get('etc_note'), 
+            'max_limit': deposit_base.get('max_limit') 
+        }
+
         serializer = DepositSerializer(data=save_deposit)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
@@ -59,12 +74,20 @@ def financial_products(request):
 
         option_prdt_cd = deposit_option.get('fin_prdt_cd')
         product = Deposit.objects.get(fin_prdt_cd=option_prdt_cd)
+
         save_option = {
-            'intr_rate_type_nm': deposit_option.get('intr_rate_type_nm', '-1'),
-            'intr_rate': deposit_option.get('intr_rate', -1), 
-            'intr_rate2': deposit_option.get('intr_rate2', -1), 
-            'save_trm': deposit_option.get('save_trm', -1), 
+        'intr_rate_type_nm': deposit_option.get('intr_rate_type_nm'),
+        'intr_rate': deposit_option.get('intr_rate'), 
+        'intr_rate2': deposit_option.get('intr_rate2'), 
+        'save_trm': deposit_option.get('save_trm'), 
         }
+
+        # save_option = {
+        #     'intr_rate_type_nm': deposit_option.get('intr_rate_type_nm', '-1'),
+        #     'intr_rate': deposit_option.get('intr_rate', -1), 
+        #     'intr_rate2': deposit_option.get('intr_rate2', -1), 
+        #     'save_trm': deposit_option.get('save_trm', -1), 
+        # }
 
         serializer = DepositOptionSerializer(data=save_option)
         if serializer.is_valid(raise_exception=True):
@@ -139,6 +162,7 @@ def financial_products(request):
             'kor_co_nm': loan_base.get('kor_co_nm','-1'), 
             'fin_prdt_cd': loan_base.get('fin_prdt_cd','-1'), 
             'fin_prdt_nm': loan_base.get('fin_prdt_nm','-1'),
+            'join_way' : loan_base.get('join_way','-1'),
             'erly_rpay_fee': loan_base.get('erly_rpay_fee','-1'),
             'dly_rate' : loan_base.get('dly_rate','-1'),
             'loan_lmt' : loan_base.get('loan_lmt','-1')
@@ -177,28 +201,27 @@ def deposit_list(request):
 
 # 단일 예금상품 조회
 @api_view(['GET'])
-def deposit_detail(request, deposit_code):
-    deposit = get_object_or_404(Deposit, fin_prdt_cd=deposit_code)
+def deposit_detail(request, code):
+    deposit = get_object_or_404(Deposit, fin_prdt_cd=code)
     # if request.method == 'GET':
     serializer = DepositSerializer(deposit)
     return Response(serializer.data)    
     
 # 단일 예금상품 옵션 목록 조회
 @api_view(['GET'])
-def depositOption_list(request, deposit_code):
-    deposit = get_object_or_404(Deposit, fin_prdt_cd=deposit_code)
+def depositoption_list(request, code):
+    deposit = get_object_or_404(Deposit, fin_prdt_cd=code)
     deposit_options = DepositOption.objects.filter(deposit=deposit)
 
     # if request.method == 'GET':
     serializer = DepositOptionSerializer(deposit_options, many=True)
     return Response(serializer.data)
 
-
 # 단일 예금상품 옵션 조회
 @api_view(['GET'])
-def depositOption_detail(request, deposit_code, depositOption_pk):
-    deposit = get_object_or_404(Deposit, fin_prdt_cd=deposit_code)
-    deposit_option = get_object_or_404(DepositOption, pk=depositOption_pk, deposit=deposit)
+def depositoption_detail(request, code, option_pk):
+    deposit = get_object_or_404(Deposit, fin_prdt_cd=code)
+    deposit_option = get_object_or_404(DepositOption, pk=option_pk, deposit=deposit)
 
     # if request.method == 'GET':
     serializer = DepositOptionSerializer(deposit_option)
@@ -213,16 +236,16 @@ def saving_list(request):
 
 # 단일 적금상품 조회
 @api_view(['GET'])
-def saving_detail(request, saving_code):
-    saving = get_object_or_404(Saving, fin_prdt_cd=saving_code)
+def saving_detail(request, code):
+    saving = get_object_or_404(Saving, fin_prdt_cd=code)
     # if request.method == 'GET':
     serializer = SavingSerializer(saving)
     return Response(serializer.data)
 
 # 단일 적금상품 옵션 목록 조회    
 @api_view(['GET'])
-def savingOption_list(request, saving_code):
-    saving = get_object_or_404(Saving, fin_prdt_cd=saving_code)
+def savingoption_list(request, code):
+    saving = get_object_or_404(Saving, fin_prdt_cd=code)
     saving_options = SavingOption.objects.filter(saving=saving)
 
     # if request.method == 'GET':
@@ -231,8 +254,8 @@ def savingOption_list(request, saving_code):
 
 # 단일 적금상품 옵션 조회
 @api_view(['GET'])
-def savingOption_detail(request, saving_code, savingOption_pk):
-    savingOption = get_object_or_404(SavingOption, pk=savingOption_pk)
+def savingoption_detail(request, code, option_pk):
+    savingOption = get_object_or_404(SavingOption, pk=option_pk)
     # if request.method == 'GET':
     serializer = SavingOptionSerializer(savingOption)
     return Response(serializer.data)
@@ -253,8 +276,8 @@ def loan_detail(request, loan_code):
 
 # 단일 대출상품 옵션 목록 조회
 @api_view(['GET'])
-def loanOption_list(request, loan_code):
-    loan = get_object_or_404(Loan, fin_prdt_cd=loan_code)
+def loanoption_list(request, code):
+    loan = get_object_or_404(Loan, fin_prdt_cd=code)
     loan_options = LoanOption.objects.filter(loan=loan)
 
     # if request.method == 'GET':
@@ -263,9 +286,9 @@ def loanOption_list(request, loan_code):
 
 # 단일 대출상품 옵션 조회
 @api_view(['GET'])
-def loanOption_detail(request, loan_code, loanOption_pk):
-    loan = get_object_or_404(Loan, fin_prdt_cd=loan_code)
-    loan_option = get_object_or_404(LoanOption, pk=loanOption_pk, loan=loan)
+def loanoption_detail(request, code, option_pk):
+    loan = get_object_or_404(Loan, fin_prdt_cd=code)
+    loan_option = get_object_or_404(LoanOption, pk=option_pk, loan=loan)
 
     # if request.method == 'GET':
     serializer = LoanOptionSerializer(loan_option)
@@ -348,7 +371,7 @@ def get_reverse_avg_loans(request, mrtg_type):
 
 # 금융기관 별 예금상품
 @api_view(['GET'])
-def get_bank_deposit(request, kor_co_nm):
+def bank_deposit(request, kor_co_nm):
     if Deposit.objects.filter(kor_co_nm=kor_co_nm).exists():
         deposits = Deposit.objects.filter(kor_co_nm=kor_co_nm)
         serializer = DepositSerializer(deposits, many=True)
@@ -358,7 +381,7 @@ def get_bank_deposit(request, kor_co_nm):
 
 # 금융기관 별 적금상품
 @api_view(['GET'])
-def get_bank_saving(request, kor_co_nm):
+def bank_saving(request, kor_co_nm):
     if Saving.objects.filter(kor_co_nm=kor_co_nm).exists():
         savings = Saving.objects.filter(kor_co_nm=kor_co_nm)
         serializer = SavingSerializer(savings, many=True)
@@ -368,7 +391,7 @@ def get_bank_saving(request, kor_co_nm):
     
 # 금융기관 별 대출상품
 @api_view(['GET'])
-def get_bank_loan(request, kor_co_nm):
+def bank_loan(request, kor_co_nm):
     if Loan.objects.filter(kor_co_nm=kor_co_nm).exists():
         loans = Loan.objects.filter(kor_co_nm=kor_co_nm)
         serializer = LoanSerializer(loans, many=True)
