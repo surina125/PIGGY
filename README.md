@@ -29,6 +29,19 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
 ```
 UserDetailsSerializer가 undefined되었다고 error나왔었는데 import를 안해서 오류 났었다.
 <br>
+```
+# exchange/models.py  + exchange/views.py- 도연
+if exchange_infos:
+                # db에 데이터가 존재X, db 저장
+                if not result: 
+                        serializer = ExchangeSerializer(data=exchange_infos, many=True)
+                        if serializer.is_valid(raise_exception=True):          
+                                serializer.save()
+                        return Response(serializer.data)
+
+```
+유효성 검사를 통과하지 못해서 오류 발생 + db 저장이 안됐었다.
+json파일의 키 값과 모델의 필드 값이 일치하지 않았기 때문이었다.
 
 ## 계획
 
