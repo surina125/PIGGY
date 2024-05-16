@@ -12,8 +12,6 @@ class User(AbstractUser):
 
     email = models.EmailField(max_length=300, blank=True, null=True)                                     # 이메일
     profile_img = models.ImageField(upload_to='image/', default='image/user.png')                        # 프로필 이미지
-    contract_products = models.TextField(blank=True, null=True)                                          # 가입한 상품
-    like_products = models.TextField(blank=True, null=True)                                              # 관심 상품
     is_superuser = models.BooleanField(default=False)                                                    # 관리자 아닐 경우 default 부여
     nickname = models.CharField(max_length=50, unique=True)                                              # 닉네임(ID)
     annual_income = models.IntegerField(blank=True, null=True)                                           # 연봉

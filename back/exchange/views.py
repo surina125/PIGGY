@@ -16,24 +16,26 @@ def exchange_info(request):
         EXCHANGE_API_URL = f'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey={settings.EXCHANGE_API_KEY}&searchdate={searchdate}&data=AP01'
         exchange_infos = requests.get(EXCHANGE_API_URL).json()
         # return Response(exchange_infos)
-        result = Exchange.objects.all()
+        
+        # DB에 저장된 Exchange 데이터 가져오기
+        existing_exchanges = Exchange.objects.all()
    
         if exchange_infos:
                 # db에 데이터가 존재X, db 저장
-                if not result: 
+                if not existing_exchanges: 
                         serializer = ExchangeSerializer(data=exchange_infos, many=True)
                         if serializer.is_valid(raise_exception=True):          
                                 serializer.save()
                         return Response(serializer.data)
                 # db에 데이터가 존재O, db 데이터 삭제 후 저장
                 else: 
-                        Exchange.objects.all().delete()
+                        existing_exchanges.delete()
                         serializer = ExchangeSerializer(data=exchange_infos, many=True)     
                         if serializer.is_valid(raise_exception=True):
                                 serializer.save()
                                 return Response(serializer.data)
         
-        serializer = ExchangeSerializer(result, many=True)
+        serializer = ExchangeSerializer(existing_exchanges, many=True)
         return Response(serializer.data)
 
        
