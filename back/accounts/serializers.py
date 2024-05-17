@@ -21,12 +21,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         max_length=50,
         required=False,
     )
-    contract_products = serializers.CharField(
-        max_length=50,
-        required=False,
-    )
-    like_products = serializers.CharField(
-        max_length=50,
+    age = serializers.IntegerField(
         required=False,
     )
     saving_propensity = serializers.ChoiceField(choices=User.SAVING_PROPENSITY_CHOICES)
@@ -39,11 +34,10 @@ class CustomRegisterSerializer(RegisterSerializer):
         'password1': self.validated_data.get('password1', ''),
         # 추가한 필드
         'nickname': self.validated_data.get('nickname', ''),
+        'age': self.validated_data.get('age', ''),
         'annual_income': self.validated_data.get('annual_income', ''),
         'email': self.validated_data.get('email', ''),
         'property': self.validated_data.get('property', ''),
-        'contract_products': self.validated_data.get('contract_products', ''),
-        'like_products': self.validated_data.get('like_products', ''),
         'main_bank': self.validated_data.get('main_bank', ''),
         'saving_propensity': self.validated_data.get('saving_propensity', ''),
         'profile_img': self.validated_data.get('profile_img', ''),
@@ -78,10 +72,7 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
             extra_fields.append('saving_propensity')
         if hasattr(UserModel, 'profile_img'):
             extra_fields.append('profile_img')
-        if hasattr(UserModel, 'contract_products'):
-            extra_fields.append('contract_products')
-        if hasattr(UserModel, 'like_products'):
-            extra_fields.append('like_products')
+
             model = UserModel
             fields = ('pk', *extra_fields)
             read_only_fields = ('email',)
