@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'accounts',
     'fin_products',
     'exchange',
+    'community',
     'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',

@@ -328,12 +328,55 @@ def loan_bank(request, kor_co_nm):
         return Response({"no exist loan product"}, status=status.HTTP_204_NO_CONTENT)
     
 
-# 예금 가입
-
-@api_view(['POST'])
+# 예금 가입 및 가입한 예금 조회
+@api_view(['GET','POST'])
 @permission_classes([IsAuthenticated])
 def deposit_contract(request, code):
-    deposit = get_object_or_404(Deposit, code)
+    
+    deposit = get_object_or_404(Deposit, fin_prdt_cd = code)
+
+    if request.method == 'GET':
+        # 유저가 적금에 가입되어 있는지 확인
+        if request.user in deposit.contract_user.all():
+            # 해당 유저의 가입 정보 가져오기
+            contracted_parts = deposit.contract_user.objects.filter(user_id=request.user)
+
+            # 가입된 적금에 대한 정보를 저장할 리스트
+            contract_data = []
+
+            # 가입된 적금에 대한 입금 정보 가져오기
+            for deposit in Deposit.objects.all():
+                # 가입된 적금과 관련된 입금 정보인지 확인
+                if deposit.id in contracted_parts.values_list('deposit_id', flat=True):
+                    # 입금 정보를 사전 형태로 구성하여 리스트에 추가
+                    deposit_data = {
+                        'id': deposit.id,
+                        'amount': deposit.amount,
+                        # 필요한 다른 입금 정보도 여기에 추가
+                    }
+                    contract_data.append(deposit_data)
+
+            # 결과를 시리얼라이즈하고 반환
+            serializer = DepositSerializer(contract_data, many=True)
+            return Response(serializer.data)
+        else:
+            # 가입되지 않은 경우에 대한 처리
+            return Response({'message': 'User is not contracted to this saving.'})
+        
+    elif request.method == 'POST': 
+
+    # 만약 권한이 있는 유저가 적금에 가입이 되어 있다면?
+        if request.user in deposit.contract_user.all():
+            deposit.contract_user.remove(request.user)
+            action = '적금 해지 완료'
+        else:
+            deposit.contract_user.add(request.user)
+            action = '적금 가입 완료'
+
+        response_data = {
+            'action': action,
+        }
+        return Response(response_data)
 
     # 만약 권한이 있는 유저가 예금에 가입이 되어 있다면?
     if request.user in deposit.contract_user.all():
@@ -349,30 +392,64 @@ def deposit_contract(request, code):
     return Response(response_data)
 
 
-# 적금 가입
-@api_view(['POST'])
+
+# 적금 가입 및 가입한 적금 조회
+@api_view(['POST','GET'])
 @permission_classes([IsAuthenticated])
 def saving_contract(request, code):
-    saving = get_object_or_404(Saving, code)
+    saving = get_object_or_404(Saving, fin_prdt_cd=code)
+
+    if request.method == 'GET':
+        # 유저가 적금에 가입되어 있는지 확인
+        if request.user in saving.contract_user.all():
+            # 해당 유저의 가입 정보 가져오기
+            contracted_parts = saving.contract_user.objects.filter(user_id=request.user)
+
+            # 가입된 적금에 대한 정보를 저장할 리스트
+            contract_data = []
+
+            # 가입된 적금에 대한 입금 정보 가져오기
+            for saving in Saving.objects.all():
+                # 가입된 적금과 관련된 입금 정보인지 확인
+                if saving.id in contracted_parts.values_list('saving_id', flat=True):
+                    # 입금 정보를 사전 형태로 구성하여 리스트에 추가
+                    saving_data = {
+                        'id': saving.id,
+                        'amount': saving.amount,
+                        # 필요한 다른 입금 정보도 여기에 추가
+                    }
+                    contract_data.append(saving_data)
+
+            # 결과를 시리얼라이즈하고 반환
+            serializer = SavingSerializer(contract_data, many=True)
+            return Response(serializer.data)
+        else:
+            # 가입되지 않은 경우에 대한 처리
+            return Response({'message': 'User is not contracted to this saving.'})
+        
+    elif request.method == 'POST': 
 
     # 만약 권한이 있는 유저가 적금에 가입이 되어 있다면?
-    if request.user in saving.contract_user.all():
-        saving.contract_user.remove(request.user)
-        action = '적금 해지 완료'
-    else:
-        saving.contract_user.add(request.user)
-        action = '적금 가입 완료'
+        if request.user in saving.contract_user.all():
+            saving.contract_user.remove(request.user)
+            action = '적금 해지 완료'
+        else:
+            saving.contract_user.add(request.user)
+            action = '적금 가입 완료'
 
-    response_data = {
-        'action': action,
-    }
-    return Response(response_data)
+        response_data = {
+            'action': action,
+        }
+        return Response(response_data)
+
+
+
 
 # 대출 가입
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def loan_contract(request, code):
-    loan = get_object_or_404(Loan, code)
+    loan = get_object_or_404(Loan, fin_prdt_cd=code)
 
     # 만약 권한이 있는 유저가 대출에 가입이 되어 있다면?
     if request.user in loan.contract_user.all():
