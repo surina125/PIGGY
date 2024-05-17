@@ -122,10 +122,10 @@ watch(selectedBank, (newValue) => {
 const sort = function(num) {
   axios({
     method: 'get',
-    url: `${depositStore.API_URL}/fin_products/deposit/des_sort/${selectedBank}/${save_trm}/`,
+    url: `${depositStore.API_URL}/fin_products/deposit/des_sort/${selectedBank.value}/${num}/`,
   })
     .then(response => {
-      depositStore.deposits.value = response.data
+      depositStore.deposits = response.data
     })
     .catch(error => {
       console.log(error)
@@ -155,7 +155,7 @@ const getContract = function(fin_prdt_cd) {
       })
   }
 onMounted(() => {
-  if (depositStore.contractedDeposit.length !== 0) {
+  if (authStore.isAuthenticated && depositStore.contractedDeposit.length !== 0) {
     getContract()
   }
 })
