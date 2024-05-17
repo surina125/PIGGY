@@ -97,20 +97,20 @@
           </div>
 
           <!-- 가입신청 / 관심상품 저장 버튼 -->
-          <div v-if="authStore.isAuthenticated" class="modal-footer">
-            <button type="button" class="btn btn-primary" v-if="isContracted" @click="delContract(deposit.fin_prdt_cd)">
+          <div v-if="authStore.isAuthenticated" class="modal-footer no-border">
+            <button type="button" class="btn btn-danger" v-if="isContracted" @click="delContract(deposit.fin_prdt_cd)">
               가입 취소
             </button>
-            <button type="button" class="btn btn-danger" v-else @click="addContract(deposit)">
+            <button type="button" class="btn btn-primary" v-else @click="addContract(deposit)">
               가입 신청
             </button>
 
-            <!-- <button type="button" class="btn btn-primary" v-if="isSaved" @click="delSave(prd.id)">
+            <button type="button" class="btn btn-danger" v-if="isSaved" @click="delSave(deposit.fin_prdt_cd)">
               관심상품 저장
             </button>
-            <button type="button" class="btn btn-danger" v-else @click="addSave(prd)">
+            <button type="button" class="btn btn-primary" v-else @click="addSave(deposit)">
               저장 취소
-            </button> -->
+            </button>
 
           </div>
         </div>
@@ -260,11 +260,96 @@ const delContract = (fin_prdt_cd) => {
 }
 
 
+
+// 관심상품 조회
+const getSave = function(fin_prdt_cd) {
+    axios({
+      method: 'get',
+      url: `${depositStore.API_URL}/fin_products/deposit_like/${deposit.value.fin_prdt_cd}/`
+    })
+      .then(response => {
+        depositStore.savedDeposit.value = response.data
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+onMounted(() => {
+  if (authStore.isAuthenticated && depositStore.savedDeposit.length !== 0) {
+    getSave()
+  }
+})
+
+
+// 관심상품 저장하고 있는지 판단
+const isSaved = computed(() => {
+  if (depositStore.savedDeposit.length === 0) {
+    return false
+  } 
+  const findPrd = depositStore.savedDeposit.findIndex((prd) => prd.fin_prdt_cd === deposit.value.fin_prdt_cd)
+  if (findPrd !== -1) {
+    return true
+  }
+  console.log(depositStore.savedDeposit)
+  return false
+})
+
+
+// 관심상품 저장
+const addSave = (prd) => {
+  depositStore.savedDeposit.push(prd)
+
+  axios({
+      method: 'post',
+      url: `${depositStore.API_URL}/fin_products/deposit_save/${deposit.value.fin_prdt_cd}/`,
+      data: {
+        code: deposit.value.fin_prdt_cd
+      },
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        depositStore.savedDeposit.push(deposit)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+  }
+  
+
+// 관심상품 저장 취소
+const delSave = (fin_prdt_cd) => {
+  const idx = depositStore.savedDeposit.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
+  if (idx !== -1) {
+
+    axios({
+      method: 'post',
+      url: `${depositStore.API_URL}/fin_products/deposit_save/${deposit.value.fin_prdt_cd}/`,
+      data: {
+        code: deposit.value.fin_prdt_cd
+      },
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        depositStore.savedDeposit.splice(idx, 1) 
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+}
 </script>
 
 
 <style scoped>
 .modal_row {
   width: 150px;
+}
+.no-border {
+  border: none;
 }
 </style>
