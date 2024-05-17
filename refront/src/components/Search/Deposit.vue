@@ -58,11 +58,46 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            {{ deposit }}
+            <table class="table table-hover">
+              <tbody>
+                <tr>
+                  <th class="modal_row" scope="row">공시제출일</th>
+                  <td>{{ deposit.dcls_month }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">금융회사명</th>
+                  <td>{{ deposit.kor_co_nm }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">가입방법</th>
+                  <td>{{ deposit.join_way }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">가입대상</th>
+                  <td>{{ deposit.join_member }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">최고 한도</th>
+                  <td>{{ deposit.max_limit }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">만기 후 이자율</th>
+                  <td>{{ deposit.mtrt_int }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">우대조건</th>
+                  <td>{{ deposit.spcl_cnd }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">기타 유의사항</th>
+                  <td>{{ deposit.etc_note }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
 
           <!-- 가입신청 / 관심상품 저장 버튼 -->
-          <div class="modal-footer">
+          <div v-if="authStore.isAuthenticated" class="modal-footer">
             <button type="button" class="btn btn-primary" v-if="isContracted" @click="delContract(deposit.fin_prdt_cd)">
               가입 취소
             </button>
@@ -229,5 +264,7 @@ const delContract = (fin_prdt_cd) => {
 
 
 <style scoped>
-
+.modal_row {
+  width: 150px;
+}
 </style>
