@@ -27,11 +27,15 @@ export const useAuthStore = defineStore('auth', () => {
         saving_propensity
       }
     })
-    .then(res => {
-      const password = password1
-      logIn(username, password)
-
-    })
+      .then(response => {
+        console.log('회원가입 성공!')
+        const password = password1
+        logIn(username, password)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      
   }
 
   const logIn = function (username, password) {
@@ -44,9 +48,13 @@ export const useAuthStore = defineStore('auth', () => {
       }
     })
       .then(res => {
+        console.log('로그인 성공!')
         token.value = res.data.key
         isAuthenticated.value = true
         router.push({name: 'home'})
+      })
+      .catch(error => {
+        console.log(error)
       })
     }
 
