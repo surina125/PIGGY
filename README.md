@@ -19,6 +19,7 @@
 <br>
 
 ## error
+#### 현수
 ```
 // accounts/serializers.py - 현수
 from dj_rest_auth.serializers import UserDetailsSerializer
@@ -29,6 +30,9 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
 ```
 UserDetailsSerializer가 undefined되었다고 error나왔었는데 import를 안해서 오류 났었다.
 <br>
+post보낼때 headers도 같이 안보내서 401에러남
+<br>
+####도연
 ```
 # exchange/models.py  + exchange/views.py- 도연
 if exchange_infos:
@@ -42,6 +46,8 @@ if exchange_infos:
 ```
 유효성 검사를 통과하지 못해서 오류 발생 + db 저장이 안됐었다.
 json파일의 키 값과 모델의 필드 값이 일치하지 않았기 때문이었다.
+
+
 
 ### 강사님께 질문
 1. export depault사용해야 하는지 <- 해야 한다면 마지막에 다 넣기
