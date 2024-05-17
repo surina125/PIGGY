@@ -8,41 +8,43 @@
       <input type="password" id="password" name="password" v-model="password">
       <br>
       <div v-if="isSignUpRoute">
-        <label for="password2">Confirm Password:</label>
-        <input type="password" id="password2" name="password2" v-model="password2">
-      </div>
-      <div>
-        <label for="nickname">닉네임 : </label>
-        <input type="text" v-model.trim="nickname" id="nickname">
-      </div>
-      <div>
-        <label for="age">나이 : </label>
-        <input type="text" v-model.trim="age" id="age">
-      </div>
-      <div>
-        <label for="email">이메일 : </label>
-        <input type="email" v-model.trim="email" id="email">
-      </div>
-      <div>
-        <label for="annual_income">연봉 : </label>
-        <input type="text" v-model.trim="annual_income" id="annual_income">
-      </div>
-      <div>
-        <label for="property">자산 : </label>
-        <input type="text" v-model.trim="property" id="property">
-      </div>
-      <div>
-        <label for="main_bank">주거래 은행 : </label>
-        <input type="text" v-model.trim="main_bank" id="main_bank">
-      </div>
-      <div>
-        <label for="saving_propensity">저축 성향 :</label>
-        <select v-model="saving_propensity" id="saving_propensity">
-          <option value="알뜰형" selected>알뜰형</option>
-          <option value="도전형">도전형</option>
-          <option value="성실형">성실형</option>
-        </select>
-      </div>
+        <div>
+          <label for="password2">Confirm Password:</label>
+          <input type="password" id="password2" name="password2" v-model="password2">
+        </div>
+        <div>
+          <label for="nickname">닉네임 : </label>
+          <input type="text" v-model.trim="nickname" id="nickname">
+        </div>
+        <div>
+          <label for="age">나이 : </label>
+          <input type="text" v-model.trim="age" id="age">
+        </div>
+        <div>
+          <label for="email">이메일 : </label>
+          <input type="email" v-model.trim="email" id="email">
+        </div>
+        <div>
+          <label for="annual_income">연봉 : </label>
+          <input type="text" v-model.trim="annual_income" id="annual_income">
+        </div>
+        <div>
+          <label for="property">자산 : </label>
+          <input type="text" v-model.trim="property" id="property">
+        </div>
+        <div>
+          <label for="main_bank">주거래 은행 : </label>
+          <input type="text" v-model.trim="main_bank" id="main_bank">
+        </div>
+        <div>
+          <label for="saving_propensity">저축 성향 :</label>
+          <select v-model="saving_propensity" id="saving_propensity">
+            <option value="알뜰형" selected>알뜰형</option>
+            <option value="도전형">도전형</option>
+            <option value="성실형">성실형</option>
+          </select>
+        </div>
+        </div>
       <button class="submit-button">Submit</button>
     </form>
   </div>

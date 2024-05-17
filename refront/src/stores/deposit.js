@@ -26,6 +26,9 @@ export const useDepositStore = defineStore('deposit', () => {
           }
         })
       })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
 
@@ -38,6 +41,9 @@ export const useDepositStore = defineStore('deposit', () => {
       .then(response => {
         deposits.value = response.data
       })
+      .catch(error => {
+        console.log(error)
+      })
   }
 
 
@@ -48,5 +54,5 @@ export const useDepositStore = defineStore('deposit', () => {
   const savedDeposit = ref([])
 
 
-  return { deposits, getAll, banks, selectBank, contractedDeposit, savedDeposit }
+  return { API_URL, deposits, getAll, banks, selectBank, contractedDeposit, savedDeposit }
 }, { persist: true })

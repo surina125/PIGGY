@@ -58,29 +58,42 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ...
+            {{ deposit }}
           </div>
+
+          <!-- 가입신청 / 관심상품 저장 버튼 -->
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">가입 신청</button>
-            <button type="button" class="btn btn-primary">가입 취소</button>
-            <button type="button" class="btn btn-primary">가입 신청</button>
-            <button type="button" class="btn btn-primary">관심상품 저장</button>
+            <button type="button" class="btn btn-primary" v-if="isContracted" @click="delContract(deposit.fin_prdt_cd)">
+              가입 취소
+            </button>
+            <button type="button" class="btn btn-danger" v-else @click="addContract(deposit)">
+              가입 신청
+            </button>
+
+            <!-- <button type="button" class="btn btn-primary" v-if="isSaved" @click="delSave(prd.id)">
+              관심상품 저장
+            </button>
+            <button type="button" class="btn btn-danger" v-else @click="addSave(prd)">
+              저장 취소
+            </button> -->
+
           </div>
         </div>
       </div>
     </div>
 
   </div>
-
-
   
 </template>
 
 <script setup>
 import { useDepositStore } from '@/stores/deposit.js'
-import { ref, watch } from 'vue'
+import { useAuthStore } from '@/stores/auth.js'
+import { ref, watch, computed, onMounted } from 'vue'
+import axios from 'axios'
 
 const depositStore = useDepositStore()
+const authStore = useAuthStore()
 
 // 전체 조회
 depositStore.getAll()
@@ -111,6 +124,91 @@ const deposit = ref({})
 const model = function(prd) {
   deposit.value = prd
 }
+
+
+// 가입한 상품 조회
+const getContract = function(fin_prdt_cd) {
+    axios({
+      method: 'get',
+      url: `${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`
+    })
+      .then(response => {
+        depositStore.contractedDeposit.value = response.data
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+onMounted(() => {
+  if (depositStore.contractedDeposit.length === 0) {
+    getContract()
+  }
+})
+
+
+// 상품이 계약됐는지 판단
+const isContracted = computed(() => {
+  if (depositStore.contractedDeposit.length === 0) {
+    return false
+  } 
+  const findPrd = depositStore.contractedDeposit.findIndex((prd) => prd.fin_prdt_cd === deposit.value.fin_prdt_cd)
+  if (findPrd !== -1) {
+    return true
+  }
+  console.log(depositStore.contractedDeposit)
+  return false
+})
+
+
+// 상품 계약
+const addContract = (prd) => {
+  depositStore.contractedDeposit.push(prd)
+
+  axios({
+      method: 'post',
+      url: `${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`,
+      data: {
+        code: deposit.value.fin_prdt_cd
+      },
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        depositStore.contractedDeposit.push(deposit)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+  }
+  
+
+// 상품 계약 취소
+const delContract = (fin_prdt_cd) => {
+  const idx = depositStore.contractedDeposit.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
+  console.log(`${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`)
+  if (idx !== -1) {
+
+    axios({
+      method: 'post',
+      url: `${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`,
+      data: {
+        code: deposit.value.fin_prdt_cd
+      },
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        depositStore.contractedDeposit.splice(idx, 1) 
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+}
+
 
 </script>
 
