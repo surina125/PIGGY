@@ -155,7 +155,7 @@ const getContract = function(fin_prdt_cd) {
       })
   }
 onMounted(() => {
-  if (depositStore.contractedDeposit.length === 0) {
+  if (depositStore.contractedDeposit.length !== 0) {
     getContract()
   }
 })

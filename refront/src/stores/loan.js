@@ -16,6 +16,7 @@ export const useLoanStore = defineStore('loan', () => {
     })
       .then(response => {
         loans.value = response.data
+        console.log(loans)
 
         // 각 은행을 확인하고 저장
         loans.value.forEach(loan => {
