@@ -259,83 +259,47 @@ def loanoption_detail(request, code, option_pk):
     serializer = LoanOptionSerializer(loan_option)
     return Response(serializer.data)
 
-# 예금 금리 오름차순(예치기간 별)
-@api_view(['GET'])
-def get_deposits(request, save_trm):
-    deposits = Deposit.objects.filter(depositoption__save_trm=save_trm).order_by('depositoption__intr_rate')
-
-    serializer = DepositSerializer(deposits, many=True)
-    return Response(serializer.data)
-
 # 예금 금리 내림차순(예치기간 별)
 @api_view(['GET'])
-def get_reverse_deposits(request, save_trm):
-    deposits = Deposit.objects.filter(depositoption__save_trm=save_trm).order_by('-depositoption__intr_rate')
+def get_reverse_deposits(request, kor_co_nm, save_trm):
+    deposits = Deposit.objects.filter(Q(depositoption__save_trm=save_trm) & Q(kor_co_nm=kor_co_nm)).order_by('-depositoption__intr_rate')
 
     serializer = DepositSerializer(deposits, many=True)
     return Response(serializer.data)
 
-# 적금 금리 오름차순(예치기간 별)
+# 적금 금리 내림차순(예치기간 별)
 @api_view(['GET'])
-def get_savings(request, save_trm):
-    savings = Saving.objects.filter(savingoption__save_trm=save_trm).order_by('savingoption__intr_rate')
-    serializer = SavingSerializer(savings, many=True)
-    return Response(serializer.data)
-
-
-# 적금 금리 내림차순(예치기간 별))
-@api_view(['GET'])
-def get_reverse_savings(request, save_trm):
-    savings = Saving.objects.filter(savingoption__save_trm=save_trm).order_by('-savingoption__intr_rate')
+def get_reverse_savings(request, kor_co_nm, save_trm):
+    savings = Saving.objects.filter(Q(savingoption__save_trm=save_trm) & Q(kor_co_nm=kor_co_nm)).order_by('-savingoption__intr_rate')
 
     serializer = SavingSerializer(savings, many=True)
     return Response(serializer.data)
 
 # 최저 대출 금리 오름차순(담보유형)
 @api_view(['GET'])
-def get_min_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_min')
+def get_min_loans(request, kor_co_nm, mrtg_type):
+    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_min')
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
-# 최저 대출 금리 내림차순(담보유형)
-@api_view(['GET'])
-def get_reverse_min_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_min')
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
 
 # 최대 대출 금리 오름차순(담보유형)
 @api_view(['GET'])
-def get_max_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_max')
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
-
-# 최대 대출 금리 내림차순(담보유형)
-@api_view(['GET'])
-def get_reverse_max_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_max')
+def get_max_loans(request, kor_co_nm, mrtg_type):
+    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_max')
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
 # 평균 대출 금리 오름차순(담보유형)
 @api_view(['GET'])
-def get_avg_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_avg')
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
-
-# 평균 대출 금리 내림차순(담보유형)
-@api_view(['GET'])
-def get_reverse_avg_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_avg')
+def get_avg_loans(request, kor_co_nm, mrtg_type):
+    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_avg')
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
 # 금융기관 별 예금상품
 @api_view(['GET'])
-def bank_deposit(request, kor_co_nm):
+def deposit_bank(request, kor_co_nm):
     if Deposit.objects.filter(kor_co_nm=kor_co_nm).exists():
         deposits = Deposit.objects.filter(kor_co_nm=kor_co_nm)
         serializer = DepositSerializer(deposits, many=True)
@@ -345,7 +309,7 @@ def bank_deposit(request, kor_co_nm):
 
 # 금융기관 별 적금상품
 @api_view(['GET'])
-def bank_saving(request, kor_co_nm):
+def saving_bank(request, kor_co_nm):
     if Saving.objects.filter(kor_co_nm=kor_co_nm).exists():
         savings = Saving.objects.filter(kor_co_nm=kor_co_nm)
         serializer = SavingSerializer(savings, many=True)
@@ -355,7 +319,7 @@ def bank_saving(request, kor_co_nm):
     
 # 금융기관 별 대출상품
 @api_view(['GET'])
-def bank_loan(request, kor_co_nm):
+def loan_bank(request, kor_co_nm):
     if Loan.objects.filter(kor_co_nm=kor_co_nm).exists():
         loans = Loan.objects.filter(kor_co_nm=kor_co_nm)
         serializer = LoanSerializer(loans, many=True)
@@ -368,7 +332,7 @@ def bank_loan(request, kor_co_nm):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def contract_deposit(request, code):
+def deposit_contract(request, code):
     deposit = get_object_or_404(Deposit, code)
 
     # 만약 권한이 있는 유저가 예금에 가입이 되어 있다면?
@@ -382,7 +346,6 @@ def contract_deposit(request, code):
     response_data = {
         'action': action,
     }
-    
     return Response(response_data)
 
 

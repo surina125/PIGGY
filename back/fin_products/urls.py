@@ -5,33 +5,28 @@ from . import views
 app_name = "fin_products"
 urlpatterns = [
     path('financial_products/', views.financial_products),
-    path('deposit/', views.deposit_list),
-    path('deposit/<code>/', views.deposit_detail),
-    path('deposit/<code>/option_list/', views.depositoption_list),
-    path('deposit/<code>/option_list/<int:option_pk>/', views.depositoption_detail),
-    path('saving/', views.saving_list),
-    path('saving/<code>/', views.saving_detail),
-    path('saving/<code>/option_list/', views.savingoption_list),
-    path('saving/<code>/option_list/<int:option_pk>/', views.savingoption_detail),
-    path('loan/', views.loan_list),
-    path('loan/<code>/', views.loan_detail),
-    path('loan/<code>/option_list/', views.loanoption_list),
-    path('loan/<code>/option_list/<int:option_pk>/', views.loanoption_detail),
-    path('deposit/aes_sort/<int:save_trm>/', views.get_deposits),
-    path('deposit/des_sort/<int:save_trm>/', views.get_reverse_deposits),
-    path('saving/aes_sort/<int:save_trm>/', views.get_savings),
-    path('saving/des_sort/<int:save_trm>/', views.get_reverse_savings),
-    path('loan/min_aes_sort/<mrtg_type>/', views.get_min_loans),
-    path('loan/min_des_sort/<mrtg_type>/', views.get_reverse_min_loans),
-    path('loan/max_aes_sort/<mrtg_type>/', views.get_max_loans),
-    path('loan/max_des_sort/<mrtg_type>/', views.get_reverse_max_loans),
-    path('loan/avg_aes_sort/<mrtg_type>/', views.get_avg_loans),
-    path('loan/avg_des_sort/<mrtg_type>/', views.get_reverse_avg_loans),
-    path('bank_deposit/<kor_co_nm>/', views.bank_deposit),
-    path('bank_saving/<kor_co_nm>/', views.bank_saving),
-    path('bank_loan/<kor_co_nm>/', views.bank_loan), 
-    path('contract_deposit/<code>/', views.contract_deposit),
-    path('contract_saving/<code>/', views.contract_saving),
-    path('contract_loan/<code>/', views.contract_loan),
+    path('deposit/', views.deposit_list),                                             # 전체 예금 목록 조회
+    path('deposit/<code>/', views.deposit_detail),                                    # 단일 예금 상품 조회
+    path('deposit/<code>/option_list/', views.depositoption_list),                    # 단일 예금 상품 옵션 목록 조회
+    path('deposit/<code>/option_list/<int:option_pk>/', views.depositoption_detail),  # 단일 예금 상품 옵션 조회
+    path('saving/', views.saving_list),                                               # 전체 적금 목록 조회
+    path('saving/<code>/', views.saving_detail),                                      # 단일 적금상품 조회
+    path('saving/<code>/option_list/', views.savingoption_list),                      # 단일 적금상품 옵션 목록 조회   
+    path('saving/<code>/option_list/<int:option_pk>/', views.savingoption_detail),    # 단일 적금상품 옵션 조회
+    path('loan/', views.loan_list),                                                   # 전체 대출 목록 조회
+    path('loan/<code>/', views.loan_detail),                                          # 단일 대출상품 조회
+    path('loan/<code>/option_list/', views.loanoption_list),                          # 단일 대출상품 옵션 목록 조회
+    path('loan/<code>/option_list/<int:option_pk>/', views.loanoption_detail),        # 단일 대출상품 옵션 조회
+    path('deposit/des_sort/<kor_co_nm>/<int:save_trm>/', views.get_reverse_deposits), # 예금 금리 내림차순(예치기간 별)
+    path('saving/des_sort/<kor_co_nm>/<int:save_trm>/', views.get_reverse_savings),   # 적금 금리 내림차순(예치기간 별))
+    path('loan/min_aes_sort/<kor_co_nm>/<mrtg_type>/', views.get_min_loans),          # 최저 대출 금리 오름차순(담보유형)
+    path('loan/max_aes_sort/<kor_co_nm>/<mrtg_type>/', views.get_max_loans),          # 최대 대출 금리 오름차순(담보유형)
+    path('loan/avg_aes_sort/<kor_co_nm>/<mrtg_type>/', views.get_avg_loans),          # 평균 대출 금리 오름차순(담보유형)
+    path('deposit_bank/<kor_co_nm>/', views.deposit_bank),                            # 금융기관 별 예금상품
+    path('saving_bank/<kor_co_nm>/', views.saving_bank),                              # 금융기관 별 적금상품
+    path('loan_bank/<kor_co_nm>/', views.loan_bank),                                  # 금융기관 별 대출상품
+    path('deposit_contract/<code>/', views.deposit_contract),
+    path('saving_contract/<code>/', views.saving_contract),
+    path('loan_contract/<code>/', views.loan_contract),
 
     ]
