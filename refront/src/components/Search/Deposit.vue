@@ -23,10 +23,10 @@
           <th scope="col">공시제출일</th>
           <th scope="col">금융회사명</th>
           <th scope="col">상품명</th>
-          <th scope="col">6개월</th>
-          <th scope="col">12개월</th>
-          <th scope="col">24개월</th>
-          <th scope="col">36개월</th>
+          <th scope="col" @click="sort(6)">6개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort(12)">12개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort(24)">24개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort(36)">36개월 (Click to sort↓)</th>
         </tr>
       </thead>
       <tbody>
@@ -116,6 +116,21 @@ watch(selectedBank, (newValue) => {
     depositStore.selectBank(selectedBank.value)
   }
 })
+
+
+// 기간 선택 시 정렬
+const sort = function(num) {
+  axios({
+    method: 'get',
+    url: `${depositStore.API_URL}/fin_products/deposit/des_sort/${selectedBank}/${save_trm}/`,
+  })
+    .then(response => {
+      depositStore.deposits.value = response.data
+    })
+    .catch(error => {
+      console.log(error)
+    })
+}
 
 
 // 모달
