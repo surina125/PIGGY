@@ -349,10 +349,43 @@ def deposit_contract(request, code):
     return Response(response_data)
 
 
-    
+# 적금 가입
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def saving_contract(request, code):
+    saving = get_object_or_404(Saving, code)
 
-def contract_saving(request,code):
-    pass
-def contract_loan(request,code):
-    pass
+    # 만약 권한이 있는 유저가 적금에 가입이 되어 있다면?
+    if request.user in saving.contract_user.all():
+        saving.contract_user.remove(request.user)
+        action = '적금 해지 완료'
+    else:
+        saving.contract_user.add(request.user)
+        action = '적금 가입 완료'
+
+    response_data = {
+        'action': action,
+    }
+    return Response(response_data)
+
+# 대출 가입
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def loan_contract(request, code):
+    loan = get_object_or_404(Loan, code)
+
+    # 만약 권한이 있는 유저가 대출에 가입이 되어 있다면?
+    if request.user in loan.contract_user.all():
+        loan.contract_user.remove(request.user)
+        action = '대출 해지 완료'
+    else:
+        loan.contract_user.add(request.user)
+        action = '대출 가입 완료'
+
+    response_data = {
+        'action': action,
+    }
+    return Response(response_data)
+
+
 
