@@ -13,7 +13,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=300, blank=True, null=True)                                     # 이메일
     age = models.IntegerField()                                                                          # 나이
     profile_img = models.ImageField(upload_to='image/', default='image/user.png')                        # 프로필 이미지
-    nickname = models.CharField(max_length=50)                                              # 닉네임(ID)
+    nickname = models.CharField(max_length=50)                                                           # 닉네임(ID)
     annual_income = models.IntegerField(blank=True, null=True)                                           # 연봉
     property = models.IntegerField(blank=True, null=True)                                                # 자산  
     main_bank = models.CharField(max_length=50, blank=True, null=True)                                   # 주거래 은행
