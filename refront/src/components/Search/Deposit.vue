@@ -62,6 +62,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary">가입 신청</button>
+            <button type="button" class="btn btn-primary">가입 취소</button>
+            <button type="button" class="btn btn-primary">가입 신청</button>
             <button type="button" class="btn btn-primary">관심상품 저장</button>
           </div>
         </div>

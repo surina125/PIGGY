@@ -1,6 +1,14 @@
 <template>
   <!-- 네비게이션 바 -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <!-- 로그인, 회원가입 -->
+      <span
+        v-if="!isAuthenticated"
+        >
+        <RouterLink to="/signup">SignUp</RouterLink> 
+        <RouterLink to="/login">LogIn</RouterLink>
+      </span>
+
     <div class="container-fluid">
       <RouterLink class="navbar-brand" :to="{name: 'home'}">PIGGY</RouterLink>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

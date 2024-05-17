@@ -22,9 +22,9 @@ urlpatterns = [
     path('loan/min_aes_sort/<kor_co_nm>/<mrtg_type>/', views.get_min_loans),          # 최저 대출 금리 오름차순(담보유형)
     path('loan/max_aes_sort/<kor_co_nm>/<mrtg_type>/', views.get_max_loans),          # 최대 대출 금리 오름차순(담보유형)
     path('loan/avg_aes_sort/<kor_co_nm>/<mrtg_type>/', views.get_avg_loans),          # 평균 대출 금리 오름차순(담보유형)
-    path('deposit_bank/<kor_co_nm>/', views.deposit_bank),                            # 금융기관 별 예금상품
-    path('saving_bank/<kor_co_nm>/', views.saving_bank),                              # 금융기관 별 적금상품
-    path('loan_bank/<kor_co_nm>/', views.loan_bank),                                  # 금융기관 별 대출상품
+    path('deposit/bank/<kor_co_nm>/', views.deposit_bank),                            # 금융기관 별 예금상품
+    path('saving/bank/<kor_co_nm>/', views.saving_bank),                              # 금융기관 별 적금상품
+    path('loan/bank/<kor_co_nm>/', views.loan_bank),                                  # 금융기관 별 대출상품
     path('deposit_contract/<code>/', views.deposit_contract),
     path('saving_contract/<code>/', views.saving_contract),
     path('loan_contract/<code>/', views.loan_contract),

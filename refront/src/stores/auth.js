@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import axios from 'axios'
 
 
-export const useUserStore = defineStore('user', () => {
+export const useAuthStore = defineStore('auth', () => {
   const API_URL = 'http://127.0.0.1:8000'
 
   const token = ref(null)
@@ -26,7 +26,7 @@ export const useUserStore = defineStore('user', () => {
     // 2. axios로 django에 요청을 보냄
     axios({
       method: 'post',
-      url: `${API_URL}/accounts/signup/`,
+      url: `${API_URL}/accounts/registration/`,
       data: {
         username, password1, password2
       }
@@ -57,7 +57,7 @@ export const useUserStore = defineStore('user', () => {
       .then((response) => {
         // 3. 로그인 성공 후 응답 받은 토큰을 저장
         token.value = response.data.key
-        router.push({ name : 'ArticleView' })
+        router.push({ name : 'home' })
       })
       .catch((error) => {
         console.log(error)

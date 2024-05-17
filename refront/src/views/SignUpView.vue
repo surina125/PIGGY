@@ -1,14 +1,18 @@
 <template>
   <div>
-    <h1>로그인</h1>
-    <form @submit.prevent="logIn">
+    <h1>회원가입</h1>
+    <form @submit.prevent="signUp">
       <div>
         <label for="username">username : </label>
         <input type="text" v-model.trim="username" id="username">
       </div>
       <div>
-        <label for="password">password : </label>
-        <input type="password" v-model.trim="password" id="password">
+        <label for="password1">password : </label>
+        <input type="password" v-model.trim="password1" id="password1">
+      </div>
+      <div>
+        <label for="password2">password confirmation : </label>
+        <input type="password" v-model.trim="password2" id="password2">
       </div>
       <input type="submit">
     </form>
@@ -17,18 +21,20 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useCounterStore } from '@/stores/counter'
+import { useAuthStore } from '@/stores/auth'
 
-const username = ref(null)
-const password = ref(null)
-const store = useCounterStore()
+const username = ref(null) 
+const password1 = ref(null)
+const password2 = ref(null)
+const store = useAuthStore()
 
-const logIn = function () {
+const signUp = function () {
   const payload = {
     username: username.value,
-    password: password.value
+    password1: password1.value,
+    password2: password2.value
   }
-  store.logIn(payload)
+  store.signUp(payload)
 }
 
 </script>

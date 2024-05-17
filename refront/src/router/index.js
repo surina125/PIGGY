@@ -5,6 +5,8 @@ import RecommendView from '@/views/RecommendView.vue'
 import ServicesView from '@/views/ServicesView.vue'
 import CommunityView from '@/views/CommunityView.vue'
 
+import SignUpView from '@/views/SignUpView.vue'
+import LogInView from '@/views/LogInView.vue'
 
 import Deposit from '@/components/Search/Deposit.vue'
 import Savings from '@/components/Search/Savings.vue'
@@ -72,6 +74,28 @@ const router = createRouter({
       path: '/community',
       name: 'community',
       component: CommunityView
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignUpView,
+      // beforeEnter: (to, from) => {
+      //   const store = useAuthStore()
+      //   if (store.isAuthenticated) {
+      //     return { name: 'home' }
+      //   }
+      // }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LogInView,
+      // beforeEnter: (to, from) => {
+      //   const store = useAuthStore()
+      //   if (store.isAuthenticated) {
+      //     return { name: 'home' }
+      //   }
+      // }
     },
   ]
 })
