@@ -33,7 +33,8 @@ UserDetailsSerializer가 undefined되었다고 error나왔었는데 import를 �
 post보낼때 headers도 같이 안보내서 401에러남
 <br>
 
-####도연
+#### 도연
+
 ```
 # exchange/models.py  + exchange/views.py- 도연
 if exchange_infos:
@@ -74,7 +75,9 @@ error문구를 많이 보다보니까 어느정도 에러에 익숙해지는 느
 ##### 도연
 
 <br>
+
 ### 평가 요소
+
 1. 초기 아이디어를 얼마나 구현 했는지?
 2. 프로젝트 명세서 요구사항을 얼마나 충족 했는지?
 3. 구현된 기능은 철저한 테스트를 통해 에러없이 작동이 잘 되는지?
