@@ -32,6 +32,7 @@ UserDetailsSerializer가 undefined되었다고 error나왔었는데 import를 �
 <br>
 post보낼때 headers도 같이 안보내서 401에러남
 <br>
+
 ####도연
 ```
 # exchange/models.py  + exchange/views.py- 도연
