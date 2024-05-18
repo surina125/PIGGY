@@ -67,12 +67,23 @@ const property = ref('')
 const main_bank = ref('')
 const saving_propensity = ref('')
 const age = ref('')
+const nickname = ref('')
 
 const isSignUpRoute = route.name === 'signup';
 
 const handleFormSubmit = () => {
   if (isSignUpRoute) {
-    store.signUp(username.value, password.value, password2.value, age.value , nickname.value, email.value, annual_income.value, property.value, main_bank.value, saving_propensity.value);
+    store.signUp(
+      username.value, 
+      password.value, 
+      password2.value, 
+      age.value , 
+      nickname.value, 
+      email.value, 
+      annual_income.value, 
+      property.value, 
+      main_bank.value, 
+      saving_propensity.value);
   } else {
     store.logIn(username.value, password.value);
   }

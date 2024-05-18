@@ -94,6 +94,9 @@
                 </tr>
               </tbody>
             </table>
+
+            <!-- 차트 -->
+            <DepositChart/>
           </div>
 
           <!-- 가입신청 / 관심상품 저장 버튼 -->
@@ -126,6 +129,7 @@ import { useDepositStore } from '@/stores/deposit.js'
 import { useAuthStore } from '@/stores/auth.js'
 import { ref, watch, computed, onMounted } from 'vue'
 import axios from 'axios'
+import DepositChart from '@/components/Chart/DepositChart.vue'
 
 const depositStore = useDepositStore()
 const authStore = useAuthStore()
@@ -173,6 +177,7 @@ const deposit = ref({})
 
 const model = function(prd) {
   deposit.value = prd
+  depositStore.forChartDeposit = prd
 }
 
 
@@ -180,10 +185,13 @@ const model = function(prd) {
 const getContract = function(fin_prdt_cd) {
     axios({
       method: 'get',
-      url: `${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`
+      url: `${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`,
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
     })
       .then(response => {
-        depositStore.contractedDeposit.value = response.data
+        depositStore.contractedDeposit = response.data
       })
       .catch(error => {
         console.log(error)
@@ -205,7 +213,6 @@ const isContracted = computed(() => {
   if (findPrd !== -1) {
     return true
   }
-  console.log(depositStore.contractedDeposit)
   return false
 })
 
@@ -237,7 +244,6 @@ const addContract = (prd) => {
 // 상품 계약 취소
 const delContract = (fin_prdt_cd) => {
   const idx = depositStore.contractedDeposit.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
-  console.log(`${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`)
   if (idx !== -1) {
 
     axios({
@@ -265,10 +271,13 @@ const delContract = (fin_prdt_cd) => {
 const getSave = function(fin_prdt_cd) {
     axios({
       method: 'get',
-      url: `${depositStore.API_URL}/fin_products/deposit_like/${deposit.value.fin_prdt_cd}/`
+      url: `${depositStore.API_URL}/fin_products/deposit_like/${deposit.value.fin_prdt_cd}/`,
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
     })
       .then(response => {
-        depositStore.savedDeposit.value = response.data
+        depositStore.savedDeposit = response.data
       })
       .catch(error => {
         console.log(error)
@@ -290,7 +299,6 @@ const isSaved = computed(() => {
   if (findPrd !== -1) {
     return true
   }
-  console.log(depositStore.savedDeposit)
   return false
 })
 

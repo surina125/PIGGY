@@ -53,6 +53,7 @@ export const useDepositStore = defineStore('deposit', () => {
   // 관심 예금 저장
   const savedDeposit = ref([])
 
+  const forChartDeposit = ref({})
 
-  return { API_URL, deposits, getAll, banks, selectBank, contractedDeposit, savedDeposit }
+  return { API_URL, deposits, getAll, banks, selectBank, contractedDeposit, savedDeposit, forChartDeposit }
 }, { persist: true })
