@@ -6,8 +6,6 @@ import axios from 'axios'
 export const useSavingStore = defineStore('saving', () => {
   const API_URL = 'http://127.0.0.1:8000'
   const savings = ref([])   // 전체 적금
-  const savingsI = ref([])  // 정기적금(정액적립식)
-  const savingsF = ref([])  // 자유적금(자유적립식)
   const banks = ref([])
 
 
@@ -15,7 +13,7 @@ export const useSavingStore = defineStore('saving', () => {
   const getAll = function() {
     axios({
       method: 'get',
-      url: `${API_URL}/fin_products/saving/`
+      url: `${API_URL}/fin_products/saving/all_bank/all_type/`
     })
       .then(response => {
         savings.value = response.data
@@ -44,30 +42,6 @@ export const useSavingStore = defineStore('saving', () => {
   }
 
 
-  // 특정 은행 선택 시 데이터 저장
-  const selectBank = function(kor_co_nm) {
-    axios({
-      method: 'get',
-      url: `${API_URL}/fin_products/saving/bank/${kor_co_nm}/`
-    })
-      .then(response => {
-        savings.value = response.data
-
-        savings.value.forEach(saving => {
-          // 자유적금과 정기적금에 따라 나누어 저장
-          if (saving.savingoption_set.rsrv_type_nm === '정액적립식') {
-            savingsI.value.push(saving)
-          } else if (saving.savingoption_set.rsrv_type_nm === '자유적립식') {
-            savingsF.value.push(saving)
-          }
-        })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-
   // 가입한 예금 저장
   const contractedSaving = ref([])
 
@@ -75,5 +49,5 @@ export const useSavingStore = defineStore('saving', () => {
   const savedSaving = ref([])
 
 
-  return { API_URL, savings, getAll, banks, selectBank, contractedSaving, savedSaving }
+  return { API_URL, savings, getAll, banks, contractedSaving, savedSaving }
 }, { persist: true })

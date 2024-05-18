@@ -4,22 +4,22 @@
 
     <!-- 적금 타입 선택 버튼 -->
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="all" v-model="savingType">
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="all_type" v-model="selectedType">
       <label class="btn btn-outline-primary" for="btnradio1">전체</label>
 
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="setted" v-model="savingType">
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="정액적립식" v-model="selectedType">
       <label class="btn btn-outline-primary" for="btnradio2">정기 적금</label>
 
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="free" v-model="savingType">
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="자유적립식" v-model="selectedType">
       <label class="btn btn-outline-primary" for="btnradio3">자유 적금</label>
     </div>
 
     <!-- 은행 선택 버튼 -->
     <select class="form-select form-select-lg mb-3" aria-label="Large select example" v-model="selectedBank">
-      <option class="selected" value="all">전체 은행</option>
+      <option class="selected" value="all_bank">전체 은행</option>
       <option 
-        v-for="bank in savingStore.banks"
-        :key="bank.kor_co_nm"
+        v-for="(bank, index) in savingStore.banks"
+        :key="index"
         :bank="bank.kor_co_nm"
       >
         {{ bank }}
@@ -35,10 +35,10 @@
           <th scope="col">공시제출일</th>
           <th scope="col">금융회사명</th>
           <th scope="col">상품명</th>
-          <th scope="col">6개월 (Click to sort↓)</th>
-          <th scope="col">12개월 (Click to sort↓)</th>
-          <th scope="col">24개월 (Click to sort↓)</th>
-          <th scope="col">36개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort('6')">6개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort('12')">12개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort('24')">24개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort('36')">36개월 (Click to sort↓)</th>
         </tr>
       </thead>
       <tbody>
@@ -70,26 +70,63 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            {{ saving }}
+            <table class="table table-hover">
+              <tbody>
+                <tr>
+                  <th class="modal_row" scope="row">공시제출일</th>
+                  <td>{{ saving.dcls_month }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">금융회사명</th>
+                  <td>{{ saving.kor_co_nm }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">가입방법</th>
+                  <td>{{ saving.join_way }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">가입대상</th>
+                  <td>{{ saving.join_member }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">최고 한도</th>
+                  <td>{{ saving.max_limit }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">만기 후 이자율</th>
+                  <td>{{ saving.mtrt_int }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">우대조건</th>
+                  <td>{{ saving.spcl_cnd }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">기타 유의사항</th>
+                  <td>{{ saving.etc_note }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+
           </div>
 
           <!-- 가입신청 / 관심상품 저장 버튼 -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" v-if="isContracted" @click="delContract(saving.fin_prdt_cd)">
+          <div v-if="authStore.isAuthenticated" class="modal-footer no-border">
+            <button type="button" class="btn btn-danger" v-if="isContracted" @click="delContract(saving.fin_prdt_cd)">
               가입 취소
             </button>
-            <button type="button" class="btn btn-danger" v-else @click="addContract(saving)">
+            <button type="button" class="btn btn-primary" v-else @click="addContract(saving)">
               가입 신청
             </button>
 
-            <!-- <button type="button" class="btn btn-primary" v-if="isSaved" @click="delSave(prd.id)">
+            <button type="button" class="btn btn-danger" v-if="isSaved" @click="delSave(saving.fin_prdt_cd)">
               관심상품 저장
             </button>
-            <button type="button" class="btn btn-danger" v-else @click="addSave(prd)">
+            <button type="button" class="btn btn-primary" v-else @click="addSave(saving)">
               저장 취소
-            </button> -->
-
+            </button>
           </div>
+
         </div>
       </div>
     </div>
@@ -101,13 +138,12 @@
 <script setup>
 import { useSavingStore } from '@/stores/saving.js'
 import { useAuthStore } from '@/stores/auth.js'
-import { ref, watch, computed, onMounted, watchEffect } from 'vue'
+import { ref, computed, onMounted, watchEffect } from 'vue'
 import axios from 'axios'
 
 
 const savingStore = useSavingStore()
 const authStore = useAuthStore()
-const savingType = ref('all')
 
 // 전체 조회
 savingStore.getAll()
@@ -119,27 +155,53 @@ const getInterestRate = (prd, term) => {
 }
 
 
-// 특정 은행 선택 시 조회
-const selectedBank = ref('all')
+const selectedBank = ref('all_bank')
+const selectedType = ref('all_type')
 
-// selectedBank 값이 변경될 때마다 데이터 갱신
-watch(selectedBank, (newValue) => {
-  if (newValue === 'all') {
-    savingStore.getAll()
-  } else {
-    savingStore.selectBank(selectedBank.value)
-  }
+// selectedBank 또는 selectedType 값이 변경될 때마다 데이터 갱신
+const fetchData = () => {
+  axios({
+    method: 'get',
+    url: `${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/`
+  })
+    .then(response => {
+      savingStore.savings = response.data
+      console.log(`Data fetched from: ${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/`)
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error)
+    })
+}
+
+// v-model로 변수가 변경될 때마다 데이터를 갱신
+watchEffect(() => {
+  fetchData()
 })
 
-
-
+// 기간 선택 시 정렬
+const sort = function(num) {
+  axios({
+    method: 'get',
+    url: `${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/sort/${num}/`,
+  })
+    .then(response => {
+      savingStore.savings = response.data
+      console.log(savingStore.savings)
+      console.log(`${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+}
 
 
 // 모달
 const saving = ref({})
 
-const model = function(prd) {
+const model_click = function(prd) {
   saving.value = prd
+  savingStore.forChartSaving = prd
+  console.log(savingStore.forChartSaving)
 }
 
 
@@ -147,17 +209,20 @@ const model = function(prd) {
 const getContract = function(fin_prdt_cd) {
     axios({
       method: 'get',
-      url: `${savingStore.API_URL}/fin_products/saving_contract/${saving.value.fin_prdt_cd}/`
+      url: `${savingStore.API_URL}/fin_products/saving/contract/${saving.value.fin_prdt_cd}/`,
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
     })
       .then(response => {
-        savingStore.contractedSaving.value = response.data
+        savingStore.contractedSaving = response.data
       })
       .catch(error => {
         console.log(error)
       })
   }
 onMounted(() => {
-  if (savingStore.contractedSaving.length !== 0) {
+  if (authStore.isAuthenticated && savingStore.contractedSaving.length !== 0 && saving.value.fin_prdt_cd) {
     getContract()
   }
 })
@@ -172,7 +237,6 @@ const isContracted = computed(() => {
   if (findPrd !== -1) {
     return true
   }
-  console.log(savingStore.contractedSaving)
   return false
 })
 
@@ -183,9 +247,9 @@ const addContract = (prd) => {
 
   axios({
       method: 'post',
-      url: `${savingStore.API_URL}/fin_products/saving_contract/${saving.value.fin_prdt_cd}/`,
+      url: `${savingStore.API_URL}/fin_products/saving/contract/${saving.value.fin_prdt_cd}/`,
       data: {
-        code: saving.value.fin_prdt_cd
+        fin_prdt_cd: saving.value.fin_prdt_cd
       },
       headers: {
         Authorization: `Token ${authStore.token}`
@@ -204,14 +268,13 @@ const addContract = (prd) => {
 // 상품 계약 취소
 const delContract = (fin_prdt_cd) => {
   const idx = savingStore.contractedSaving.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
-
   if (idx !== -1) {
 
     axios({
       method: 'post',
-      url: `${savingStore.API_URL}/fin_products/saving_contract/${saving.value.fin_prdt_cd}/`,
+      url: `${savingStore.API_URL}/fin_products/saving/contract/${saving.value.fin_prdt_cd}/`,
       data: {
-        code: saving.value.fin_prdt_cd
+        fin_prdt_cd: saving.value.fin_prdt_cd
       },
       headers: {
         Authorization: `Token ${authStore.token}`
@@ -227,9 +290,99 @@ const delContract = (fin_prdt_cd) => {
 }
 
 
+
+// 관심상품 조회
+const getSave = function(fin_prdt_cd) {
+    axios({
+      method: 'get',
+      url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        savingStore.savedSaving = response.data
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+onMounted(() => {
+  if (authStore.isAuthenticated && savingStore.savedSaving.length !== 0 && saving.value.fin_prdt_cd) {
+    getSave()
+  }
+})
+
+
+// 관심상품 저장하고 있는지 판단
+const isSaved = computed(() => {
+  if (savingStore.savedSaving.length === 0) {
+    return false
+  } 
+  const findPrd = savingtStore.savedSaving.findIndex((prd) => prd.fin_prdt_cd === saving.value.fin_prdt_cd)
+  if (findPrd !== -1) {
+    return true
+  }
+  return false
+})
+
+
+// 관심상품 저장
+const addSave = (prd) => {
+  savingStore.savedSaving.push(prd)
+
+  axios({
+      method: 'post',
+      url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,
+      data: {
+        fin_prdt_cd: saving.value.fin_prdt_cd
+      },
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        savingStore.savedSaving.push(saving)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+  }
+  
+
+// 관심상품 저장 취소
+const delSave = (fin_prdt_cd) => {
+  const idx = savingStore.savedSaving.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
+  if (idx !== -1) {
+
+    axios({
+      method: 'post',
+      url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,
+      data: {
+        fin_prdt_cd: saving.value.fin_prdt_cd
+      },
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        savingStore.savedSaving.splice(idx, 1) 
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+}
+
 </script>
 
 
 <style scoped>
-
+.modal_row {
+  width: 150px;
+}
+.no-border {
+  border: none;
+}
 </style>

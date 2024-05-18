@@ -4,7 +4,7 @@
 
     <!-- 은행 선택 버튼 -->
     <select class="form-select form-select-lg mb-3" aria-label="Large select example" v-model="selectedBank">
-      <option class="selected" value="all">전체 은행</option>
+      <option class="selected" value="all_bank">전체 은행</option>
       <option 
         v-for="bank in depositStore.banks"
         :key="bank.kor_co_nm"
@@ -23,16 +23,16 @@
           <th scope="col">공시제출일</th>
           <th scope="col">금융회사명</th>
           <th scope="col">상품명</th>
-          <th scope="col" @click="sort(6)">6개월 (Click to sort↓)</th>
-          <th scope="col" @click="sort(12)">12개월 (Click to sort↓)</th>
-          <th scope="col" @click="sort(24)">24개월 (Click to sort↓)</th>
-          <th scope="col" @click="sort(36)">36개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort('6')">6개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort('12')">12개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort('24')">24개월 (Click to sort↓)</th>
+          <th scope="col" @click="sort('36')">36개월 (Click to sort↓)</th>
         </tr>
       </thead>
       <tbody>
         <tr 
           v-for="(prd, index) in depositStore.deposits"
-          :key="prd.id"
+          :key="index"
           data-bs-toggle="modal" data-bs-target="#exampleModal"
           @click="model_click(prd)"
         >
@@ -114,8 +114,8 @@
             <button type="button" class="btn btn-primary" v-else @click="addSave(deposit)">
               저장 취소
             </button>
-
           </div>
+          
         </div>
       </div>
     </div>
@@ -145,7 +145,7 @@ const getInterestRate = (prd, term) => {
 
 
 // 특정 은행 선택 시 조회
-const selectedBank = ref('all')
+const selectedBank = ref('all_bank')
 
 // selectedBank 값이 변경될 때마다 데이터 갱신
 watch(selectedBank, (newValue) => {
@@ -170,7 +170,7 @@ watch(selectedBank, (newValue) => {
 const sort = function(num) {
   axios({
     method: 'get',
-    url: `${depositStore.API_URL}/fin_products/deposit/des_sort/${selectedBank.value}/${num}/`,
+    url: `${depositStore.API_URL}/fin_products/deposit/bank/${selectedBank.value}/sort/${num}/`,
   })
     .then(response => {
       depositStore.deposits = response.data
@@ -233,9 +233,9 @@ const addContract = (prd) => {
 
   axios({
       method: 'post',
-      url: `${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`,
+      url: `${depositStore.API_URL}/fin_products/deposit/contract/${deposit.value.fin_prdt_cd}/`,
       data: {
-        code: deposit.value.fin_prdt_cd
+        fin_prdt_cd: deposit.value.fin_prdt_cd
       },
       headers: {
         Authorization: `Token ${authStore.token}`
@@ -258,9 +258,9 @@ const delContract = (fin_prdt_cd) => {
 
     axios({
       method: 'post',
-      url: `${depositStore.API_URL}/fin_products/deposit_contract/${deposit.value.fin_prdt_cd}/`,
+      url: `${depositStore.API_URL}/fin_products/deposit/contract/${deposit.value.fin_prdt_cd}/`,
       data: {
-        code: deposit.value.fin_prdt_cd
+        fin_prdt_cd: deposit.value.fin_prdt_cd
       },
       headers: {
         Authorization: `Token ${authStore.token}`
@@ -281,7 +281,7 @@ const delContract = (fin_prdt_cd) => {
 const getSave = function(fin_prdt_cd) {
     axios({
       method: 'get',
-      url: `${depositStore.API_URL}/fin_products/deposit_like/${deposit.value.fin_prdt_cd}/`,
+      url: `${depositStore.API_URL}/fin_products/deposit/like/${deposit.value.fin_prdt_cd}/`,
       headers: {
         Authorization: `Token ${authStore.token}`
       }
@@ -319,9 +319,9 @@ const addSave = (prd) => {
 
   axios({
       method: 'post',
-      url: `${depositStore.API_URL}/fin_products/deposit_like/${deposit.value.fin_prdt_cd}/`,
+      url: `${depositStore.API_URL}/fin_products/deposit/like/${deposit.value.fin_prdt_cd}/`,
       data: {
-        code: deposit.value.fin_prdt_cd
+        fin_prdt_cd: deposit.value.fin_prdt_cd
       },
       headers: {
         Authorization: `Token ${authStore.token}`
@@ -344,9 +344,9 @@ const delSave = (fin_prdt_cd) => {
 
     axios({
       method: 'post',
-      url: `${depositStore.API_URL}/fin_products/deposit_like/${deposit.value.fin_prdt_cd}/`,
+      url: `${depositStore.API_URL}/fin_products/deposit/like/${deposit.value.fin_prdt_cd}/`,
       data: {
-        code: deposit.value.fin_prdt_cd
+        fin_prdt_cd: deposit.value.fin_prdt_cd
       },
       headers: {
         Authorization: `Token ${authStore.token}`
