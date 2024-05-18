@@ -18,7 +18,7 @@ urlpatterns = [
     path('loan/<code>/option_list/', views.loanoption_list),                                                        # 단일 대출상품 옵션 목록 조회
     path('loan/<code>/option_list/<int:option_pk>/', views.loanoption_detail),                                      # 단일 대출상품 옵션 조회   
 
-    # path('deposit/des_sort/all/', views.get_all_deposits),                         >> deposit_list와 동일                               # 전체 금융기관 예금상품
+    path('deposit/des_sort/all/<int:save_trm>/', views.get_all_deposits),                                           # 전체 금융기관 예금 금리 내림차순
     path('deposit/all_bank/<kor_co_nm>/', views.get_bank_deposits),                                                 # 금융기관별 예금상품
     path('deposit/des_sort/<kor_co_nm>/<int:save_trm>/', views.get_reverse_deposits),                               # 금융기관별 예금 금리 내림차순
 

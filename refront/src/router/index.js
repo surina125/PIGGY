@@ -7,6 +7,9 @@ import CommunityView from '@/views/CommunityView.vue'
 
 import SignUpView from '@/views/SignUpView.vue'
 import LogInView from '@/views/LogInView.vue'
+import LogOutView from '@/views/LogOutView.vue'
+import ProfileView from '@/views/ProfileView.vue'
+import UserInfo from '@/components/User/UserInfo.vue'
 
 import Deposit from '@/components/Search/Deposit.vue'
 import Savings from '@/components/Search/Savings.vue'
@@ -96,6 +99,19 @@ const router = createRouter({
       //     return { name: 'home' }
       //   }
       // }
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: LogOutView
+    },
+    {
+      path: '/user/profile/:userId',
+      name: 'profile',
+      component: ProfileView,
+      children: [
+        { path: 'info', name: 'userInfo', component: UserInfo },
+      ]
     },
   ]
 })

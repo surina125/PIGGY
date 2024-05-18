@@ -96,7 +96,7 @@
             </table>
 
             <!-- 차트 -->
-            <DepositChart/>
+            <!-- <DepositChart/> -->
           </div>
 
           <!-- 가입신청 / 관심상품 저장 버튼 -->
@@ -129,7 +129,7 @@ import { useDepositStore } from '@/stores/deposit.js'
 import { useAuthStore } from '@/stores/auth.js'
 import { ref, watch, computed, onMounted } from 'vue'
 import axios from 'axios'
-import DepositChart from '@/components/Chart/DepositChart.vue'
+// import DepositChart from '@/components/Chart/DepositChart.vue'
 
 const depositStore = useDepositStore()
 const authStore = useAuthStore()
@@ -208,7 +208,7 @@ const getContract = function(fin_prdt_cd) {
       })
   }
 onMounted(() => {
-  if (authStore.isAuthenticated && depositStore.contractedDeposit.length !== 0) {
+  if (authStore.isAuthenticated && depositStore.contractedDeposit.length !== 0 && deposit.value.fin_prdt_cd) {
     getContract()
   }
 })
@@ -294,7 +294,7 @@ const getSave = function(fin_prdt_cd) {
       })
   }
 onMounted(() => {
-  if (authStore.isAuthenticated && depositStore.savedDeposit.length !== 0) {
+  if (authStore.isAuthenticated && depositStore.savedDeposit.length !== 0 && deposit.value.fin_prdt_cd) {
     getSave()
   }
 })
@@ -319,7 +319,7 @@ const addSave = (prd) => {
 
   axios({
       method: 'post',
-      url: `${depositStore.API_URL}/fin_products/deposit_save/${deposit.value.fin_prdt_cd}/`,
+      url: `${depositStore.API_URL}/fin_products/deposit_like/${deposit.value.fin_prdt_cd}/`,
       data: {
         code: deposit.value.fin_prdt_cd
       },
@@ -344,7 +344,7 @@ const delSave = (fin_prdt_cd) => {
 
     axios({
       method: 'post',
-      url: `${depositStore.API_URL}/fin_products/deposit_save/${deposit.value.fin_prdt_cd}/`,
+      url: `${depositStore.API_URL}/fin_products/deposit_like/${deposit.value.fin_prdt_cd}/`,
       data: {
         code: deposit.value.fin_prdt_cd
       },

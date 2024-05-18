@@ -36,7 +36,7 @@ export const useDepositStore = defineStore('deposit', () => {
   const selectBank = function(kor_co_nm) {
     axios({
       method: 'get',
-      url: `${API_URL}/fin_products/deposit/bank/${kor_co_nm}/`
+      url: `${API_URL}/fin_products/deposit/all_bank/${kor_co_nm}/`
     })
       .then(response => {
         deposits.value = response.data

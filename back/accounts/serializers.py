@@ -77,8 +77,19 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
             fields = ('pk', *extra_fields)
             read_only_fields = ('email',)
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('profile_img', 'id', 'username', 'name', 'email', 'age', 'property', 'annual_income', 'main_bank')
+        read_only_fields = ('id', 'username', 'nickname')
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    profile_img = serializers.ImageField(use_url=True)
 
+    class Meta:
+        model = User
+        fields = '__all__'
+        read_only_fields = ('id', 'username', 'nickname')
 
  
 

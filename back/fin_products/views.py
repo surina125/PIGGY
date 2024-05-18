@@ -259,12 +259,13 @@ def loanoption_detail(request, code, option_pk):
     serializer = LoanOptionSerializer(loan_option)
     return Response(serializer.data)
 
-# # 전체 금융기관 예금 금리 내림차순 == deposit_list와 동일
-# @api_view(['GET'])
-# def get_all_deposits(request):
-#     deposits = Deposit.objects.all
-#     serializer = DepositSerializer(deposits, many=True)
-#     return Response(serializer.data)
+# 전체 금융기관 예금 금리 내림차순(예치기간 별)
+@api_view(['GET'])
+def get_all_deposits(request, save_trm):
+    deposits = Deposit.objects.filter(depositoption__save_trm=save_trm).order_by('-depositoption__intr_rate')
+    serializer = DepositSerializer(deposits, many=True)
+    return Response(serializer.data)
+
 
 
 # 금융기관별 예금

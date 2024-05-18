@@ -1,13 +1,22 @@
 <template>
   <!-- 네비게이션 바 -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <!-- 로그인, 회원가입 -->
-      <span
-        v-if="!isAuthenticated"
-        >
-        <RouterLink to="/signup">SignUp</RouterLink> 
-        <RouterLink to="/login">LogIn</RouterLink>
-      </span>
+      <!-- 로그인된 경우 -->
+      <RouterLink v-if="authStore.isAuthenticated" :to="{name: 'profile', params: {userId: authStore.userData.pk}}" class="nav-link"
+        active-class="active-tab">
+        프로필
+      </RouterLink>
+      <RouterLink v-if="authStore.isAuthenticated" :to="{name: 'logout'}" class="nav-link" active-class="active-tab">
+        로그아웃
+      </RouterLink>
+      <!-- 로그인 안 된 경우 -->
+      <RouterLink v-if="!authStore.isAuthenticated" :to="{name: 'login'}" class="nav-link" active-class="active-tab">
+        로그인
+      </RouterLink>
+      <RouterLink v-if="!authStore.isAuthenticated" :to="{name: 'signup'}" class="nav-link" active-class="active-tab">
+        회원가입
+      </RouterLink>
+
 
     <div class="container-fluid">
       <RouterLink class="navbar-brand" :to="{name: 'home'}">PIGGY</RouterLink>
@@ -18,7 +27,7 @@
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <!-- <RouterLink class="nav-link" :to="{name: 'recommend', params: {username: username}}">상품 추천</RouterLink> -->
+            <RouterLink v-if="authStore.isAuthenticated" class="nav-link" :to="{name: 'recommend', params: {username:  authStore.userData.pk}}">상품 추천</RouterLink>
           </li>
 
           <li class="nav-item dropdown">
@@ -58,10 +67,15 @@
       </div>
     </div>
   </nav>
+
 </template>
 
 <script setup>
 import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
+
 </script>
 
 <style scoped>
