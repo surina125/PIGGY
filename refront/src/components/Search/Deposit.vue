@@ -34,7 +34,7 @@
           v-for="(prd, index) in depositStore.deposits"
           :key="index"
           data-bs-toggle="modal" data-bs-target="#exampleModal"
-          @click="model_click(prd)"
+          @click="modal_click(prd)"
         >
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
@@ -109,10 +109,10 @@
             </button>
 
             <button type="button" class="btn btn-danger" v-if="isSaved" @click="delSave(deposit.fin_prdt_cd)">
-              관심상품 저장
+              저장 취소
             </button>
             <button type="button" class="btn btn-primary" v-else @click="addSave(deposit)">
-              저장 취소
+              관심상품 저장
             </button>
           </div>
           
@@ -184,7 +184,7 @@ const sort = function(num) {
 // 모달
 const deposit = ref({})
 
-const model_click = function(prd) {
+const modal_click = function(prd) {
   deposit.value = prd
   depositStore.forChartDeposit = prd
   console.log(depositStore.forChartDeposit)
@@ -208,6 +208,8 @@ const getContract = function(fin_prdt_cd) {
       })
   }
 onMounted(() => {
+  const depositStore = useDepositStore()
+  const authStore = useAuthStore()
   if (authStore.isAuthenticated && depositStore.contractedDeposit.length !== 0 && deposit.value.fin_prdt_cd) {
     getContract()
   }
@@ -242,7 +244,8 @@ const addContract = (prd) => {
       }
     })
       .then(response => {
-        depositStore.contractedDeposit.push(deposit)
+        // depositStore.contractedDeposit.push(deposit)
+        console.log(prd)
       })
       .catch(error => {
         console.log(error)
@@ -294,6 +297,8 @@ const getSave = function(fin_prdt_cd) {
       })
   }
 onMounted(() => {
+  const depositStore = useDepositStore()
+  const authStore = useAuthStore()
   if (authStore.isAuthenticated && depositStore.savedDeposit.length !== 0 && deposit.value.fin_prdt_cd) {
     getSave()
   }
@@ -328,7 +333,8 @@ const addSave = (prd) => {
       }
     })
       .then(response => {
-        depositStore.savedDeposit.push(deposit)
+        console.log(prd)
+        // depositStore.savedDeposit.push(deposit)
       })
       .catch(error => {
         console.log(error)

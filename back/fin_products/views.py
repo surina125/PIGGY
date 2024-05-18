@@ -298,24 +298,15 @@ def get_all_bank_savings(request, rsrv_type_nm):
 # 금융기관별 적금 
 @api_view(['GET'])
 def get_bank_all_type_savings(request, kor_co_nm):
-    if Saving.objects.filter(kor_co_nm=kor_co_nm).exists():
-        savings = Saving.objects.filter(kor_co_nm=kor_co_nm)
-        serializer = SavingSerializer(savings, many=True)
-        return Response(serializer.data)
-    else:
-        return Response({"no exist loan product"}, status=status.HTTP_204_NO_CONTENT)
+    savings = Saving.objects.filter(kor_co_nm=kor_co_nm)
+    serializer = SavingSerializer(savings, many=True)
+    return Response(serializer.data)
+ 
 
 # 금융기관별 적금 (적금유형별)
 @api_view(['GET'])
 def get_bank_type_savings(request, rsrv_type_nm, kor_co_nm):
     savings = Saving.objects.filter(Q(savingoption__rsrv_type_nm=rsrv_type_nm)& Q(kor_co_nm=kor_co_nm))
-    serializer = SavingSerializer(savings, many=True)
-    return Response(serializer.data)
-
-# 전체 금융기관 적금 금리 내림차순(예치기간별)
-@api_view(['GET'])
-def get_all_bank_reverse_savings(request, save_trm):
-    savings = Saving.objects.filter(savingoption__save_trm=save_trm).order_by('-savingoption__intr_rate')
     serializer = SavingSerializer(savings, many=True)
     return Response(serializer.data)
 

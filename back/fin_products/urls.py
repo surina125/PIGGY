@@ -28,7 +28,7 @@ urlpatterns = [
     path('saving/<kor_co_nm>/<rsrv_type_nm>/', views.get_bank_type_savings),     # 적금유형별, 금융기관별 조회
     
     path('saving/all_bank/all_type/sort/<save_trm>/', views.get_all_bank_all_type_reverse_savings),        # 전체 금융기관, 전체 적금유형에서 기간 선택 시 금리 내림차순 정렬
-    path('saving/all_bank/<rsrv_type_nm>/sort/<save_trm>/', views.get_all_bank_reverse_savings),       # 전체 금융기관에서 특정 적금유형과 기간 선택 시 금리 내림차순 정렬
+    path('saving/all_bank/<rsrv_type_nm>/sort/<save_trm>/', views.get_all_bank_type_reverse_savings),       # 전체 금융기관에서 특정 적금유형과 기간 선택 시 금리 내림차순 정렬
     path('saving/<kor_co_nm>/all_type/sort/<save_trm>/', views.get_bank_all_type_reverse_savings),     # 전체 적금유형에서 특정 금융기관과 기간 선택 시 금리 내림차순 정렬
     path('saving/<kor_co_nm>/<rsrv_type_nm>/sort/<save_trm>/', views.get_bank_type_reverse_savings),   # 특정 금융기관, 특정 적금유형, 기간 선택 시 금리 내림차순 정렬
     

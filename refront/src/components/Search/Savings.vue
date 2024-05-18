@@ -44,9 +44,9 @@
       <tbody>
         <tr 
           v-for="(prd, index) in savingStore.savings"
-          :key="prd.id"
+          :key="index"
           data-bs-toggle="modal" data-bs-target="#exampleModal"
-          @click="model(prd)"
+          @click="modal_click(prd)"
         >
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
@@ -120,10 +120,10 @@
             </button>
 
             <button type="button" class="btn btn-danger" v-if="isSaved" @click="delSave(saving.fin_prdt_cd)">
-              관심상품 저장
+              저장 취소
             </button>
             <button type="button" class="btn btn-primary" v-else @click="addSave(saving)">
-              저장 취소
+              관심상품 저장
             </button>
           </div>
 
@@ -138,32 +138,17 @@
 <script setup>
 import { useSavingStore } from '@/stores/saving.js'
 import { useAuthStore } from '@/stores/auth.js'
-import { ref, computed, onMounted, watchEffect } from 'vue'
+import { ref, watchEffect, onMounted, computed } from 'vue'
 import axios from 'axios'
-
 
 const savingStore = useSavingStore()
 const authStore = useAuthStore()
 
-// 전체 조회
-savingStore.getAll()
-
-// 특정 저축 기간에 대한 이자율 찾는 함수
-const getInterestRate = (prd, term) => {
-  const option = prd.savingoption_set.find(option => option.save_trm === term)
-  return option ? option.intr_rate : '-'
-}
-
-
 const selectedBank = ref('all_bank')
 const selectedType = ref('all_type')
 
-// selectedBank 또는 selectedType 값이 변경될 때마다 데이터 갱신
 const fetchData = () => {
-  axios({
-    method: 'get',
-    url: `${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/`
-  })
+  axios.get(`${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/`)
     .then(response => {
       savingStore.savings = response.data
       console.log(`Data fetched from: ${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/`)
@@ -173,32 +158,34 @@ const fetchData = () => {
     })
 }
 
-// v-model로 변수가 변경될 때마다 데이터를 갱신
 watchEffect(() => {
   fetchData()
 })
 
-// 기간 선택 시 정렬
-const sort = function(num) {
-  axios({
-    method: 'get',
-    url: `${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/sort/${num}/`,
-  })
+const sort = (num) => {
+  axios.get(`${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
     .then(response => {
       savingStore.savings = response.data
-      console.log(savingStore.savings)
+      console.log(num)
       console.log(`${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
     })
     .catch(error => {
-      console.log(error)
+      console.error('Error sorting data:', error)
     })
+}
+
+// 특정 저축 기간에 대한 이자율 찾는 함수
+const getInterestRate = (prd, term) => {
+  if (!prd.savingoption_set) return '-'; // savingoption_set이 정의되지 않은 경우
+  const option = prd.savingoption_set.find(option => option.save_trm === term);
+  return option ? option.intr_rate : '-';
 }
 
 
 // 모달
 const saving = ref({})
 
-const model_click = function(prd) {
+const modal_click = function(prd) {
   saving.value = prd
   savingStore.forChartSaving = prd
   console.log(savingStore.forChartSaving)
@@ -222,7 +209,7 @@ const getContract = function(fin_prdt_cd) {
       })
   }
 onMounted(() => {
-  if (authStore.isAuthenticated && savingStore.contractedSaving.length !== 0 && saving.value.fin_prdt_cd) {
+  if (authStore.isAuthenticated && savingStore.contractedSaving.length !== 0 && saving.value) {
     getContract()
   }
 })
@@ -308,7 +295,7 @@ const getSave = function(fin_prdt_cd) {
       })
   }
 onMounted(() => {
-  if (authStore.isAuthenticated && savingStore.savedSaving.length !== 0 && saving.value.fin_prdt_cd) {
+  if (authStore.isAuthenticated && savingStore.savedSaving.length !== 0 && saving.value) {
     getSave()
   }
 })
@@ -319,7 +306,7 @@ const isSaved = computed(() => {
   if (savingStore.savedSaving.length === 0) {
     return false
   } 
-  const findPrd = savingtStore.savedSaving.findIndex((prd) => prd.fin_prdt_cd === saving.value.fin_prdt_cd)
+  const findPrd = savingStore.savedSaving.findIndex((prd) => prd.fin_prdt_cd === saving.value.fin_prdt_cd)
   if (findPrd !== -1) {
     return true
   }
