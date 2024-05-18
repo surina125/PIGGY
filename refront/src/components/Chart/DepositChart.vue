@@ -27,6 +27,7 @@ export default defineComponent({
   },
 
   setup() {
+    const store = useDepositStore()
 
     // 특정 저축 기간에 대한 저축 금리 찾는 함수
     const getInterestRate = (deposit, term) => {
@@ -45,9 +46,6 @@ export default defineComponent({
       return 0
     }
 
-    const store = useDepositStore()
-
-
     const data = {
       labels: [
         '6개월',
@@ -60,20 +58,20 @@ export default defineComponent({
           label: '저축 금리',
           backgroundColor: '#f87979',
           data: [
-            getInterestRate(store.deposit, '6'), 
-            getInterestRate(store.deposit, '12'), 
-            getInterestRate(store.deposit, '24'), 
-            getInterestRate(store.deposit, '36')
+            getInterestRate(store.forChartDeposit, '6'), 
+            getInterestRate(store.forChartDeposit, '12'), 
+            getInterestRate(store.forChartDeposit, '24'), 
+            getInterestRate(store.forChartDeposit, '36')
           ]
         },
         {
           label: '최고 우대 금리',
           backgroundColor: '#f87979',
           data: [
-            getInterestRate2(store.deposit, '6'), 
-            getInterestRate2(store.deposit, '12'), 
-            getInterestRate2(store.deposit, '24'), 
-            getInterestRate2(store.deposit, '36')
+            getInterestRate2(store.forChartDeposit, '6'), 
+            getInterestRate2(store.forChartDeposit, '12'), 
+            getInterestRate2(store.forChartDeposit, '24'), 
+            getInterestRate2(store.forChartDeposit, '36')
           ]
         },
       ]

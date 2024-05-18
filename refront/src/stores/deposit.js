@@ -55,5 +55,7 @@ export const useDepositStore = defineStore('deposit', () => {
 
   const forChartDeposit = ref({})
 
+  
+
   return { API_URL, deposits, getAll, banks, selectBank, contractedDeposit, savedDeposit, forChartDeposit }
 }, { persist: true })

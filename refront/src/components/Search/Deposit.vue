@@ -34,7 +34,7 @@
           v-for="(prd, index) in depositStore.deposits"
           :key="prd.id"
           data-bs-toggle="modal" data-bs-target="#exampleModal"
-          @click="model(prd)"
+          @click="model_click(prd)"
         >
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
@@ -156,6 +156,15 @@ watch(selectedBank, (newValue) => {
   }
 })
 
+// selectedBank 값이 변경될 때마다 데이터 갱신
+watch(selectedBank, (newValue) => {
+  if (newValue === 'all') {
+    depositStore.getAll()
+  } else {
+    depositStore.selectBank(selectedBank.value)
+  }
+})
+
 
 // 기간 선택 시 정렬
 const sort = function(num) {
@@ -175,9 +184,10 @@ const sort = function(num) {
 // 모달
 const deposit = ref({})
 
-const model = function(prd) {
+const model_click = function(prd) {
   deposit.value = prd
   depositStore.forChartDeposit = prd
+  console.log(depositStore.forChartDeposit)
 }
 
 
