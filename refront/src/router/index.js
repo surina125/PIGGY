@@ -4,6 +4,7 @@ import SearchView from '@/views/SearchView.vue'
 import RecommendView from '@/views/RecommendView.vue'
 import ServicesView from '@/views/ServicesView.vue'
 import CommunityView from '@/views/CommunityView.vue'
+import PostCreate from '@/components/Community/PostCreate.vue'
 
 import SignUpView from '@/views/SignUpView.vue'
 import LogInView from '@/views/LogInView.vue'
@@ -76,7 +77,16 @@ const router = createRouter({
     {
       path: '/community',
       name: 'community',
-      component: CommunityView
+      component: CommunityView,
+      children : [
+        {
+          path: 'create',
+          name: 'postcreate',
+          component: PostCreate
+
+        }
+
+      ]
     },
     {
       path: '/signup',

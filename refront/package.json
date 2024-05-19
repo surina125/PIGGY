@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.6.8",
-    "chart.js": "^3.9.1",
+    "chart.js": "^4.4.3",
     "flowbite": "^2.3.0",
     "flowbite-vue": "^0.1.4",
     "pinia": "^2.1.7",
