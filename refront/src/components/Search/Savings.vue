@@ -80,6 +80,10 @@
                   <th scope="row">금융회사명</th>
                   <td>{{ saving.kor_co_nm }}</td>
                 </tr>
+                <!-- <tr>
+                  <th scope="row">적립유형</th>
+                  <td>{{ saving.savingoption_set[0].rsrv_type_nm }}</td>
+                </tr> -->
                 <tr>
                   <th scope="row">가입방법</th>
                   <td>{{ saving.join_way }}</td>

@@ -33,21 +33,6 @@ export const useLoanStore = defineStore('loan', () => {
   }
 
 
-  // 특정 은행 선택 시 데이터 저장
-  const selectBank = function(kor_co_nm) {
-    axios({
-      method: 'get',
-      url: `${API_URL}/fin_products/loan/bank/${kor_co_nm}/`
-    })
-      .then(response => {
-        loans.value = response.data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-
   // 가입한 예금 저장
   const contractedLoan = ref([])
 
@@ -55,5 +40,5 @@ export const useLoanStore = defineStore('loan', () => {
   const savedLoan = ref([])
 
 
-  return { API_URL, loans, getAll, banks, selectBank, contractedLoan, savedLoan }
+  return { API_URL, loans, getAll, banks, contractedLoan, savedLoan }
 }, { persist: true })

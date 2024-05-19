@@ -2,12 +2,24 @@
   <div>
     <h1>주택담보대출</h1>
 
+    <!-- 대출 타입 선택 버튼 -->
+    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="all_type" v-model="selectedType">
+      <label class="btn btn-outline-primary" for="btnradio1">전체</label>
+
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="아파트" v-model="selectedType">
+      <label class="btn btn-outline-primary" for="btnradio2">아파트</label>
+
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="아파트외" v-model="selectedType">
+      <label class="btn btn-outline-primary" for="btnradio3">아파트외</label>
+    </div>
+
     <!-- 은행 선택 버튼 -->
     <select class="form-select form-select-lg mb-3" aria-label="Large select example" v-model="selectedBank">
-      <option class="selected" value="all">전체 은행</option>
+      <option class="selected" value="all_bank">전체 은행</option>
       <option 
-        v-for="bank in loanStore.banks"
-        :key="bank.kor_co_nm"
+        v-for="(bank, index) in loanStore.banks"
+        :key="index"
         :bank="bank.kor_co_nm"
       >
         {{ bank }}
@@ -23,27 +35,31 @@
           <th scope="col">공시제출일</th>
           <th scope="col">금융회사명</th>
           <th scope="col">상품명</th>
-          <th scope="col" @click="sort(6)">대출금리유형</th>
-          <th scope="col" @click="sort(12)">최저 대출금리 (Click to sort↑)</th>
-          <th scope="col" @click="sort(24)">최고 대출금리 (Click to sort↑)</th>
-          <th scope="col" @click="sort(36)">전월 취급 평균금리 (Click to sort↑)</th>
+          <th scope="col">대출금리유형</th>
+          <th scope="col" @click="sort('min')">최저 대출금리 (Click to sort↑)</th>
+          <th scope="col" @click="sort('max')">최고 대출금리 (Click to sort↑)</th>
+          <th scope="col" @click="sort('avg')">전월 취급 평균금리 (Click to sort↑)</th>
         </tr>
       </thead>
       <tbody>
         <tr 
           v-for="(prd, index) in loanStore.loans"
-          :key="prd.id"
+          :key="index"
           data-bs-toggle="modal" data-bs-target="#exampleModal"
-          @click="model(prd)"
+          @click="modal_click(prd)"
         >
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
           <td>{{ prd.kor_co_nm }}</td>
           <td>{{ prd.fin_prdt_nm }}</td>
-          <td>{{ prd.loanoption_set.rpay_type_nm }}</td>
-          <td>{{ prd.loanoption_set.lend_rate_avg }}</td>
-          <td>{{ prd.loanoption_set.lend_rate_max }}</td>
-          <td>{{ prd.loanoption_set.lend_rate_min }}</td>
+          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.lend_rate_type_nm">{{ prd.loanoption_set[0]?.lend_rate_type_nm }}</td>
+          <td v-else>-</td>
+          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.lend_rate_min">{{ prd.loanoption_set[0]?.lend_rate_min }}</td>
+          <td v-else>-</td>
+          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.lend_rate_max">{{ prd.loanoption_set[0]?.lend_rate_max !== null ? prd.loanoption_set[0]?.lend_rate_max : '-' }}</td>
+          <td v-else>-</td>
+          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.lend_rate_avg">{{ prd.loanoption_set[0]?.lend_rate_avg }}</td>
+          <td v-else>-</td>
         </tr>
       </tbody>
     </table>
@@ -58,26 +74,69 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            {{ loan }}
+            <table class="table table-hover">
+              <tbody>
+                <tr>
+                  <th class="modal_row" scope="row">공시제출일</th>
+                  <td>{{ loan.dcls_month }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">금융회사명</th>
+                  <td>{{ loan.kor_co_nm }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">가입방법</th>
+                  <td>{{ loan.join_way }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">가입대상</th>
+                  <td>{{ loan.join_member }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">최고 한도</th>
+                  <td>{{ loan.max_limit }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">만기 후 이자율</th>
+                  <td>{{ loan.mtrt_int }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">우대조건</th>
+                  <td>{{ loan.spcl_cnd }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">기타 유의사항</th>
+                  <td>{{ loan.etc_note }}</td>
+                </tr>
+                <tr>
+                  <!-- 차트 -->
+                  <td v-if="loan" colspan="7">
+                    <Bar class="chart-page" :data="chartData" :options="options" style="width: 50px; height: 50px;" />
+                  </td>                  
+                </tr>
+              </tbody>
+            </table>
+
+
           </div>
 
           <!-- 가입신청 / 관심상품 저장 버튼 -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" v-if="isContracted" @click="delContract(loan.fin_prdt_cd)">
+          <div v-if="authStore.isAuthenticated" class="modal-footer no-border">
+            <button type="button" class="btn btn-danger" v-if="isContracted" @click="delContract(loan.fin_prdt_cd)">
               가입 취소
             </button>
-            <button type="button" class="btn btn-danger" v-else @click="addContract(loan)">
+            <button type="button" class="btn btn-primary" v-else @click="addContract(loan)">
               가입 신청
             </button>
 
-            <!-- <button type="button" class="btn btn-primary" v-if="isSaved" @click="delSave(prd.id)">
+            <button type="button" class="btn btn-danger" v-if="isSaved" @click="delSave(loan.fin_prdt_cd)">
+              저장 취소
+            </button>
+            <button type="button" class="btn btn-primary" v-else @click="addSave(loan)">
               관심상품 저장
             </button>
-            <button type="button" class="btn btn-danger" v-else @click="addSave(prd)">
-              저장 취소
-            </button> -->
-
           </div>
+
         </div>
       </div>
     </div>
@@ -89,45 +148,63 @@
 <script setup>
 import { useLoanStore } from '@/stores/loan.js'
 import { useAuthStore } from '@/stores/auth.js'
-import { ref, watch, computed, onMounted } from 'vue'
+import { ref, watchEffect, onMounted, computed } from 'vue'
 import axios from 'axios'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+import { Bar } from 'vue-chartjs'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
+// 기간별로 저축금리 가져오기
+const getInterestRate = (prd, term) => {
+  if (!prd || !prd.loanoption_set) return '-';
+
+  const option = prd.loanoption_set.find(option => option.save_trm === term);
+  return option ? option.intr_rate : '-';
+}
+
+// 기간별로 최고 우대금리 가져오기
+const getInterestRate2 = (prd, term) => {
+  if (!prd || !prd.loanoption_set) return '-';
+
+  const option = prd.loanoption_set.find(option => option.save_trm === term);
+  return option ? option.intr_rate2 : '-';
+}
 
 const loanStore = useLoanStore()
 const authStore = useAuthStore()
 
-// 전체 조회
-loanStore.getAll()
+const selectedBank = ref('all_bank')
+const selectedType = ref('all_type')
 
-console.log(loanStore.loan)
-
-// 특정 저축 기간에 대한 이자율 찾는 함수
-const getInterestRate = (prd, term) => {
-  const option = prd.loanoption_set.find(option => option.save_trm === term)
-  return option ? option.intr_rate : '-'
+const fetchData = () => {
+  axios.get(`${loanStore.API_URL}/fin_products/loan/${selectedBank.value}/${selectedType.value}/`)
+    .then(response => {
+      loanStore.loans = response.data
+      console.log(response.data)
+      
+    })
+    .catch(error => {
+      console.log(error)
+    })
 }
 
-
-// 특정 은행 선택 시 조회
-const selectedBank = ref('all')
-
-// selectedBank 값이 변경될 때마다 데이터 갱신
-watch(selectedBank, (newValue) => {
-  if (newValue === 'all') {
-    loanStore.getAll()
-  } else {
-    loanStore.selectBank(selectedBank.value)
-  }
+watchEffect(() => {
+  fetchData()
 })
 
-
-// 기간 선택 시 정렬
-const sort = function(num) {
-  axios({
-    method: 'get',
-    url: `${loanStore.API_URL}/fin_products/loan/des_sort/${selectedBank}/${save_trm}/`,
-  })
+const sort = (num) => {
+  axios.get(`${loanStore.API_URL}/fin_products/loan/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
     .then(response => {
-      loanStore.loans.value = response.data
+      loanStore.loans = response.data
     })
     .catch(error => {
       console.log(error)
@@ -138,26 +215,86 @@ const sort = function(num) {
 // 모달
 const loan = ref({})
 
-const model = function(prd) {
+const modal_click = function(prd) {
   loan.value = prd
+
+  // 모달창 열리면 차트 안에 데이터 갱신
+  chartData.value = {
+    labels: ['6개월', '12개월', '24개월', '36개월'],
+    datasets: [
+      {
+        label: '저축 금리',
+        backgroundColor: '#f87979',
+        data: [
+          parseFloat(getInterestRate(loan.value, '6')) || 0,
+          parseFloat(getInterestRate(loan.value, '12')) || 0,
+          parseFloat(getInterestRate(loan.value, '24')) || 0,
+          parseFloat(getInterestRate(loan.value, '36')) || 0
+        ]
+      },
+      {
+        label: '최고 우대 금리',
+        backgroundColor: '#aad1e6',
+        data: [
+          parseFloat(getInterestRate2(loan.value, '6')) || 0,
+          parseFloat(getInterestRate2(loan.value, '12')) || 0,
+          parseFloat(getInterestRate2(loan.value, '24')) || 0,
+          parseFloat(getInterestRate2(loan.value, '36')) || 0
+        ]
+      }
+    ]
+  }
 }
+
+
+// 차트 초기설정
+const chartData = ref({
+      labels: [
+        '6개월',
+        '12개월',
+        '24개월',
+        '36개월',
+      ],
+      datasets: [
+        {
+          label: '저축 금리',
+          backgroundColor: '#f87979',
+          data: [0,0,0,0]
+        },
+        {
+          label: '최고 우대 금리',
+          backgroundColor: '#aad1e6',
+          data: [0,0,0,0]
+        },
+      ]
+    });
+
+    // 차트 옵션 설정
+    const options = {
+      responsive: true,
+      maintainAspectRatio: true, // 세로 길이를 고정
+      aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
+    }
 
 
 // 가입한 상품 조회
 const getContract = function(fin_prdt_cd) {
     axios({
       method: 'get',
-      url: `${loanStore.API_URL}/fin_products/loan_contract/${loan.value.fin_prdt_cd}/`
+      url: `${loanStore.API_URL}/fin_products/loan/contract/${loan.value.fin_prdt_cd}/`,
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
     })
       .then(response => {
-        loanStore.contractedLoan.value = response.data
+        loanStore.contractedLoan = response.data
       })
       .catch(error => {
         console.log(error)
       })
   }
 onMounted(() => {
-  if (loanStore.contractedLoan.length !== 0) {
+  if (authStore.isAuthenticated && loanStore.contractedLoan.length !== 0 && loan.value) {
     getContract()
   }
 })
@@ -172,7 +309,6 @@ const isContracted = computed(() => {
   if (findPrd !== -1) {
     return true
   }
-  console.log(loanStore.contractedLoan)
   return false
 })
 
@@ -183,9 +319,9 @@ const addContract = (prd) => {
 
   axios({
       method: 'post',
-      url: `${loantStore.API_URL}/fin_products/loan_contract/${loan.value.fin_prdt_cd}/`,
+      url: `${loanStore.API_URL}/fin_products/loan/contract/${loan.value.fin_prdt_cd}/`,
       data: {
-        code: loan.value.fin_prdt_cd
+        fin_prdt_cd: loan.value.fin_prdt_cd
       },
       headers: {
         Authorization: `Token ${authStore.token}`
@@ -204,14 +340,13 @@ const addContract = (prd) => {
 // 상품 계약 취소
 const delContract = (fin_prdt_cd) => {
   const idx = loanStore.contractedLoan.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
-  console.log(`${loanStore.API_URL}/fin_products/loan_contract/${loan.value.fin_prdt_cd}/`)
   if (idx !== -1) {
 
     axios({
       method: 'post',
-      url: `${loanStore.API_URL}/fin_products/loan_contract/${loan.value.fin_prdt_cd}/`,
+      url: `${loanStore.API_URL}/fin_products/loan/contract/${loan.value.fin_prdt_cd}/`,
       data: {
-        code: loan.value.fin_prdt_cd
+        fin_prdt_cd: loan.value.fin_prdt_cd
       },
       headers: {
         Authorization: `Token ${authStore.token}`
@@ -227,9 +362,99 @@ const delContract = (fin_prdt_cd) => {
 }
 
 
+
+// 관심상품 조회
+const getSave = function(fin_prdt_cd) {
+    axios({
+      method: 'get',
+      url: `${loanStore.API_URL}/fin_products/loan/like/${loan.value.fin_prdt_cd}/`,
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        loanStore.savedLoan = response.data
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+onMounted(() => {
+  if (authStore.isAuthenticated && loanStore.savedLoan.length !== 0 && loan.value) {
+    getSave()
+  }
+})
+
+
+// 관심상품 저장하고 있는지 판단
+const isSaved = computed(() => {
+  if (loanStore.savedLoan.length === 0) {
+    return false
+  } 
+  const findPrd = loanStore.savedLoan.findIndex((prd) => prd.fin_prdt_cd === loan.value.fin_prdt_cd)
+  if (findPrd !== -1) {
+    return true
+  }
+  return false
+})
+
+
+// 관심상품 저장
+const addSave = (prd) => {
+  loanStore.savedLoan.push(prd)
+
+  axios({
+      method: 'post',
+      url: `${loanStore.API_URL}/fin_products/loan/like/${loan.value.fin_prdt_cd}/`,
+      data: {
+        fin_prdt_cd: loan.value.fin_prdt_cd
+      },
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        loanStore.savedLoan.push(loan)
+      })
+      .catch(error => {
+        console.log(error)
+      })
+
+  }
+  
+
+// 관심상품 저장 취소
+const delSave = (fin_prdt_cd) => {
+  const idx = loanStore.savedLoan.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
+  if (idx !== -1) {
+
+    axios({
+      method: 'post',
+      url: `${loanStore.API_URL}/fin_products/loan/like/${loan.value.fin_prdt_cd}/`,
+      data: {
+        fin_prdt_cd: loan.value.fin_prdt_cd
+      },
+      headers: {
+        Authorization: `Token ${authStore.token}`
+      }
+    })
+      .then(response => {
+        loanStore.savedLoan.splice(idx, 1) 
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+}
+
 </script>
 
 
 <style scoped>
-
+.modal_row {
+  width: 150px;
+}
+.no-border {
+  border: none;
+}
 </style>
