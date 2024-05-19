@@ -46,7 +46,7 @@
       <!-- 담보유형 아파트인 경우 -->
       <tbody v-if="selectedType === '아파트'">
         <tr 
-          v-for="(prd, index) in loanStore.loans"
+          v-for="(prd, index) in loanStore.Aloans"
           :key="index"
           data-bs-toggle="modal" data-bs-target="#exampleModal"
           @click="modal_click(prd)"
@@ -54,84 +54,35 @@
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
           <td>{{ prd.kor_co_nm }}</td>
-          <td>{{ prd.fin_prdt_nm }}</td>
-          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.mrtg_type_nm">{{ prd.loanoption_set[0]?.mrtg_type_nm }}</td>
+          <!-- 상품명 찍히는 것도 있고 안찍히는 것도 있음(확인필요) -->
+          <td v-if="prd.fin_prdt_nm">{{ prd.fin_prdt_nm }}</td>
           <td v-else>-</td>
-          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.lend_rate_type_nm">{{ prd.loanoption_set[0]?.lend_rate_type_nm }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.lend_rate_min">{{ prd.loanoption_set[0]?.lend_rate_min }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.lend_rate_max">{{ prd.loanoption_set[0]?.lend_rate_max !== null ? prd.loanoption_set[0]?.lend_rate_max : '-' }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set && prd.loanoption_set[0]?.lend_rate_avg">{{ prd.loanoption_set[0]?.lend_rate_avg }}</td>
-          <td v-else>-</td>
-        </tr>
-        <tr 
-          v-for="(prd, index) in loanStore.loans"
-          :key="index"
-          data-bs-toggle="modal" data-bs-target="#exampleModal"
-          @click="modal_click(prd)"
-          >
-          <th scope="row">{{ loanStore.loans.length + index }}</th>
-          <td>{{ prd.dcls_month }}</td>
-          <td>{{ prd.kor_co_nm }}</td>
-          <td>{{ prd.fin_prdt_nm }}</td>
-          <td v-if="prd.loanoption_set[1]?.mrtg_type_nm">{{ prd.loanoption_set[1]?.mrtg_type_nm }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[1]?.lend_rate_type_nm">{{ prd.loanoption_set[1]?.lend_rate_type_nm }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[1]?.lend_rate_min">{{ prd.loanoption_set[1]?.lend_rate_min }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[1]?.lend_rate_max !== null">{{ prd.loanoption_set[1]?.lend_rate_max }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[1]?.lend_rate_avg">{{ prd.loanoption_set[1]?.lend_rate_avg }}</td>
-          <td v-else>-</td>
+          <td>{{ prd.mrtg_type_nm }}</td>
+          <td>{{ prd.lend_rate_type_nm }}</td>
+          <td>{{ prd.lend_rate_min }}</td>
+          <td>{{ prd.lend_rate_max }}</td>
+          <td>{{ prd.lend_rate_avg }}</td>
         </tr>
       </tbody>
-      
-      <!-- 담보유형 아파트외 인 경유 -->
-      <tbody v-else>
+      <!-- 담보유형 아파트외인 경우 -->
+      <tbody v-if="selectedType === '아파트외'">
         <tr 
-          v-for="(prd, index) in loanStore.loans"
+          v-for="(prd, index) in loanStore.Eloans"
           :key="index"
           data-bs-toggle="modal" data-bs-target="#exampleModal"
           @click="modal_click(prd)"
-          >
+        >
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
           <td>{{ prd.kor_co_nm }}</td>
-          <td>{{ prd.fin_prdt_nm }}</td>
-          <td v-if="prd.loanoption_set[2]">{{ prd.loanoption_set[2]?.mrtg_type_nm }}</td>
+          <!-- 상품명 찍히는 것도 있고 안찍히는 것도 있음(확인필요) -->
+          <td v-if="prd.fin_prdt_nm">{{ prd.fin_prdt_nm }}</td>
           <td v-else>-</td>
-          <td v-if="prd.loanoption_set[2]">{{ prd.loanoption_set[2]?.lend_rate_type_nm }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[2]">{{ prd.loanoption_set[2]?.lend_rate_min }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[2]">{{ prd.loanoption_set[2]?.lend_rate_max }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[2]">{{ prd.loanoption_set[2]?.lend_rate_avg }}</td>
-          <td v-else>-</td>
-        </tr>
-        <tr 
-          v-for="(prd, index) in loanStore.loans"
-          :key="index"
-          data-bs-toggle="modal" data-bs-target="#exampleModal"
-          @click="modal_click(prd)"
-          >
-          <th scope="row">{{ loanStore.loans.length + index }}</th>
-          <td>{{ prd.dcls_month }}</td>
-          <td>{{ prd.kor_co_nm }}</td>
-          <td>{{ prd.fin_prdt_nm }}</td>
-          <td v-if="prd.loanoption_set[3]">{{ prd.loanoption_set[3]?.mrtg_type_nm }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[3]">{{ prd.loanoption_set[3]?.lend_rate_type_nm }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[3]">{{ prd.loanoption_set[3]?.lend_rate_min }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[3]">{{ prd.loanoption_set[3]?.lend_rate_max }}</td>
-          <td v-else>-</td>
-          <td v-if="prd.loanoption_set[3]">{{ prd.loanoption_set[3]?.lend_rate_avg }}</td>
-          <td v-else>-</td>
+          <td>{{ prd.mrtg_type_nm }}</td>
+          <td>{{ prd.lend_rate_type_nm }}</td>
+          <td>{{ prd.lend_rate_min }}</td>
+          <td>{{ prd.lend_rate_max }}</td>
+          <td>{{ prd.lend_rate_avg }}</td>
         </tr>
       </tbody>
     </table>
@@ -236,8 +187,11 @@ import { Bar } from 'vue-chartjs'
 const loanStore = useLoanStore()
 const authStore = useAuthStore()
 
-// 전체 조회
-loanStore.getAll()
+onMounted(() => {
+  loanStore.getAll()
+})
+
+console.log(loanStore.Aloans)
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
@@ -256,6 +210,8 @@ const getInterestRate2 = (prd, term) => {
   const option = prd.loanoption_set.find(option => option.save_trm === term);
   return option ? option.intr_rate2 : '-';
 }
+
+
 
 
 const selectedBank = ref('all_bank')
