@@ -10,7 +10,7 @@ import SignUpView from '@/views/SignUpView.vue'
 import LogInView from '@/views/LogInView.vue'
 import LogOutView from '@/views/LogOutView.vue'
 import ProfileView from '@/views/ProfileView.vue'
-import UserInfo from '@/components/User/UserInfo.vue'
+import UserInfo from '@/components/User/UpdateInfo.vue'
 
 import Deposit from '@/components/Search/Deposit.vue'
 import Savings from '@/components/Search/Savings.vue'

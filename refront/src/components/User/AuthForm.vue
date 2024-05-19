@@ -93,12 +93,7 @@ const handleFormSubmit = () => {
 
   if (isSignUpRoute) {
     // 회원가입 시 추가적인 유효성 검사
-    if (!nickname.value.trim()) {
-      errors.value.nickname = '닉네임을 입력해주세요';
-    }
-    if (!password2.value.trim()) {
-      errors.value.password2 = 'Confirm Password is required';
-    } else if (password.value !== password2.value) {
+    if (password.value !== password2.value) {
       errors.value.password2 = 'Passwords do not match';
     }
   }
@@ -109,19 +104,17 @@ const handleFormSubmit = () => {
     if (isSignUpRoute) {
       store.signUp(username.value, password.value, password2.value, age.value, nickname.value, email.value, annual_income.value, property.value, main_bank.value, saving_propensity.value)
         .then(() => {
-          Swal.fire('회원가입 성공', '회원가입에 성공했습니다.', 'success')
-            .then(() => router.push({ name: 'home' }));
         })
         .catch(error => {
-          errorMessage.value = error.message;
+          Swal.fire('회원가입에 실패했습니다', '', 'error')
+          errorMessage.value = '회원가입에 실패했습니다.';
         });
     } else {
       store.logIn(username.value, password.value)
         .then(() => {
-          Swal.fire('로그인 성공', '로그인에 성공했습니다.', 'success')
-            .then(() => router.push({ name: 'home' }));
         })
         .catch(error => {
+          Swal.fire('로그인에 실패했습니다', '', 'error')
           errorMessage.value = '로그인에 실패했습니다.';
         });
     }

@@ -95,7 +95,7 @@
                 <tr>
                   <!-- 차트 -->
                   <td v-if="deposit" colspan="7">
-                    <Bar class="chart-page" :data="chartData" :options="options" style="width: 50px; height: 50px;" />
+                    <Bar class="chart-page" :data="chartData" :options="options"/>
                   </td>                  
                 </tr>
               </tbody>
@@ -453,8 +453,8 @@ const delSave = (fin_prdt_cd) => {
 .no-border {
   border: none;
 }
-.chart-page {
-  width: 80px;
+/* .chart-page {
+  width: 100%;
   height: 30px;
-}
+} */
 </style>
