@@ -16,8 +16,8 @@ import {
   LinearScale
 } from 'chart.js'
 import { Bar } from 'vue-chartjs'
-import { useDepositStore } from '@/stores/deposit'
 
+// Chart.js 모듈을 등록합니다.
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 export default defineComponent({
@@ -25,27 +25,28 @@ export default defineComponent({
   components: {
     Bar
   },
+  // 부모 컴포넌트로부터 받은 deposit prop을 정의합니다.
+  props: {
+    deposit: Object
+  },
+  // setup 함수를 사용하여 컴포넌트의 데이터와 옵션을 설정합니다.
+  setup(props) {
+    // setup 함수 내에서 console.log()를 사용하여 deposit을 확인합니다.
+    console.log('Received deposit in DepositChart:', props.deposit.value);
 
-  setup() {
-    const store = useDepositStore()
-
-    // 특정 저축 기간에 대한 저축 금리 찾는 함수
-    const getInterestRate = (deposit, term) => {
-      if (deposit) {
-        const option = deposit.depositoption_set.find(option => option.save_trm === term)
-        return option ? option.intr_rate : 0
-      }
-      return 0
-    }
-    // 특정 저축 기간에 대한 최고우대 금리 찾는 함수
-    const getInterestRate2 = (deposit, term) => {
-      if (deposit) {
-        const option = deposit.depositoption_set.find(option => option.save_trm === term)
-        return option ? option.intr_rate2 : 0
-      }
-      return 0
+    // 특정 기간에 대한 저축 금리를 가져오는 함수
+    const getInterestRate = (term) => {
+      const option = props.deposit.value.depositoption_set.find(option => option.save_trm === term)
+      return option ? option.intr_rate : 0
     }
 
+    // 특정 기간에 대한 최고 우대 금리를 가져오는 함수
+    const getInterestRate2 = (term) => {
+      const option = props.deposit.value.depositoption_set.find(option => option.save_trm === term)
+      return option ? option.intr_rate2 : 0
+    }
+
+    // 차트에 표시할 데이터
     const data = {
       labels: [
         '6개월',
@@ -58,37 +59,38 @@ export default defineComponent({
           label: '저축 금리',
           backgroundColor: '#f87979',
           data: [
-            getInterestRate(store.forChartDeposit, '6'), 
-            getInterestRate(store.forChartDeposit, '12'), 
-            getInterestRate(store.forChartDeposit, '24'), 
-            getInterestRate(store.forChartDeposit, '36')
+            getInterestRate('6'), 
+            getInterestRate('12'), 
+            getInterestRate('24'), 
+            getInterestRate('36')
           ]
         },
         {
           label: '최고 우대 금리',
-          backgroundColor: '#f87979',
+          backgroundColor: '#aad1e6',
           data: [
-            getInterestRate2(store.forChartDeposit, '6'), 
-            getInterestRate2(store.forChartDeposit, '12'), 
-            getInterestRate2(store.forChartDeposit, '24'), 
-            getInterestRate2(store.forChartDeposit, '36')
+            getInterestRate2('6'), 
+            getInterestRate2('12'), 
+            getInterestRate2('24'), 
+            getInterestRate2('36')
           ]
         },
       ]
     };
 
+    // 차트 옵션 설정
     const options = {
       responsive: true,
       maintainAspectRatio: false
     };
 
+    // setup 함수에서 반환하는 객체에 데이터와 옵션을 포함하여 반환합니다.
     return {
       data, options
     };
   }
 });
 </script>
-
 <style scoped>
 .chart-page {
   width: 80vh;

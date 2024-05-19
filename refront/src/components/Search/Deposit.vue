@@ -50,7 +50,7 @@
 
 
     <!-- 모달 -->
-    <div v-if="deposit" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div v-if="deposit" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  @show="drawChart">
       <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -92,11 +92,16 @@
                   <th scope="row">기타 유의사항</th>
                   <td>{{ deposit.etc_note }}</td>
                 </tr>
+                <tr>
+                  <!-- 차트 -->
+                  <td v-if="deposit" colspan="7">
+                    <Bar class="chart-page" :data="chartData" :options="options" style="width: 50px; height: 50px;" />
+                  </td>                  
+                </tr>
               </tbody>
             </table>
 
-            <!-- 차트 -->
-            <!-- <DepositChart/> -->
+
           </div>
 
           <!-- 가입신청 / 관심상품 저장 버튼 -->
@@ -129,7 +134,21 @@ import { useDepositStore } from '@/stores/deposit.js'
 import { useAuthStore } from '@/stores/auth.js'
 import { ref, watch, computed, onMounted } from 'vue'
 import axios from 'axios'
-// import DepositChart from '@/components/Chart/DepositChart.vue'
+
+// 차트 그리기
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+import { Bar } from 'vue-chartjs'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
 
 const depositStore = useDepositStore()
 const authStore = useAuthStore()
@@ -137,12 +156,19 @@ const authStore = useAuthStore()
 // 전체 조회
 depositStore.getAll()
 
-// 특정 저축 기간에 대한 이자율 찾는 함수
 const getInterestRate = (prd, term) => {
-  const option = prd.depositoption_set.find(option => option.save_trm === term)
-  return option ? option.intr_rate : '-'
+  if (!prd || !prd.depositoption_set) return '-';
+
+  const option = prd.depositoption_set.find(option => option.save_trm === term);
+  return option ? option.intr_rate : '-';
 }
 
+const getInterestRate2 = (prd, term) => {
+  if (!prd || !prd.depositoption_set) return '-';
+
+  const option = prd.depositoption_set.find(option => option.save_trm === term);
+  return option ? option.intr_rate2 : '-';
+}
 
 // 특정 은행 선택 시 조회
 const selectedBank = ref('all_bank')
@@ -186,9 +212,68 @@ const deposit = ref({})
 
 const modal_click = function(prd) {
   deposit.value = prd
-  depositStore.forChartDeposit = prd
-  console.log(depositStore.forChartDeposit)
-}
+
+  chartData.value = {
+    labels: ['6개월', '12개월', '24개월', '36개월'],
+    datasets: [
+      {
+        label: '저축 금리',
+        backgroundColor: '#f87979',
+        data: [
+          parseFloat(getInterestRate(deposit.value, '6')) || 0,
+          parseFloat(getInterestRate(deposit.value, '12')) || 0,
+          parseFloat(getInterestRate(deposit.value, '24')) || 0,
+          parseFloat(getInterestRate(deposit.value, '36')) || 0
+        ]
+      },
+      {
+        label: '최고 우대 금리',
+        backgroundColor: '#aad1e6',
+        data: [
+          parseFloat(getInterestRate2(deposit.value, '6')) || 0,
+          parseFloat(getInterestRate2(deposit.value, '12')) || 0,
+          parseFloat(getInterestRate2(deposit.value, '24')) || 0,
+          parseFloat(getInterestRate2(deposit.value, '36')) || 0
+        ]
+      }
+    ]
+  };
+};
+
+
+watch(() => deposit.value, (newDeposit) => {
+  depositStore.forChartSaving = newDeposit;
+});
+
+
+// 차트
+const chartData = ref({
+      labels: [
+        '6개월',
+        '12개월',
+        '24개월',
+        '36개월',
+      ],
+      datasets: [
+        {
+          label: '저축 금리',
+          backgroundColor: '#f87979',
+          data: [0,0,0,0]
+        },
+        {
+          label: '최고 우대 금리',
+          backgroundColor: '#aad1e6',
+          data: [0,0,0,0]
+        },
+      ]
+    });
+
+    // 차트 옵션 설정
+    const options = {
+      responsive: true,
+      maintainAspectRatio: true, // 세로 길이를 고정
+      aspectRatio: 2, // 원하는 세로 길이를 설정 (가로 길이는 부모 요소에 따라 조절됨)
+    };
 
 
 // 가입한 상품 조회
@@ -244,8 +329,6 @@ const addContract = (prd) => {
       }
     })
       .then(response => {
-        // depositStore.contractedDeposit.push(deposit)
-        console.log(prd)
       })
       .catch(error => {
         console.log(error)
@@ -333,8 +416,6 @@ const addSave = (prd) => {
       }
     })
       .then(response => {
-        console.log(prd)
-        // depositStore.savedDeposit.push(deposit)
       })
       .catch(error => {
         console.log(error)
@@ -375,5 +456,9 @@ const delSave = (fin_prdt_cd) => {
 }
 .no-border {
   border: none;
+}
+.chart-page {
+  width: 80px;
+  height: 30px;
 }
 </style>
