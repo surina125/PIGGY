@@ -20,7 +20,6 @@ class User(AbstractUser):
     saving_propensity = models.CharField(max_length=20, choices=SAVING_PROPENSITY_CHOICES)               # 성향
 
 
-
 class CustomAccountAdapter(DefaultAccountAdapter):
     def save_user(self, request, user, form, commit=True):
         data = form.cleaned_data
