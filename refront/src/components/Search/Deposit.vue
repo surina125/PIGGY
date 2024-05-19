@@ -134,8 +134,6 @@ import { useDepositStore } from '@/stores/deposit.js'
 import { useAuthStore } from '@/stores/auth.js'
 import { ref, watch, computed, onMounted } from 'vue'
 import axios from 'axios'
-
-// 차트 그리기
 import {
   Chart as ChartJS,
   Title,
@@ -156,6 +154,7 @@ const authStore = useAuthStore()
 // 전체 조회
 depositStore.getAll()
 
+// 기간별로 저축금리 가져오기
 const getInterestRate = (prd, term) => {
   if (!prd || !prd.depositoption_set) return '-';
 
@@ -163,6 +162,7 @@ const getInterestRate = (prd, term) => {
   return option ? option.intr_rate : '-';
 }
 
+// 기간별로 최고 우대금리 가져오기
 const getInterestRate2 = (prd, term) => {
   if (!prd || !prd.depositoption_set) return '-';
 
@@ -213,6 +213,7 @@ const deposit = ref({})
 const modal_click = function(prd) {
   deposit.value = prd
 
+  // 모달창 열리면 차트 안에 데이터 갱신
   chartData.value = {
     labels: ['6개월', '12개월', '24개월', '36개월'],
     datasets: [
@@ -237,16 +238,11 @@ const modal_click = function(prd) {
         ]
       }
     ]
-  };
-};
+  }
+}
 
 
-watch(() => deposit.value, (newDeposit) => {
-  depositStore.forChartSaving = newDeposit;
-});
-
-
-// 차트
+// 차트 초기설정
 const chartData = ref({
       labels: [
         '6개월',
@@ -272,8 +268,8 @@ const chartData = ref({
     const options = {
       responsive: true,
       maintainAspectRatio: true, // 세로 길이를 고정
-      aspectRatio: 2, // 원하는 세로 길이를 설정 (가로 길이는 부모 요소에 따라 조절됨)
-    };
+      aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
+    }
 
 
 // 가입한 상품 조회

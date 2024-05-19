@@ -104,6 +104,12 @@
                   <th scope="row">기타 유의사항</th>
                   <td>{{ saving.etc_note }}</td>
                 </tr>
+                <tr>
+                  <!-- 차트 -->
+                  <td v-if="saving" colspan="7">
+                    <Bar class="chart-page" :data="chartData" :options="options" style="width: 50px; height: 50px;" />
+                  </td>                  
+                </tr>
               </tbody>
             </table>
 
@@ -140,6 +146,34 @@ import { useSavingStore } from '@/stores/saving.js'
 import { useAuthStore } from '@/stores/auth.js'
 import { ref, watchEffect, onMounted, computed } from 'vue'
 import axios from 'axios'
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  BarElement,
+  CategoryScale,
+  LinearScale
+} from 'chart.js'
+import { Bar } from 'vue-chartjs'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+
+// 기간별로 저축금리 가져오기
+const getInterestRate = (prd, term) => {
+  if (!prd || !prd.savingoption_set) return '-';
+
+  const option = prd.savingoption_set.find(option => option.save_trm === term);
+  return option ? option.intr_rate : '-';
+}
+
+// 기간별로 최고 우대금리 가져오기
+const getInterestRate2 = (prd, term) => {
+  if (!prd || !prd.savingoption_set) return '-';
+
+  const option = prd.savingoption_set.find(option => option.save_trm === term);
+  return option ? option.intr_rate2 : '-';
+}
 
 const savingStore = useSavingStore()
 const authStore = useAuthStore()
@@ -154,7 +188,7 @@ const fetchData = () => {
       console.log(`Data fetched from: ${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/`)
     })
     .catch(error => {
-      console.error('Error fetching data:', error)
+      console.log(error)
     })
 }
 
@@ -166,19 +200,10 @@ const sort = (num) => {
   axios.get(`${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
     .then(response => {
       savingStore.savings = response.data
-      console.log(num)
-      console.log(`${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
     })
     .catch(error => {
-      console.error('Error sorting data:', error)
+      console.log(error)
     })
-}
-
-// 특정 저축 기간에 대한 이자율 찾는 함수
-const getInterestRate = (prd, term) => {
-  if (!prd.savingoption_set) return '-'; // savingoption_set이 정의되지 않은 경우
-  const option = prd.savingoption_set.find(option => option.save_trm === term);
-  return option ? option.intr_rate : '-';
 }
 
 
@@ -187,9 +212,64 @@ const saving = ref({})
 
 const modal_click = function(prd) {
   saving.value = prd
-  savingStore.forChartSaving = prd
-  console.log(savingStore.forChartSaving)
+
+  // 모달창 열리면 차트 안에 데이터 갱신
+  chartData.value = {
+    labels: ['6개월', '12개월', '24개월', '36개월'],
+    datasets: [
+      {
+        label: '저축 금리',
+        backgroundColor: '#f87979',
+        data: [
+          parseFloat(getInterestRate(saving.value, '6')) || 0,
+          parseFloat(getInterestRate(saving.value, '12')) || 0,
+          parseFloat(getInterestRate(saving.value, '24')) || 0,
+          parseFloat(getInterestRate(saving.value, '36')) || 0
+        ]
+      },
+      {
+        label: '최고 우대 금리',
+        backgroundColor: '#aad1e6',
+        data: [
+          parseFloat(getInterestRate2(saving.value, '6')) || 0,
+          parseFloat(getInterestRate2(saving.value, '12')) || 0,
+          parseFloat(getInterestRate2(saving.value, '24')) || 0,
+          parseFloat(getInterestRate2(saving.value, '36')) || 0
+        ]
+      }
+    ]
+  }
 }
+
+
+// 차트 초기설정
+const chartData = ref({
+      labels: [
+        '6개월',
+        '12개월',
+        '24개월',
+        '36개월',
+      ],
+      datasets: [
+        {
+          label: '저축 금리',
+          backgroundColor: '#f87979',
+          data: [0,0,0,0]
+        },
+        {
+          label: '최고 우대 금리',
+          backgroundColor: '#aad1e6',
+          data: [0,0,0,0]
+        },
+      ]
+    });
+
+    // 차트 옵션 설정
+    const options = {
+      responsive: true,
+      maintainAspectRatio: true, // 세로 길이를 고정
+      aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
+    }
 
 
 // 가입한 상품 조회
