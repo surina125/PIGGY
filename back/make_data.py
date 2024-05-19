@@ -39,10 +39,13 @@ def random_name():
 # 현재 API 에 들어있는 금융 상품 코드 리스트 저장
 DP_URL = 'http://finlife.fss.or.kr/finlifeapi/depositProductsSearch.json'
 SP_URL = 'http://finlife.fss.or.kr/finlifeapi/savingProductsSearch.json'
+LP_URL = 'http://finlife.fss.or.kr/finlifeapi/mortgageLoanProductsSearch.json'
 
 API_KEY = 'f85e8d0bb15539c70a663845720483dc'
 
-financial_products = []
+financial_products1 = []
+financial_products2 = []
+financial_products3 = []
 
 params = {
     'auth': API_KEY,
@@ -52,26 +55,29 @@ params = {
 }
 
 # 정기예금 목록 저장
-response = requests.get(DP_URL, params=params).json()
-baseList = response.get('result').get('baseList')  # 상품 목록
-
-for product in baseList:
-    financial_products.append(product['fin_prdt_cd'])
-
+response1 = requests.get(DP_URL, params=params).json()
+baseList1 = response1.get('result').get('baseList')  # 상품 목록
 # 적금 목록 저장
-response = requests.get(SP_URL, params=params).json()
-baseList = response.get('result').get('baseList')  # 상품 목록
+response2 = requests.get(SP_URL, params=params).json()
+baseList2 = response2.get('result').get('baseList')  # 상품 목록
+# 주택담보대출 목록 저장
+response3 = requests.get(LP_URL, params=params).json()
+baseList3 = response3.get('result').get('baseList')  # 상품 목록
 
-for product in baseList:
-    financial_products.append(product['fin_prdt_cd'])
+
+for product1 in baseList1:
+    financial_products1.append(product1['fin_prdt_cd'])
+for product2 in baseList2:
+    financial_products2.append(product2['fin_prdt_cd'])
+for product3 in baseList3:
+    financial_products3.append(product3['fin_prdt_cd'])
+
 
 dict_keys = [
     'username',
-    'gender',
     'age',
     'annual_income',
     'property',
-    'financial_products', 
 ]
 
 # json 파일 만들기
@@ -105,22 +111,34 @@ with open(save_dir, 'w', encoding="utf-8") as f:
         file['fields'] = {
             'username': username_list[i],  # 유저 이름 랜덤 생성
             # 랜덤한 0~5개의 상품을 가입하도록 삽입됨
-            'financial_products': ','.join(
+            'D_products': ','.join(
                 [
-                    random.choice(financial_products)
+                    random.choice(financial_products1)
+                    for _ in range(random.randint(0, 5))
+                ]
+            ),  # 금융 상품 리스트
+            'S_products': ','.join(
+                [
+                    random.choice(financial_products2)
+                    for _ in range(random.randint(0, 5))
+                ]
+            ),  # 금융 상품 리스트
+            'L_products': ','.join(
+                [
+                    random.choice(financial_products3)
                     for _ in range(random.randint(0, 5))
                 ]
             ),  # 금융 상품 리스트
             'age': random.randint(1, 100),  # 나이
-            'money': random.randrange(0, 100000000, 100000),  # 현재 가진 금액
-            'salary': random.randrange(0, 1500000000, 1000000),  # 연봉
+            'annual_income': random.randrange(0, 100000000, 100000),  # 현재 가진 금액
+            'property': random.randrange(0, 1500000000, 1000000),  # 연봉
             'password': '1234',
             'nickname': None,
             'is_active': True,
             'is_staff': False,
             'is_superuser': False,
         }
-
+   
         json.dump(file, f, ensure_ascii=False, indent='\t')
         if i != N - 1:
             f.write(',')
