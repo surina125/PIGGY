@@ -276,10 +276,10 @@ def get_bank_deposits(request, kor_co_nm):
         serializer = DepositSerializer(deposits, many=True)
         return Response(serializer.data)
     else:
-        return Response({ "no exist loan product" }, status=status.HTTP_204_NO_CONTENT)
+        return Response({ "no exist deposit product" }, status=status.HTTP_204_NO_CONTENT)
     
 
-# 금융기관 별 예금 금리 내림차순(예치기간 별)
+# 금융기관 별 예금 금리 내림차순(예치기간별)
 @api_view(['GET'])
 def get_reverse_deposits(request, kor_co_nm, save_trm):
     deposits = Deposit.objects.filter(Q(depositoption__save_trm=save_trm) & Q(kor_co_nm=kor_co_nm)).order_by('-depositoption__intr_rate')
@@ -291,10 +291,11 @@ def get_reverse_deposits(request, kor_co_nm, save_trm):
 # 전체 금융기관 적금 (적금유형별)
 @api_view(['GET'])
 def get_all_bank_savings(request, rsrv_type_nm):
-    savings = Saving.objects.filter(savingoption__rsrv_type_nm=rsrv_type_nm)
+    savings = Saving.objects.filter(savingoption__rsrv_type_nm=rsrv_type_nm).distinct()
     serializer = SavingSerializer(savings, many=True)
     return Response(serializer.data)
 
+    
 # 금융기관별 적금 
 @api_view(['GET'])
 def get_bank_all_type_savings(request, kor_co_nm):
@@ -306,7 +307,7 @@ def get_bank_all_type_savings(request, kor_co_nm):
 # 금융기관별 적금 (적금유형별)
 @api_view(['GET'])
 def get_bank_type_savings(request, rsrv_type_nm, kor_co_nm):
-    savings = Saving.objects.filter(Q(savingoption__rsrv_type_nm=rsrv_type_nm)& Q(kor_co_nm=kor_co_nm))
+    savings = Saving.objects.filter(Q(savingoption__rsrv_type_nm=rsrv_type_nm)& Q(kor_co_nm=kor_co_nm)).distinct()
     serializer = SavingSerializer(savings, many=True)
     return Response(serializer.data)
 
@@ -314,7 +315,7 @@ def get_bank_type_savings(request, rsrv_type_nm, kor_co_nm):
 # 전체 금융기관 적금 금리 내림차순(적금유형별, 예치기간별)
 @api_view(['GET'])
 def get_all_bank_type_reverse_savings(request, rsrv_type_nm, save_trm):
-    savings = Saving.objects.filter(Q(savingoption__rsrv_type_nm=rsrv_type_nm)&Q(savingoption__save_trm=save_trm)).order_by('-savingoption__intr_rate')
+    savings = Saving.objects.filter(Q(savingoption__rsrv_type_nm=rsrv_type_nm)&Q(savingoption__save_trm=save_trm)).order_by('-savingoption__intr_rate').distinct()
     serializer = SavingSerializer(savings, many=True)
     return Response(serializer.data)
 
@@ -337,7 +338,7 @@ def get_all_bank_all_type_reverse_savings(request, save_trm):
 # 금융기관 별 적금 금리 내림차순(적금유형별,예치기간 별)
 @api_view(['GET'])
 def get_bank_type_reverse_savings(request, rsrv_type_nm, kor_co_nm, save_trm):
-    savings = Saving.objects.filter(Q(savingoption__rsrv_type_nm=rsrv_type_nm)&Q(savingoption__save_trm=save_trm) & Q(kor_co_nm=kor_co_nm)).order_by('-savingoption__intr_rate')
+    savings = Saving.objects.filter(Q(savingoption__rsrv_type_nm=rsrv_type_nm)&Q(savingoption__save_trm=save_trm) & Q(kor_co_nm=kor_co_nm)).order_by('-savingoption__intr_rate').distinct()
 
     serializer = SavingSerializer(savings, many=True)
     return Response(serializer.data)
@@ -346,7 +347,7 @@ def get_bank_type_reverse_savings(request, rsrv_type_nm, kor_co_nm, save_trm):
 # 전체 금융기관 대출(담보유형별)
 @api_view(['GET'])
 def get_all_bank_type_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type)
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
@@ -363,7 +364,7 @@ def get_bank_all_type_loans(request, kor_co_nm):
 # 금융기관 별 대출(담보유형별)
 @api_view(['GET'])
 def get_bank_type_loans(request, mrtg_type, kor_co_nm):
-    loans = Loan.objects.filter(Q(savingoption__mrtg_type=mrtg_type)&Q(kor_co_nm=kor_co_nm))
+    loans = Loan.objects.filter(Q(savingoption__mrtg_type=mrtg_type)&Q(kor_co_nm=kor_co_nm)).distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
@@ -391,42 +392,42 @@ def get_all_bank_all_type_avg_loans(request):
 # 전체 금융기관 대출 금리 오름차순(담보유형별, min)
 @api_view(['GET'])
 def get_all_bank_type_min_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_min')
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_min').distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
 # 전체 금융기관 대출 금리 오름차순(담보유형별, max)
 @api_view(['GET'])
 def get_all_bank_type_max_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_max')
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_max').distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
 # 전체 금융기관 대출 금리 오름차순(담보유형별, avg)
 @api_view(['GET'])
 def get_all_bank_type_avg_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_avg')
+    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_avg').distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
 # 금융기관 별 대출금리 오름차순(담보유형별, min)
 @api_view(['GET'])
 def get_bank_type_min_loans(request, kor_co_nm, mrtg_type):
-    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_min')
+    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_min').distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
 # 금융기관 별 대출금리 오름차순(담보유형별, max)
 @api_view(['GET'])
 def get_bank_type_max_loans(request, kor_co_nm, mrtg_type):
-    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_max')
+    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_max').distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
 # 금융기관 별 대출금리 오름차순(담보유형별, avg)
 @api_view(['GET'])
 def get_bank_type_avg_loans(request, kor_co_nm, mrtg_type):
-    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('-loanoption__lend_rate_avg')
+    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('-loanoption__lend_rate_avg').distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
@@ -454,7 +455,6 @@ def deposit_contract(request, fin_prdt_cd):
 
                     deposit_data = {
                         'id': deposit.id,
-                        'amount': deposit.amount,
                     }
                     
                     contract_data.append(deposit_data)
@@ -468,67 +468,51 @@ def deposit_contract(request, fin_prdt_cd):
 
         if request.user in deposit.contract_user.all():
             deposit.contract_user.remove(request.user)
-            action = '적금 해지 완료'
+            action = '예금 해지 완료'
         else:
             deposit.contract_user.add(request.user)
-            action = '적금 가입 완료'
+            action = '예금 가입 완료'
 
         response_data = {
             'action': action,
         }
         return Response(response_data)
 
-    if request.user in deposit.contract_user.all():
-        deposit.contract_user.remove(request.user)
-        action = '예금 해지 완료'
-    else:
-        deposit.contract_user.add(request.user)
-        action = '예금 가입 완료'
-
-    response_data = {
-        'action': action,
-    }
-    return Response(response_data)
-
-
-
 # 적금 가입 및 가입한 적금 조회
-@api_view(['POST','GET'])
+@api_view(['GET','POST'])
 @permission_classes([IsAuthenticated])
 def saving_contract(request, fin_prdt_cd):
-    saving = get_object_or_404(Saving, fin_prdt_cd=fin_prdt_cd)
+
+    saving = get_object_or_404(Saving, fin_prdt_cd = fin_prdt_cd)
+
+        
 
     if request.method == 'GET':
-        # 유저가 적금에 가입되어 있는지 확인
         if request.user in saving.contract_user.all():
-            # 해당 유저의 가입 정보 가져오기
+
             contracted_parts = saving.contract_user.objects.filter(user_id=request.user)
 
-            # 가입된 적금에 대한 정보를 저장할 리스트
             contract_data = []
 
-            # 가입된 적금에 대한 입금 정보 가져오기
+
             for saving in Saving.objects.all():
-                # 가입된 적금과 관련된 입금 정보인지 확인
+
                 if saving.id in contracted_parts.values_list('saving_id', flat=True):
-                    # 입금 정보를 사전 형태로 구성하여 리스트에 추가
+
                     saving_data = {
                         'id': saving.id,
-                        'amount': saving.amount,
-                        # 필요한 다른 입금 정보도 여기에 추가
                     }
+                    
                     contract_data.append(saving_data)
 
-            # 결과를 시리얼라이즈하고 반환
             serializer = SavingSerializer(contract_data, many=True)
             return Response(serializer.data)
         else:
-            # 가입되지 않은 경우에 대한 처리
-            return Response({'message': 'User is not contracted to this loan.'})
-        
+            return Response({'message': 'User is not contracted to this deposit.'})
+
+
     elif request.method == 'POST': 
 
-    # 만약 권한이 있는 유저가 적금에 가입이 되어 있다면?
         if request.user in saving.contract_user.all():
             saving.contract_user.remove(request.user)
             action = '적금 해지 완료'
@@ -540,6 +524,55 @@ def saving_contract(request, fin_prdt_cd):
             'action': action,
         }
         return Response(response_data)
+    
+# # 적금 가입 및 가입한 적금 조회
+# @api_view(['POST','GET'])
+# @permission_classes([IsAuthenticated])
+# def saving_contract(request, fin_prdt_cd):
+#     saving = get_object_or_404(Saving, fin_prdt_cd=fin_prdt_cd)
+
+#     if request.method == 'GET':
+#         # 유저가 적금에 가입되어 있는지 확인
+#         if request.user in saving.contract_user.all():
+#             # 해당 유저의 가입 정보 가져오기
+#             contracted_parts = saving.contract_user.objects.filter(user_id=request.user)
+
+#             # 가입된 적금에 대한 정보를 저장할 리스트
+#             contract_data = []
+
+#             # 가입된 적금에 대한 입금 정보 가져오기
+#             for saving in Saving.objects.all():
+#                 # 가입된 적금과 관련된 입금 정보인지 확인
+#                 if saving.id in contracted_parts.values_list('saving_id', flat=True):
+#                     # 입금 정보를 사전 형태로 구성하여 리스트에 추가
+#                     saving_data = {
+#                         'id': saving.id,
+#                         'amount': saving.amount,
+#                         # 필요한 다른 입금 정보도 여기에 추가
+#                     }
+#                     contract_data.append(saving_data)
+
+#             # 결과를 시리얼라이즈하고 반환
+#             serializer = SavingSerializer(contract_data, many=True)
+#             return Response(serializer.data)
+#         else:
+#             # 가입되지 않은 경우에 대한 처리
+#             return Response({'message': 'User is not contracted to this loan.'})
+        
+#     elif request.method == 'POST': 
+
+#     # 만약 권한이 있는 유저가 적금에 가입이 되어 있다면?
+#         if request.user in saving.contract_user.all():
+#             saving.contract_user.remove(request.user)
+#             action = '적금 해지 완료'
+#         else:
+#             saving.contract_user.add(request.user)
+#             action = '적금 가입 완료'
+
+#         response_data = {
+#             'action': action,
+#         }
+#         return Response(response_data)
 
 # 대출 가입 및 가입한 대출 조회
 @api_view(['POST','GET'])

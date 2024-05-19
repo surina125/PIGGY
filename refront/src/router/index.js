@@ -5,12 +5,15 @@ import RecommendView from '@/views/RecommendView.vue'
 import ServicesView from '@/views/ServicesView.vue'
 import CommunityView from '@/views/CommunityView.vue'
 import PostCreate from '@/components/Community/PostCreate.vue'
+import PostDetail from '@/components/Community/PostDetail.vue'
+import PostUpdate from '@/components/Community/PostUpdate.vue'
+import CommentCreate from '@/components/Community/CommentCreate.vue'
 
 import SignUpView from '@/views/SignUpView.vue'
 import LogInView from '@/views/LogInView.vue'
 import LogOutView from '@/views/LogOutView.vue'
 import ProfileView from '@/views/ProfileView.vue'
-import UserInfo from '@/components/User/UpdateInfo.vue'
+import UserInfo from '@/components/User/UserInfo.vue'
 
 import Deposit from '@/components/Search/Deposit.vue'
 import Savings from '@/components/Search/Savings.vue'
@@ -78,15 +81,31 @@ const router = createRouter({
       path: '/community',
       name: 'community',
       component: CommunityView,
-      children : [
-        {
-          path: 'create',
-          name: 'postcreate',
-          component: PostCreate
+     
+    },
+    {
+      path: '/create',
+      name: 'postcreate',
+      component: PostCreate,
+     
+    },
+    {
+      path: '/detail/:postId',
+      name: 'postdetail',
+      component: PostDetail,
 
-        }
-
-      ]
+    },
+    {
+      path: '/update/:postId',
+      name: 'postupdate',
+      component: PostUpdate,
+     
+    },
+    {
+      path: '/comment/:postId',
+      name: 'commentcreate',
+      component: CommentCreate,
+     
     },
     {
       path: '/signup',

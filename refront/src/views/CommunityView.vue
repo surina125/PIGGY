@@ -1,46 +1,33 @@
 <template>
   <div>
-    <button @click="showPostCreate">글쓰기</button>
-    <div v-if="isCreatingPost">
-      <!-- create 창 닫으면 다시 글쓰기 버튼 활성화 -->
-      <PostCreate @close="isCreatingPost = false"/>
-    </div>
-    <div v-if="!isCreatingPost">
-      <div v-for="post in post_lists" :key="post.id">
-        <p>{{ post.title }}</p>
-        <p>{{ post.content }}</p>
-        <p>{{ post.created_at }}</p>
-      </div>
+    <h1>게시글 목록 페이지</h1>
+
+      <RouterLink :to="{name:'postcreate'}">
+        <button v-if="authStore.isAuthenticated">게시글 생성</button>
+      </RouterLink>
+    <div v-for="(post,index) in postStore.postInfos" :key="post.id" @click="goDetail(post.id)">
+      <p>{{index+1}} - {{ post.title }}</p>
     </div>
   </div>
 </template>
+
 <script setup>
-import { ref, defineAsyncComponent, onMounted } from 'vue';
-import axios from 'axios';
-
-// 동적으로 컴포넌트 불러옴
-const PostCreate = defineAsyncComponent(() => import('@/components/Community/PostCreate.vue'));
-
-const post_lists = ref([]);
-const isCreatingPost = ref(false);
+import { RouterLink } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.js'
+import { usePostStore } from '@/stores/post'
 
 
-const postInfo = function() {
-  axios.get('http://127.0.0.1:8000/community/')
-  .then(response => {
-    post_lists.value = response.data
-  })
-  .catch(error => {
-    console.log(error)
-  })
+const router = useRouter()
+const authStore = useAuthStore()
+const postStore = usePostStore()
+
+
+postStore.postList()
+
+const goDetail = (pk) => {
+  router.push({name:'postdetail', params:{postId: pk}})
   
-}
-
-
-onMounted(postInfo);
-
-function showPostCreate() {
-  isCreatingPost.value = true;
 }
 </script>
 
