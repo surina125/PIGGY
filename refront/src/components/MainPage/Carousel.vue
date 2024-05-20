@@ -5,8 +5,8 @@
         <div class="box d-block w-100">
           <div class="carousel-container">
             <div class="carousel-box">
-              <img class="carousel-image" src="@/assets/carousel1.png" alt="recommend_img">
-              <div class="carousel-text">
+              <img class="carousel-image1" src="@/assets/carousel1.png" alt="recommend_img">
+              <div class="carousel-text first-carousel-text">
                 <h3 class="first-font">회원가입하고<br><strong>내게 딱─ 맞는</strong> 상품 찾기</h3>
                 <p>PIGGY에서 추천 서비스를 이용해 보세요.</p>
                 <button @click="handleRecommendationClick" class="recommend-link">
@@ -29,7 +29,7 @@
                   금리 비교하기
                 </button>
               </div>
-              <img class="carousel-image" src="@/assets/carousel2.png" alt="search_img">
+              <img class="carousel-image2" src="@/assets/carousel2.png" alt="search_img">
             </div>
           </div>
         </div>
@@ -95,26 +95,18 @@ const handleSearchClick = () => {
   /* margin: auto; */
 }
 
-.carousel-image {
+.carousel-image2 {
   width: auto;
-  height: 100%;
+  height: 90%;
+}
+.carousel-image1 {
+  width: auto;
+  height: 80%;
 }
 
 .carousel-text {
   width: 50%;
   padding: 20px;
-  font-family: 'Montserrat', sans-serif; /* Google Fonts 적용 */
-
-.first-font {
-  font-size: 40px; /* 텍스트 크기 조정 */
-  margin-bottom: 20px;
-  color: #333;
-}
-.second-font {
-  font-size: 43px; /* 텍스트 크기 조정 */
-  margin-bottom: 20px;
-  color: #333;
-}
 
  
 p {
@@ -144,6 +136,16 @@ p {
 
 .second-carousel-text {
   text-align: right; /* 두 번째 카루셀 텍스트를 왼쪽 정렬 */
-  margin-right: 40px;
+  margin-right: 60px;
+  font-size: 120px; /* 텍스트 크기 조정 */
+  margin-bottom: 20px;
+  color: #333;
+}
+.first-carousel-text {
+  text-align: left; /* 두 번째 카루셀 텍스트를 왼쪽 정렬 */
+  margin-left: 60px;
+  font-size: 120px; /* 텍스트 크기 조정 */
+  margin-bottom: 20px;
+  color: #333;
 }
 </style>
