@@ -83,6 +83,11 @@ const postUpdate = function(update) {
 
 }
 
+const commentCreate = function() {
+
+}
+
+
  
- return { route, postInfos, detailInfo, postList, postDetail, updatePostId, postUpdate, postDelete}
+ return { route, postInfos, detailInfo, postList, postDetail, updatePostId, postUpdate, postDelete, commentCreate}
 }, { persist: true })
