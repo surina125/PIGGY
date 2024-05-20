@@ -42,15 +42,15 @@ urlpatterns = [
     path('loan/<kor_co_nm>/all_type/', views.get_bank_all_type_loans),     # 전체 담보유형에서 금융기관별 조회
     path('loan/<kor_co_nm>/<mrtg_type>/', views.get_bank_type_loans),      # 담보유형별, 금융기관별 조회
     
-    path('loan/all_bank/all_type/sort/min_rate/', views.get_all_bank_all_type_min_loans),    # 전체 금융기관에서 대출금리 오름차순(min)       
-    path('loan/all_bank/all_type/sort/max_rate/', views.get_all_bank_all_type_max_loans),    # 전체 금융기관에서 대출금리 오름차순(max)      
-    path('loan/all_bank/all_type/sort/avg_rate/', views.get_all_bank_all_type_avg_loans),    # 전체 금융기관에서 대출금리 오름차순(avg)       
-    path('loan/all_bank/<mrtg_type>/sort/min_rate/', views.get_all_bank_type_min_loans),     # 전체 금융기관에서 담보유형별 대출금리 오름차순(min)
-    path('loan/all_bank/<mrtg_type>/sort/max_rate/', views.get_all_bank_type_max_loans),     # 전체 금융기관에서 담보유형별 대출금리 오름차순(max)
-    path('loan/all_bank/<mrtg_type>/sort/avg_rate/', views.get_all_bank_type_avg_loans),     # 전체 금융기관에서 담보유형별 대출금리 오름차순(avg)
-    path('loan/<kor_co_nm>/<mrtg_type>/sort/min_rate/', views.get_bank_type_min_loans),      # 전체 담보유형에서 금융기관별 대출금리 오름차순(min)          
-    path('loan/<kor_co_nm>/<mrtg_type>/sort/max_rate/', views.get_bank_type_max_loans),      # 전체 담보유형에서 금융기관별 대출금리 오름차순(max)          
-    path('loan/<kor_co_nm>/<mrtg_type>/sort/avg_rate/', views.get_bank_type_avg_loans),      # 전체 담보유형에서 금융기관별 대출금리 오름차순(avg)          
+    # path('loan/all_bank/all_type/sort/min_rate/', views.get_all_bank_all_type_min_loans),    # 전체 금융기관에서 대출금리 오름차순(min)       
+    # path('loan/all_bank/all_type/sort/max_rate/', views.get_all_bank_all_type_max_loans),    # 전체 금융기관에서 대출금리 오름차순(max)      
+    # path('loan/all_bank/all_type/sort/avg_rate/', views.get_all_bank_all_type_avg_loans),    # 전체 금융기관에서 대출금리 오름차순(avg)       
+    # path('loan/all_bank/<mrtg_type>/sort/min_rate/', views.get_all_bank_type_min_loans),     # 전체 금융기관에서 담보유형별 대출금리 오름차순(min)
+    # path('loan/all_bank/<mrtg_type>/sort/max_rate/', views.get_all_bank_type_max_loans),     # 전체 금융기관에서 담보유형별 대출금리 오름차순(max)
+    # path('loan/all_bank/<mrtg_type>/sort/avg_rate/', views.get_all_bank_type_avg_loans),     # 전체 금융기관에서 담보유형별 대출금리 오름차순(avg)
+    # path('loan/<kor_co_nm>/<mrtg_type>/sort/min_rate/', views.get_bank_type_min_loans),      # 전체 담보유형에서 금융기관별 대출금리 오름차순(min)          
+    # path('loan/<kor_co_nm>/<mrtg_type>/sort/max_rate/', views.get_bank_type_max_loans),      # 전체 담보유형에서 금융기관별 대출금리 오름차순(max)          
+    # path('loan/<kor_co_nm>/<mrtg_type>/sort/avg_rate/', views.get_bank_type_avg_loans),      # 전체 담보유형에서 금융기관별 대출금리 오름차순(avg)          
     
     # 상품 가입/취소 + 조회
     path('deposit/contract/<fin_prdt_cd>/', views.deposit_contract),   # 예금 

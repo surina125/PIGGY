@@ -84,6 +84,20 @@ const postUpdate = function(update) {
 }
 
 const commentCreate = function() {
+  axios({
+    method:'delete',
+    url:`http://127.0.0.1:8000/community/post/${postId}/edit/`,
+    headers: {
+      'Authorization': `Token ${authStore.token}`
+    },
+  })
+  .then((response) => {
+    router.push({name:'community'})
+    
+  })
+  .catch((error)=>{
+    console.log(error)
+  })
 
 }
 

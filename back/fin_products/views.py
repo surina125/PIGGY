@@ -368,68 +368,68 @@ def get_bank_type_loans(request, mrtg_type, kor_co_nm):
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
-# 전체 금융기관 대출 금리 오름차순(min)
-@api_view(['GET'])
-def get_all_bank_all_type_min_loans(request):
-    loans = Loan.objects.all.order_by('loanoption__lend_rate_min')
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 전체 금융기관 대출 금리 오름차순(min)
+# @api_view(['GET'])
+# def get_all_bank_all_type_min_loans(request):
+#     loans = Loan.objects.all.order_by('loanoption__lend_rate_min')
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
-# 전체 금융기관 대출 금리 오름차순(max)
-@api_view(['GET'])
-def get_all_bank_all_type_max_loans(request):
-    loans = Loan.objects.all.order_by('loanoption__lend_rate_max')
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 전체 금융기관 대출 금리 오름차순(max)
+# @api_view(['GET'])
+# def get_all_bank_all_type_max_loans(request):
+#     loans = Loan.objects.all.order_by('loanoption__lend_rate_max')
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
-# 전체 금융기관 대출 금리 오름차순(avg)
-@api_view(['GET'])
-def get_all_bank_all_type_avg_loans(request):
-    loans = Loan.objects.all.order_by('-loanoption__lend_rate_avg')
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 전체 금융기관 대출 금리 오름차순(avg)
+# @api_view(['GET'])
+# def get_all_bank_all_type_avg_loans(request):
+#     loans = Loan.objects.all.order_by('-loanoption__lend_rate_avg')
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
-# 전체 금융기관 대출 금리 오름차순(담보유형별, min)
-@api_view(['GET'])
-def get_all_bank_type_min_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_min').distinct()
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 전체 금융기관 대출 금리 오름차순(담보유형별, min)
+# @api_view(['GET'])
+# def get_all_bank_type_min_loans(request, mrtg_type):
+#     loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_min').distinct()
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
-# 전체 금융기관 대출 금리 오름차순(담보유형별, max)
-@api_view(['GET'])
-def get_all_bank_type_max_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_max').distinct()
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 전체 금융기관 대출 금리 오름차순(담보유형별, max)
+# @api_view(['GET'])
+# def get_all_bank_type_max_loans(request, mrtg_type):
+#     loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('loanoption__lend_rate_max').distinct()
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
-# 전체 금융기관 대출 금리 오름차순(담보유형별, avg)
-@api_view(['GET'])
-def get_all_bank_type_avg_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_avg').distinct()
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 전체 금융기관 대출 금리 오름차순(담보유형별, avg)
+# @api_view(['GET'])
+# def get_all_bank_type_avg_loans(request, mrtg_type):
+#     loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).order_by('-loanoption__lend_rate_avg').distinct()
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
-# 금융기관 별 대출금리 오름차순(담보유형별, min)
-@api_view(['GET'])
-def get_bank_type_min_loans(request, kor_co_nm, mrtg_type):
-    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_min').distinct()
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 금융기관 별 대출금리 오름차순(담보유형별, min)
+# @api_view(['GET'])
+# def get_bank_type_min_loans(request, kor_co_nm, mrtg_type):
+#     loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_min').distinct()
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
-# 금융기관 별 대출금리 오름차순(담보유형별, max)
-@api_view(['GET'])
-def get_bank_type_max_loans(request, kor_co_nm, mrtg_type):
-    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_max').distinct()
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 금융기관 별 대출금리 오름차순(담보유형별, max)
+# @api_view(['GET'])
+# def get_bank_type_max_loans(request, kor_co_nm, mrtg_type):
+#     loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('loanoption__lend_rate_max').distinct()
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
-# 금융기관 별 대출금리 오름차순(담보유형별, avg)
-@api_view(['GET'])
-def get_bank_type_avg_loans(request, kor_co_nm, mrtg_type):
-    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('-loanoption__lend_rate_avg').distinct()
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
+# # 금융기관 별 대출금리 오름차순(담보유형별, avg)
+# @api_view(['GET'])
+# def get_bank_type_avg_loans(request, kor_co_nm, mrtg_type):
+#     loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type) & Q(kor_co_nm=kor_co_nm)).order_by('-loanoption__lend_rate_avg').distinct()
+#     serializer = LoanSerializer(loans, many=True)
+#     return Response(serializer.data)
 
 
 
