@@ -50,8 +50,8 @@ def post_detail_edit(request, post_pk):
 # 댓글 조회
 @api_view(['GET'])
 def comment(request, post_pk):
-    post = Post.objects.get(pk=post_pk)
-    serializer = CommentSerialzer(post)
+    comments = Comment.objects.filter(post_id=post_pk)
+    serializer = CommentSerialzer(comments, many=True)
     return Response(serializer.data)
 
 # 댓글 생성
@@ -59,7 +59,7 @@ def comment(request, post_pk):
 @permission_classes([IsAuthenticated])
 def comment_create(request, post_pk):
     post = Post.objects.get(pk=post_pk)
-    serializer = CommentSerialzer()
+    serializer = CommentSerialzer(data=request.data)
     if serializer.is_valid():
         serializer.save(user=request.user, post=post)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

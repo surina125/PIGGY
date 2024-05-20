@@ -1,39 +1,60 @@
+
 <template>
   <div>
-    <p>제목: {{ postStore.detailInfo.title }}</p>
-    <p>내용 : {{ postStore.detailInfo.content }}</p>
-    
-    <button v-if="authStore.userData.username === postStore.detailInfo.user.username" @click="postUpdate(postStore.detailInfo.id)">게시물 수정</button> 
-    <button v-if="authStore.userData.username === postStore.detailInfo.user.username" @click="postStore.postDelete(postStore.detailInfo.id)">게시물 삭제</button> 
-    <CommentCreate v-if="authStore.isAuthenticated" @comment-submitted="handleComment" />
+    <h1>게시물</h1>
+    <p>제목: {{ postStore.detailInfos.title }}</p>
+    <p>내용 : {{ postStore.detailInfos.content }}</p>
 
+    <button v-if="authStore.userData.username === postStore.detailInfos.user.username" @click="postUpdate(postStore.detailInfos.id)">게시물 수정</button> 
+    <button v-if="authStore.userData.username === postStore.detailInfos.user.username" @click="postStore.postDelete(postStore.detailInfos.id)">게시물 삭제</button>  
+
+    <hr>
+
+    <div v-if="authStore.isAuthenticated">
+      <form @submit.prevent="createComment">
+        <label for="comment">댓글</label>
+        <input type="text" id="comment" v-model="commentText"/>
+        <button type="submit">댓글 생성</button>
+      </form>
+      <hr>
+    </div>
+
+    <div>
+      <CommentList />
+    </div>
   </div>
 </template>
 
 <script setup>
-
+import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
 import { useAuthStore } from '@/stores/auth.js';
 import { usePostStore } from '@/stores/post';
-import { useRouter } from 'vue-router';
-import CommentCreate from '@/components/Community/CommentCreate.vue'
+import CommentList from '@/components/Community/CommentList.vue';
+
+const authStore = useAuthStore();
+const postStore = usePostStore();
+const router = useRouter();
+const commentText = ref("");
 
 
-const authStore = useAuthStore()
-const postStore = usePostStore()
-const router = useRouter()
+const postId = router.currentRoute.value.params.postId;
 
-postStore.postDetail()
-
-const postUpdate = (pk) => {
-  router.push({name:'postupdate', params:{postId:pk}})
+const postUpdate = (postId) => {
+  router.push({ name: 'postupdate', params: { postId: postId } });
 }
 
-function handleComment(commentText) {
-  // 여기에서 댓글 제출
-  // console.log('Comment submitted:', commentText);
+const createComment = () => {
+  postStore.commentCreate(postId, commentText.value);
+  commentText.value = "";
 }
+
+
+onMounted( () => {
+  postStore.postDetail(postId);
+  // postStore.commentList(postId);
+  
+});
+
+
 </script>
-
-<style lang="scss" scoped>
-
-</style>

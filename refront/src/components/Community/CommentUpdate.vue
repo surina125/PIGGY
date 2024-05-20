@@ -1,37 +1,34 @@
 <template>
   <div>
-    <h1>수정하기</h1>
-    <form @submit.prevent="handleSubmit">
-      <label for="title">제목:</label>
-      <input type="text" id="title" v-model="title"/>
-      <label for="content">내용:</label>
+    <h3>댓글 수정</h3>
+    <form @submit.prevent="handleSubmitComment">
+      <label for="content">댓글:</label>
       <input type="text" id="content" v-model="content"/>
 
-      <button type="submit" >게시글 수정</button>
-
+      <button type="submit">commit</button>
     </form>
+ 
   </div>
 </template>
 
 <script setup>
-
-import {ref} from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { usePostStore } from '@/stores/post'
 
 
 const postStore = usePostStore()
-const title = ref('')
 const content = ref('')
 const router = useRouter()
 
-function handleSubmit() {
+const commentId = router.currentRoute.value.params.commentId;
+
+function handleSubmitComment() {
   const updateData = {
-    title: title.value,
     content: content.value
   };
-  
-  postStore.postUpdate(postStore.detailInfos.id, updateData)
+ 
+  postStore.commentUpdate(postStore.detailInfos.id, commentId, updateData)
   .then(() => {
     router.push({
       name: 'postdetail',
@@ -43,9 +40,8 @@ function handleSubmit() {
   });
 }
 
-
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

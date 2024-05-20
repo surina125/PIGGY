@@ -27,7 +27,6 @@ postStore.postList()
 
 const goDetail = (pk) => {
   router.push({name:'postdetail', params:{postId: pk}})
-  
 }
 </script>
 
