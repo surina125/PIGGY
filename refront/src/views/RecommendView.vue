@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <form @submit.prevent="submitForm" class="form-container">
     <div class="question-page">
       <label for="product-type">예금, 적금, 주택담보대출 중에 원하는 상품을 선택하세요:</label>
@@ -273,4 +273,4 @@ const submitForm = () => {
   padding: 10px;
   cursor: pointer;
 }
-</style> -->
+</style>
