@@ -14,9 +14,6 @@ from .serializers import *
 from .models import *
 # from accounts.serializers import *
 
-# 추가해야함 사용자 인증!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
 
 # 금융상품 데이터 DB 저장
 @api_view(['GET'])

@@ -20,6 +20,12 @@
           <option value="36">36개월</option>
         </select>
 
+        <label for="interest-rate">원하는 최소한의 금리를 입력하세요:</label>
+        <div class="slider-container">
+          <span class="range-value">{{ interestRate }}%</span>
+          <input type="range" v-model="interestRate" id="interest-rate" min="0" max="10" step="0.1" class="form-range">
+        </div>
+
         <label>선호하는 은행을 선택하세요:</label>
         <div class="bank-buttons">
           <button
@@ -33,6 +39,8 @@
             {{ bank }}
           </button>
         </div>
+
+
       </div>
 
       <!-- 적금을 선택했을 경우 -->
@@ -54,6 +62,12 @@
           <option value="36">36개월</option>
         </select>
 
+        <label for="interest-rate">원하는 최소한의 금리를 입력하세요:</label>
+        <div class="slider-container">
+          <span class="range-value">{{ interestRate }}%</span>
+          <input type="range" v-model="interestRate" id="interest-rate" min="0" max="10" step="0.1" class="form-range">
+        </div>
+
         <label>선호하는 은행을 선택하세요:</label>
         <div class="bank-buttons">
           <button
@@ -66,6 +80,12 @@
           >
             {{ bank }}
           </button>
+        </div>
+
+        <label for="interest-rate">원하는 최소한의 금리를 입력하세요:</label>
+        <div class="slider-container">
+          <span class="range-value">{{ interestRate }}%</span>
+          <input type="range" v-model="interestRate" id="interest-rate" min="0" max="10" step="0.1" class="form-range">
         </div>
       </div>
 
@@ -113,6 +133,8 @@ const selectedProduct = ref("")
 const period = ref("")
 const selectedBanks = ref([])
 const type = ref("")
+const interestRate = ref(0) // New ref for interest rate
+const Dpurpose = ref("") // Ref for loan purpose
 
 const depositStore = useDepositStore()
 const savingStore = useSavingStore()
@@ -124,6 +146,7 @@ watch(selectedProduct, (newValue, oldValue) => {
     selectedBanks.value = []
     period.value = ""
     type.value = ""
+    interestRate.value = 0 // Reset interest rate
   }
   if (newValue === "예금") {
     depositStore.getAll()
@@ -143,14 +166,16 @@ const toggleBank = (bank) => {
 }
 
 const submitForm = () => {
-  if (selectedProduct.value === "예금") {
-
-  } else if (selectedProduct.value === "적금") {
-
-  } else if (selectedProduct.value === "대출") {
-    
+  let formData = {
+    product: selectedProduct.value,
+    period: period.value,
+    banks: selectedBanks.value,
+    type: type.value,
+    interestRate: interestRate.value, // Include interest rate in form data
+    Dpurpose: Dpurpose.value // Include loan purpose in form data
   }
-  console.log("선호하는 은행들:", selectedBanks.value)
+  
+  console.log("Form Data:", formData)
   alert('폼이 제출되었습니다!')
 }
 </script>
@@ -178,6 +203,25 @@ const submitForm = () => {
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.form-range {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.slider-container {
+  position: relative;
+  margin-bottom: 40px;
+}
+
+.range-value {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 1.2em;
 }
 
 .bank-buttons {

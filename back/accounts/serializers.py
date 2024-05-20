@@ -80,7 +80,7 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('profile_img', 'id', 'username', 'name', 'email', 'age', 'property', 'annual_income', 'main_bank')
+        fields = ('profile_img', 'id', 'username', 'nickname', 'email', 'age', 'property', 'annual_income', 'main_bank')
         read_only_fields = ('id', 'username', 'nickname')
 
 class UserInfoSerializer(serializers.ModelSerializer):
