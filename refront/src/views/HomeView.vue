@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1>
-      홈
-    </h1>
+    <Carousel/>
   </div>
 </template>
 
 <script setup>
+import Carousel from '@/components/MainPage/Carousel.vue'
+
 
 </script>
 

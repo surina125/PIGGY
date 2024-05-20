@@ -128,17 +128,18 @@ import { ref, watch } from 'vue'
 import { useDepositStore } from '@/stores/deposit'
 import { useSavingStore } from '@/stores/saving'
 import { useLoanStore } from '@/stores/loan'
+import { useRecommendStore } from '@/stores/recommend'
 
 const selectedProduct = ref("")
 const period = ref("")
 const selectedBanks = ref([])
 const type = ref("")
-const interestRate = ref(0) // New ref for interest rate
-const Dpurpose = ref("") // Ref for loan purpose
+const interestRate = ref(0) 
 
 const depositStore = useDepositStore()
 const savingStore = useSavingStore()
 const loanStore = useLoanStore()
+const recommendStore = useRecommendStore()
 
 watch(selectedProduct, (newValue, oldValue) => {
   // 상품 유형을 다시 선택했을 때 기간이랑 은행은 비워져야 함
@@ -146,7 +147,7 @@ watch(selectedProduct, (newValue, oldValue) => {
     selectedBanks.value = []
     period.value = ""
     type.value = ""
-    interestRate.value = 0 // Reset interest rate
+    interestRate.value = 0 
   }
   if (newValue === "예금") {
     depositStore.getAll()
@@ -165,16 +166,47 @@ const toggleBank = (bank) => {
   }
 }
 
+const formData = ref({})
+
 const submitForm = () => {
-  let formData = {
-    product: selectedProduct.value,
-    period: period.value,
-    banks: selectedBanks.value,
-    type: type.value,
-    interestRate: interestRate.value, // Include interest rate in form data
-    Dpurpose: Dpurpose.value // Include loan purpose in form data
+  if (selectedProduct.value === '예금') {
+    depositStore.getAll()
+    const depos = depositStore.deposits
+    console.log(depos)
+
+    let filteredDeposits = depos.filter((deposit) => {
+      // 조건에 맞는지 확인
+      return (
+        selectedBanks.value.includes(deposit.kor_co_nm) &&
+        deposit.depositoption_set.some(
+          (option) =>
+            option.save_trm === period.value && option.intr_rate >= interestRate.value 
+        )
+      )
+    })
+
+    // console.log(filteredDeposits)
+    recommendStore.deposits.push(filteredDeposits)
+    console.log(recommendStore.deposits)
+
+
+  } else if (selectedProduct.value === '적금') {
+    formData = {
+      product: selectedProduct.value,
+      interestRate: interestRate.value,
+      period: period.value,
+      banks: selectedBanks.value
+    }
+  } else {
+    formData = {
+      product: selectedProduct.value,
+      type: type.value,
+      banks: selectedBanks.value
+    }
   }
-  
+
+  router.push({name: 'recommend'})  
+
   console.log("Form Data:", formData)
   alert('폼이 제출되었습니다!')
 }

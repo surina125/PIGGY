@@ -15,6 +15,18 @@ from .models import *
 # from accounts.serializers import *
 
 
+# @api_view(['POST', 'GET'])
+# def recommend_two(request, obj):
+#     if request.method == 'POST'
+#     if obj.product == "예금":
+#         deposits = Deposit.objects.filter(
+#             depositoption__save_trm=obj["period"],  # DepositOption 모델의 save_trm과 비교
+#             kor_co_nm__in=obj["banks"],  # kor_co_nm이 obj.banks 리스트에 포함된 경우
+#         ).filter(depositoption__intr_rate__gte=obj["interestRate"]).distinct()
+#         serializer = DepositSerializer(deposits, many=True)
+#         return Response(serializer.data)
+
+
 # 금융상품 데이터 DB 저장
 @api_view(['GET'])
 def financial_products(request):

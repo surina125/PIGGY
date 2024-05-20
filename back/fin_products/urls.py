@@ -6,6 +6,8 @@ app_name = "fin_products"
 urlpatterns = [
     path('financial_products/', views.financial_products),
  
+#    path('recommend_two/<str:username>/', views.recommend_two, name='recommend_two'), # 추천
+ 
     # 예금
     path('deposit/<fin_prdt_cd>/', views.deposit_detail),                                    # 단일 예금 상품 조회
     path('deposit/<fin_prdt_cd>/option_list/', views.depositoption_list),                    # 단일 예금 상품 옵션 목록 조회
