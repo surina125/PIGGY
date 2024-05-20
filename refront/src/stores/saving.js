@@ -8,12 +8,18 @@ export const useSavingStore = defineStore('saving', () => {
   const savings = ref([])   // 전체 적금
   const banks = ref([])
 
+  // 가입한 예금 저장
+  const contractedSaving = ref([])
+
+  // 관심 예금 저장
+  const savedSaving = ref([])
+  
 
   // 전체 데이터 저장
   const getAll = function() {
     axios({
       method: 'get',
-      url: `${API_URL}/fin_products/saving/all_bank/all_type/`
+      url: `${API_URL}/fin_products/savings/all_bank/all_type/`
     })
       .then(response => {
         savings.value = response.data
@@ -40,13 +46,6 @@ export const useSavingStore = defineStore('saving', () => {
         console.log(error)
       })
   }
-
-
-  // 가입한 예금 저장
-  const contractedSaving = ref([])
-
-  // 관심 예금 저장
-  const savedSaving = ref([])
 
 
   return { API_URL, savings, getAll, banks, contractedSaving, savedSaving }

@@ -40,7 +40,7 @@ import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
 
-const userProfilePic = authStore.userData.profile_img ? `/media/${authStore.userData.profile_img}` : '/media/image/user.png';
+const userProfilePic = authStore.userData.profile_img ? `${authStore.userData.profile_img}` : '/media/image/user.png';
 </script>
 
 <style scoped>

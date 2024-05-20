@@ -52,7 +52,7 @@ const selectedFile = ref(null)
 const selectedFileUrl = ref(null)
 
 const userProfilePic = computed(() => {
-  return selectedFileUrl.value || (user.value.profile_img && `http://127.0.0.1:8000${user.value.profile_img}`)
+  return selectedFileUrl.value || user.value.profile_img
 })
 
 const changeProfilePic = () => {

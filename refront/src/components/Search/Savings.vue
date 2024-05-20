@@ -163,6 +163,10 @@ import { Bar } from 'vue-chartjs'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
+onMounted(() => {
+  savingStore.getAll()
+})
+
 // 기간별로 저축금리 가져오기
 const getInterestRate = (prd, term) => {
   if (!prd || !prd.savingoption_set) return '-';
@@ -186,10 +190,10 @@ const selectedBank = ref('all_bank')
 const selectedType = ref('all_type')
 
 const fetchData = () => {
-  axios.get(`${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/`)
+  axios.get(`${savingStore.API_URL}/fin_products/savings/${selectedBank.value}/${selectedType.value}/`)
     .then(response => {
       savingStore.savings = response.data
-      console.log(`Data fetched from: ${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/`)
+      console.log(`Data fetched from: ${savingStore.API_URL}/fin_products/savings/${selectedBank.value}/${selectedType.value}/`)
     })
     .catch(error => {
       console.log(error)
@@ -201,7 +205,7 @@ watchEffect(() => {
 })
 
 const sort = (num) => {
-  axios.get(`${savingStore.API_URL}/fin_products/saving/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
+  axios.get(`${savingStore.API_URL}/fin_products/savings/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
     .then(response => {
       savingStore.savings = response.data
     })
@@ -216,6 +220,9 @@ const saving = ref({})
 
 const modal_click = function(prd) {
   saving.value = prd
+
+  getContract()
+  getSave()
 
   // 모달창 열리면 차트 안에 데이터 갱신
   chartData.value = {
@@ -292,18 +299,15 @@ const getContract = function(fin_prdt_cd) {
         console.log(error)
       })
   }
-onMounted(() => {
-  if (authStore.isAuthenticated && savingStore.contractedSaving.length !== 0 && saving.value) {
-    getContract()
-  }
-})
 
 
 // 상품이 계약됐는지 판단
 const isContracted = computed(() => {
+  console.log(savingStore.contractedSaving)
   if (savingStore.contractedSaving.length === 0) {
     return false
   } 
+  console.log(savingStore.contractedSaving)
   const findPrd = savingStore.contractedSaving.findIndex((prd) => prd.fin_prdt_cd === saving.value.fin_prdt_cd)
   if (findPrd !== -1) {
     return true
@@ -378,11 +382,6 @@ const getSave = function(fin_prdt_cd) {
         console.log(error)
       })
   }
-onMounted(() => {
-  if (authStore.isAuthenticated && savingStore.savedSaving.length !== 0 && saving.value) {
-    getSave()
-  }
-})
 
 
 // 관심상품 저장하고 있는지 판단

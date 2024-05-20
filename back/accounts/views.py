@@ -8,7 +8,7 @@ from .serializers import UserInfoSerializer, UserProfileSerializer
 
 User = get_user_model()
 
-@api_view(['GET', 'PUT'])
+@api_view(['GET', 'PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def user_info(request, username):
     user = get_object_or_404(User, username=username)
