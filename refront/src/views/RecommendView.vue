@@ -166,7 +166,7 @@ const toggleBank = (bank) => {
   }
 }
 
-const formData = ref({})
+// const formData = ref({})
 
 const submitForm = () => {
   if (selectedProduct.value === '예금') {
