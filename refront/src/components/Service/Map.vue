@@ -42,7 +42,8 @@ export default {
       selectedCountries: [],
       selectedBank: '', // 은행
       map: null,
-      ps: null
+      ps: null,
+      geocoder: null // Geocoder 추가
     };
   },
   methods: {
@@ -68,24 +69,30 @@ export default {
           }
         });
       } else {
-        // 은행을 선택하지 않았을 때 카테고리 검색 사용
-        const bounds = new kakao.maps.LatLngBounds();
-        bounds.extend(new kakao.maps.LatLng(this.map.getCenter().getLat(), this.map.getCenter().getLng()));
-
-        const placesSearchCB = (data, status) => {
+        // 은행을 선택하지 않았을 때 지도 중심을 이동하고 카테고리 검색 사용
+        const address = `${this.selectedCity} ${this.selectedCountry}`;
+        this.geocoder.addressSearch(address, (result, status) => {
           if (status === kakao.maps.services.Status.OK) {
-            data.forEach(place => {
-              this.displayMarker(place);
-            });
-            this.map.setBounds(bounds);
-          } else {
-            alert('검색 결과가 없습니다.');
-          }
-        };
+            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+            this.map.setCenter(coords);
 
-        this.ps.categorySearch('BK9', placesSearchCB, {
-          location: this.map.getCenter(),
-          radius: 5000 // 5km 반경 내 검색
+            const placesSearchCB = (data, status) => {
+              if (status === kakao.maps.services.Status.OK) {
+                data.forEach(place => {
+                  this.displayMarker(place);
+                });
+              } else {
+                alert('검색 결과가 없습니다.');
+              }
+            };
+
+            this.ps.categorySearch('BK9', placesSearchCB, {
+              location: coords,
+              radius: 5000 // 5km 반경 내 검색
+            });
+          } else {
+            alert('주소 검색 결과가 없습니다.');
+          }
         });
       }
     },
@@ -98,8 +105,8 @@ export default {
       kakao.maps.event.addListener(marker, 'click', () => {
         const infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
         infowindow.setContent(`
-          <div style="display: flex; justify-content: center; align-items: center; padding: 15px;">
-            <div style="padding: 25px; font-size: 13px; text-align: center;">
+          <div style="display: flex; justify-content: center; align-items: center; padding: 18px;">
+            <div style="padding: 15px; font-size: 13px; text-align: center;">
               <strong>${place.place_name}</strong><br>
               도로명 주소: ${place.road_address_name || '정보 없음'}<br>
               전화번호: ${place.phone || '정보 없음'}
@@ -118,6 +125,7 @@ export default {
       };
       this.map = new kakao.maps.Map(container, options);
       this.ps = new kakao.maps.services.Places();
+      this.geocoder = new kakao.maps.services.Geocoder(); // Geocoder 초기화
     }
   },
   mounted() {
