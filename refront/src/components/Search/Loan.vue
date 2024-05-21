@@ -37,16 +37,17 @@
           <th scope="col">상품명</th>
           <th scope="col">담보유형</th>
           <th scope="col">대출금리유형</th>
-          <th scope="col" @click="sort('min')">최저 대출금리 (Click to sort↑)</th>
-          <th scope="col" @click="sort('max')">최고 대출금리 (Click to sort↑)</th>
-          <th scope="col" @click="sort('avg')">전월 취급 평균금리 (Click to sort↑)</th>
+          <th scope="col" @click="sort('min')">최저 대출금리</th>
+          <th scope="col" @click="sort('max')">최고 대출금리 </th>
+          <th scope="col" @click="sort('avg')">전월 취급 평균금리 </th>
         </tr>
       </thead>
 
       <!-- 담보유형 아파트인 경우 -->
-      <tbody v-if="selectedType === '아파트'">
+      <!-- <tbody v-if="selectedType === '아파트'"> -->
+      <tbody>
         <tr 
-          v-for="(prd, index) in loanStore.Aloans"
+          v-for="(prd, index) in loanStore.selectedLoans"
           :key="index"
           data-bs-toggle="modal" data-bs-target="#exampleModal"
           @click="modal_click(prd)"
@@ -54,18 +55,17 @@
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
           <td>{{ prd.kor_co_nm }}</td>
-          <!-- 상품명 찍히는 것도 있고 안찍히는 것도 있음(확인필요) -->
-          <td v-if="prd.fin_prdt_nm">{{ prd.fin_prdt_nm }}</td>
-          <td v-else>-</td>
+          <td>{{ prd.fin_prdt_nm }}</td>
           <td>{{ prd.mrtg_type_nm }}</td>
           <td>{{ prd.lend_rate_type_nm }}</td>
           <td>{{ prd.lend_rate_min }}</td>
           <td>{{ prd.lend_rate_max }}</td>
-          <td>{{ prd.lend_rate_avg }}</td>
+          <td v-if="prd.lend_rate_avg">{{ prd.lend_rate_avg }}</td>
+          <td v-else>-</td>
         </tr>
       </tbody>
       <!-- 담보유형 아파트외인 경우 -->
-      <tbody v-if="selectedType === '아파트외'">
+      <!-- <tbody v-if="selectedType === '아파트외'">
         <tr 
           v-for="(prd, index) in loanStore.Eloans"
           :key="index"
@@ -74,9 +74,9 @@
         >
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
-          <td>{{ prd.kor_co_nm }}</td>
+          <td>{{ prd.kor_co_nm }}</td> -->
           <!-- 상품명 찍히는 것도 있고 안찍히는 것도 있음(확인필요) -->
-          <td v-if="prd.fin_prdt_nm">{{ prd.fin_prdt_nm }}</td>
+          <!-- <td v-if="prd.fin_prdt_nm">{{ prd.fin_prdt_nm }}</td>
           <td v-else>-</td>
           <td>{{ prd.mrtg_type_nm }}</td>
           <td>{{ prd.lend_rate_type_nm }}</td>
@@ -84,7 +84,7 @@
           <td>{{ prd.lend_rate_max }}</td>
           <td>{{ prd.lend_rate_avg }}</td>
         </tr>
-      </tbody>
+      </tbody> -->
     </table>
 
 
@@ -108,33 +108,30 @@
                   <td>{{ loan.kor_co_nm }}</td>
                 </tr>
                 <tr>
+                  <th scope="row">담보유형</th>
+                  <td>{{ loan.mrtg_type_nm }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">대출금리유형</th>
+                  <td>{{ loan.lend_rate_type_nm }}</td>
+                </tr>
+                <tr>
                   <th scope="row">가입방법</th>
                   <td>{{ loan.join_way }}</td>
                 </tr>
                 <tr>
-                  <th scope="row">가입대상</th>
-                  <td>{{ loan.join_member }}</td>
+                  <th scope="row">중도상환수수료</th>
+                  <td>{{ loan.erly_rpay_fee }}</td>
                 </tr>
                 <tr>
-                  <th scope="row">최고 한도</th>
-                  <td>{{ loan.max_limit }}</td>
+                  <th scope="row">연체 이자율</th>
+                  <td>{{ loan.dly_rate }}</td>
                 </tr>
-                <tr>
-                  <th scope="row">만기 후 이자율</th>
-                  <td>{{ loan.mtrt_int }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">우대조건</th>
-                  <td>{{ loan.spcl_cnd }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">기타 유의사항</th>
-                  <td>{{ loan.etc_note }}</td>
-                </tr>
+
                 <tr>
                   <!-- 차트 -->
                   <td v-if="loan" colspan="7">
-                    <Bar class="chart-page" :data="chartData" :options="options" style="width: 50px; height: 50px;" />
+                    <Bar class="chart-page" :data="chartData" :options="options"/>
                   </td>                  
                 </tr>
               </tbody>
@@ -196,28 +193,108 @@ console.log(loanStore.Aloans)
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
 // 기간별로 저축금리 가져오기
-const getInterestRate = (prd, term) => {
-  if (!prd || !prd.loanoption_set) return '-';
+// const getInterestRate = (prd, term) => {
+//   if (!prd || !prd.loanoption_set) return '-';
 
-  const option = prd.loanoption_set.find(option => option.save_trm === term);
-  return option ? option.intr_rate : '-';
-}
+//   const option = prd.loanoption_set.find(option => option.save_trm === term);
+//   return option ? option.intr_rate : '-';
+// }
 
-// 기간별로 최고 우대금리 가져오기
-const getInterestRate2 = (prd, term) => {
-  if (!prd || !prd.loanoption_set) return '-';
+// // 기간별로 최고 우대금리 가져오기
+// const getInterestRate2 = (prd, term) => {
+//   if (!prd || !prd.loanoption_set) return '-';
 
-  const option = prd.loanoption_set.find(option => option.save_trm === term);
-  return option ? option.intr_rate2 : '-';
-}
-
-
-
+//   const option = prd.loanoption_set.find(option => option.save_trm === term);
+//   return option ? option.intr_rate2 : '-';
+// }
 
 const selectedBank = ref('all_bank')
 const selectedType = ref('아파트')
 
+// selectedBank와 selectedType 값이 변경될 때마다 데이터 갱신
+const updateSelectedLoans = () => {
+  if (selectedBank.value === 'all_bank') {
+    if (selectedType.value === '아파트') {
+      loanStore.selectedLoans = loanStore.Aloans;
+    } else {
+      loanStore.selectedLoans = loanStore.Eloans;
+    }
+  } else {
+    if (selectedType.value === '아파트') {
+      loanStore.selectedLoans = loanStore.Aloans.filter(loan => loan.kor_co_nm === selectedBank.value);
+    } else {
+      loanStore.selectedLoans = loanStore.Eloans.filter(loan => loan.kor_co_nm === selectedBank.value);
+    }
+  }
+  console.log(loanStore.selectedLoans);
+};
+
+// selectedBank와 selectedType의 변화를 감지하여 updateSelectedLoans 호출
+watchEffect(() => {
+  updateSelectedLoans();
+});
+
+
+// function updateSelectedLoans() {
+//   if (newValue === 'all_bank') {
+//     if (selectedType === '아파트') {
+//       loanStore.selectedLoans = loanStore.Aloans
+//     } else {
+//       loanStore.selectedLoans = loanStore.Eloans
+//     }
+//   } else {
+//     if (selectedType === '아파트') {
+//       loanStore.selectedLoans = loanStore.Aloans.filter(loan => loan.kor_co_nm === selectedBank.value)
+//     } else {
+//       loanStore.selectedLoans = loanStore.Eloans.filter(loan => loan.kor_co_nm === selectedBank.value)
+//     }
+//   }
+// }
+
+// watch(obj, prop, callback) {
+//   let value = obj[prop];
+
+//   Object.defineProperty(obj, prop, {
+//     get() {
+//       return value;
+//     },
+//     set(newValue) {
+//       value = newValue;
+//       callback(newValue);
+//     },
+//     configurable: true
+//   });
+// }
+
+// // watch 설정
+// watch(window, 'selectedBank', updateSelectedLoans);
+// watch(window, 'selectedType', updateSelectedLoans);
+
+// watch 함수 구현
+// function watch(property, callback) {
+//   let currentValue = property;
+//   Object.defineProperty(window, property, {
+//     get() {
+//       return currentValue;
+//     },
+//     set(newValue) {
+//       currentValue = newValue;
+//       callback(newValue);
+//     }
+//   });
+// }
+
+// // selectedBank와 selectedType의 변화를 감지하여 처리
+// watch('selectedBank', (newValue) => {
+//   updateSelectedLoans();
+// });
+
+// watch('selectedType', (newValue) => {
+//   updateSelectedLoans();
+// });
+
 // const fetchData = () => {
+//   console.log(`${loanStore.API_URL}/fin_products/loan/${selectedBank.value}/${selectedType.value}/`)
 //   axios.get(`${loanStore.API_URL}/fin_products/loan/${selectedBank.value}/${selectedType.value}/`)
 //     .then(response => {
 //       loanStore.loans = response.data
@@ -233,15 +310,15 @@ const selectedType = ref('아파트')
 //   fetchData()
 // })
 
-const sort = (num) => {
-  axios.get(`${loanStore.API_URL}/fin_products/loan/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
-    .then(response => {
-      loanStore.loans = response.data
-    })
-    .catch(error => {
-      console.log(error)
-    })
-}
+// const sort = (num) => {
+//   axios.get(`${loanStore.API_URL}/fin_products/loan/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
+//     .then(response => {
+//       loanStore.loans = response.data
+//     })
+//     .catch(error => {
+//       console.log(error)
+//     })
+// }
 
 
 // 모달
@@ -250,30 +327,22 @@ const loan = ref({})
 const modal_click = function(prd) {
   loan.value = prd
 
+  getContract()
+  getSave()
+
   // 모달창 열리면 차트 안에 데이터 갱신
   chartData.value = {
-    labels: ['6개월', '12개월', '24개월', '36개월'],
+    labels: ['최저 대출금리', '최고 대출금리', '전월 취급 평균금리'],
     datasets: [
       {
-        label: '저축 금리',
+        label: '대출 금리',
         backgroundColor: '#f87979',
         data: [
-          parseFloat(getInterestRate(loan.value, '6')) || 0,
-          parseFloat(getInterestRate(loan.value, '12')) || 0,
-          parseFloat(getInterestRate(loan.value, '24')) || 0,
-          parseFloat(getInterestRate(loan.value, '36')) || 0
+          loan.value.lend_rate_min || 0,
+          loan.value.lend_rate_max || 0,
+          loan.value.lend_rate_avg || 0,
         ]
       },
-      {
-        label: '최고 우대 금리',
-        backgroundColor: '#aad1e6',
-        data: [
-          parseFloat(getInterestRate2(loan.value, '6')) || 0,
-          parseFloat(getInterestRate2(loan.value, '12')) || 0,
-          parseFloat(getInterestRate2(loan.value, '24')) || 0,
-          parseFloat(getInterestRate2(loan.value, '36')) || 0
-        ]
-      }
     ]
   }
 }
@@ -282,21 +351,16 @@ const modal_click = function(prd) {
 // 차트 초기설정
 const chartData = ref({
       labels: [
-        '6개월',
-        '12개월',
+        '최저 대출금리',
+        '최고 대출금리',
         '24개월',
-        '36개월',
+        '전월 취급 평균금리',
       ],
       datasets: [
         {
-          label: '저축 금리',
+          label: '대출 금리',
           backgroundColor: '#f87979',
-          data: [0,0,0,0]
-        },
-        {
-          label: '최고 우대 금리',
-          backgroundColor: '#aad1e6',
-          data: [0,0,0,0]
+          data: [0,0,0]
         },
       ]
     });
@@ -306,7 +370,20 @@ const chartData = ref({
       responsive: true,
       maintainAspectRatio: true, // 세로 길이를 고정
       aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
+      scales: {
+    x: {
+      ticks: {
+        autoSkip: false
+      }
     }
+  },
+  plugins: {
+    legend: {
+      display: true
+    }
+  },
+  barThickness: 80, // 막대의 두께를 10px로 설정
+};
 
 
 // 가입한 상품 조회
@@ -325,11 +402,7 @@ const getContract = function(fin_prdt_cd) {
         console.log(error)
       })
   }
-onMounted(() => {
-  if (authStore.isAuthenticated && loanStore.contractedLoan.length !== 0 && loan.value) {
-    getContract()
-  }
-})
+
 
 
 // 상품이 계약됐는지 판단
@@ -411,11 +484,6 @@ const getSave = function(fin_prdt_cd) {
         console.log(error)
       })
   }
-onMounted(() => {
-  if (authStore.isAuthenticated && loanStore.savedLoan.length !== 0 && loan.value) {
-    getSave()
-  }
-})
 
 
 // 관심상품 저장하고 있는지 판단

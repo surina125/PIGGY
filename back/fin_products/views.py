@@ -15,17 +15,17 @@ from .models import *
 # from accounts.serializers import *
 
 
-# @api_view(['POST', 'GET'])
-# def recommend_two(request, obj):
-#     if request.method == 'POST'
-#     if obj.product == "예금":
-#         deposits = Deposit.objects.filter(
-#             depositoption__save_trm=obj["period"],  # DepositOption 모델의 save_trm과 비교
-#             kor_co_nm__in=obj["banks"],  # kor_co_nm이 obj.banks 리스트에 포함된 경우
-#         ).filter(depositoption__intr_rate__gte=obj["interestRate"]).distinct()
-#         serializer = DepositSerializer(deposits, many=True)
-#         return Response(serializer.data)
-
+@api_view(['POST', 'GET'])
+def recommend_two(request, obj):
+    if request.method == 'POST':
+        data = request.data
+        product = data.get('product')
+        interest_rate = data.get('interestRate')
+        period = data.get('period')
+        banks = data.get('banks')
+        # 필요에 따라 추가 데이터를 처리합니다
+        return Response({'message': 'Data received', 'product': product, 'interestRate': interest_rate, 'period': period, 'banks': banks}, status=status.HTTP_200_OK)
+        
 
 # 금융상품 데이터 DB 저장
 @api_view(['GET'])
@@ -376,7 +376,7 @@ def get_bank_all_type_loans(request, kor_co_nm):
 # 금융기관 별 대출(담보유형별)
 @api_view(['GET'])
 def get_bank_type_loans(request, mrtg_type, kor_co_nm):
-    loans = Loan.objects.filter(Q(savingoption__mrtg_type=mrtg_type)&Q(kor_co_nm=kor_co_nm)).distinct()
+    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type)&Q(kor_co_nm=kor_co_nm)).distinct()
     serializer = LoanSerializer(loans, many=True)
     return Response(serializer.data)
 
@@ -385,43 +385,20 @@ def get_bank_type_loans(request, mrtg_type, kor_co_nm):
 # 예금 가입 및 가입한 예금 조회
 @api_view(['GET','POST'])
 @permission_classes([IsAuthenticated])
-def deposit_contract(request, fin_prdt_cd):
-    
+def deposit_contract(request, fin_prdt_cd): 
     deposit = get_object_or_404(Deposit, fin_prdt_cd = fin_prdt_cd)
-
     if request.method == 'GET':
+        contracted_deposits = Deposit.objects.filter(contract_user=request.user)
+        serializer = DepositSerializer(contracted_deposits, many=True)
+        return Response(serializer.data)
 
-        if request.user in deposit.contract_user.all():
-
-            contracted_parts = deposit.contract_user.objects.filter(user_id=request.user)
-
-            contract_data = []
-
-
-            for deposit in Deposit.objects.all():
-
-                if deposit.id in contracted_parts.values_list('deposit_id', flat=True):
-
-                    deposit_data = {
-                        'id': deposit.id,
-                    }
-                    
-                    contract_data.append(deposit_data)
-
-            serializer = DepositSerializer(contract_data, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({'message': 'User is not contracted to this deposit.'})
-        
     elif request.method == 'POST': 
-
         if request.user in deposit.contract_user.all():
             deposit.contract_user.remove(request.user)
             action = '예금 해지 완료'
         else:
             deposit.contract_user.add(request.user)
             action = '예금 가입 완료'
-
         response_data = {
             'action': action,
         }
@@ -435,32 +412,9 @@ def saving_contract(request, fin_prdt_cd):
     saving = get_object_or_404(Saving, fin_prdt_cd=fin_prdt_cd)
 
     if request.method == 'GET':
-        # 유저가 적금에 가입되어 있는지 확인
-        if request.user in saving.contract_user.all():
-            # 해당 유저의 가입 정보 가져오기
-            contracted_parts = saving.contract_user.objects.filter(user_id=request.user)
-
-            # 가입된 적금에 대한 정보를 저장할 리스트
-            contract_data = []
-
-            # 가입된 적금에 대한 입금 정보 가져오기
-            for saving in Saving.objects.all():
-                # 가입된 적금과 관련된 입금 정보인지 확인
-                if saving.id in contracted_parts.values_list('saving_id', flat=True):
-                    # 입금 정보를 사전 형태로 구성하여 리스트에 추가
-                    saving_data = {
-                        'id': saving.id,
-                        'amount': saving.amount,
-                        # 필요한 다른 입금 정보도 여기에 추가
-                    }
-                    contract_data.append(saving_data)
-
-            # 결과를 시리얼라이즈하고 반환
-            serializer = SavingSerializer(contract_data, many=True)
-            return Response(serializer.data)
-        else:
-            # 가입되지 않은 경우에 대한 처리
-            return Response({'message': 'User is not contracted to this loan.'})
+        contracted_savings = Saving.objects.filter(contract_user=request.user)
+        serializer = SavingSerializer(contracted_savings, many=True)
+        return Response(serializer.data)
         
     elif request.method == 'POST': 
 
@@ -485,23 +439,9 @@ def loan_contract(request, fin_prdt_cd):
     loan = get_object_or_404(Loan, fin_prdt_cd=fin_prdt_cd)
 
     if request.method == 'GET':
-
-        if request.user in loan.contract_user.all():
-            contracted_parts = loan.contract_user.objects.filter(user_id=request.user)
-
-            contract_data = []
-            for loan in Loan.objects.all():
-                if loan.id in contracted_parts.values_list('loan_id', flat=True):
-                    loan_data = {
-                        'id': loan.id,
-                        'amount': loan.amount,
-                    }
-                    contract_data.append(loan_data)
-
-            serializer = LoanSerializer(contract_data, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({'message': 'User is not contracted to this saving.'})
+        contracted_loans = Loan.objects.filter(contract_user=request.user)
+        serializer = LoanSerializer(contracted_loans, many=True)
+        return Response(serializer.data)
                 
     elif request.method == 'POST': 
 
@@ -527,22 +467,9 @@ def deposit_like(request, fin_prdt_cd):
     deposit = get_object_or_404(Deposit, fin_prdt_cd = fin_prdt_cd)
 
     if request.method == 'GET':
-        if request.user in deposit.like_user.all():
-            liked_parts = deposit.like_user.objects.filter(user_id=request.user)
-            like_data = []
-
-            for deposit in Deposit.objects.all():
-                if deposit.id in liked_parts.values_list('deposit_id', flat=True):
-                    deposit_data = {
-                        'id': deposit.id,
-                        'amount': deposit.amount,
-                    }
-                    like_data.append(deposit_data)
-
-            serializer = DepositSerializer(like_data, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({'message': 'User is not liked to this deposit.'})
+        liked_deposits = Deposit.objects.filter(like_user=request.user)
+        serializer = DepositSerializer(liked_deposits, many=True)
+        return Response(serializer.data)
         
     elif request.method == 'POST': 
 
@@ -563,28 +490,13 @@ def deposit_like(request, fin_prdt_cd):
 @api_view(['GET','POST'])
 @permission_classes([IsAuthenticated])
 def saving_like(request, fin_prdt_cd):
-
-    print(request)
     
     saving = get_object_or_404(Saving, fin_prdt_cd = fin_prdt_cd)
 
     if request.method == 'GET':
-        if request.user in saving.like_user.all():
-            liked_parts = saving.like_user.objects.filter(user_id=request.user)
-            like_data = []
-
-            for saving in Saving.objects.all():
-                if saving.id in liked_parts.values_list('saving_id', flat=True):
-                    saving_data = {
-                        'id': saving.id,
-                        'amount': saving.amount,
-                    }
-                    like_data.append(saving_data)
-
-            serializer = SavingSerializer(like_data, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({'message': 'User is not liked to this saving.'})
+        liked_savings = Saving.objects.filter(like_user=request.user)
+        serializer = SavingSerializer(liked_savings, many=True)
+        return Response(serializer.data)
         
     elif request.method == 'POST': 
 
@@ -608,22 +520,9 @@ def loan_like(request, fin_prdt_cd):
     loan = get_object_or_404(Loan, fin_prdt_cd = fin_prdt_cd)
 
     if request.method == 'GET':
-        if request.user in loan.like_user.all():
-            liked_parts = loan.like_user.objects.filter(user_id=request.user)
-            like_data = []
-
-            for loan in Loan.objects.all():
-                if loan.id in liked_parts.values_list('loan_id', flat=True):
-                    saving_data = {
-                        'id': loan.id,
-                        'amount': loan.amount,
-                    }
-                    like_data.append(saving_data)
-
-            serializer = LoanSerializer(like_data, many=True)
-            return Response(serializer.data)
-        else:
-            return Response({'message': 'User is not liked to this loan.'})
+        liked_loans = Loan.objects.filter(like_user=request.user)
+        serializer = LoanSerializer(liked_loans, many=True)
+        return Response(serializer.data)
         
     elif request.method == 'POST': 
 

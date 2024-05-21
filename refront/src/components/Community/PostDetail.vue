@@ -5,12 +5,11 @@
     <p>제목: {{ postStore.detailInfos.title }}</p>
     <p>내용 : {{ postStore.detailInfos.content }}</p>
 
-
     <div v-if="authStore.isAuthenticated && authStore.userData.username === postStore.detailInfos.user.username">
       <button @click="postUpdate(postStore.detailInfos.id)">게시물 수정</button> 
       <button @click="postStore.postDelete(postStore.detailInfos.id)">게시물 삭제</button>  
-    </div> 
-    
+    </div>
+
 
     <hr>
 

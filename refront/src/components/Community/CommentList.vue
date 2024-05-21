@@ -4,9 +4,9 @@
     <div v-for="comment in postStore.commentInfos" :key="comment.id">
       <li>{{ comment.content }}</li>
       <br>
-
-      <button v-if="authStore.isAuthenticated && authStore.userData.username === comment.user.username" @click="commentUpdate(comment.id)">댓글 수정</button> 
-      <button v-if="authStore.isAuthenticated && authStore.userData.username === comment.user.username" @click="commentDelete(comment.id)">댓글 삭제</button> 
+      <button v-if="authStore.userData.username === comment.user.username" @click="commentUpdate(comment.id)">댓글 수정</button> 
+        <!-- <CommentUpdate v-if="authStore.userData.username === comment.user.username"/> -->
+      <button v-if="authStore.userData.username === comment.user.username" @click="commentDelete(comment.id)">댓글 삭제</button> 
 
     </div>
   </div>
@@ -16,7 +16,7 @@
 import { useAuthStore } from '@/stores/auth.js';
 import { usePostStore } from '@/stores/post';
 import { useRouter } from 'vue-router';
-
+import CommentUpdate from '@/components/Community/CommentUpdate.vue';
 
 const router = useRouter()
 const authStore = useAuthStore();

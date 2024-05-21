@@ -175,21 +175,14 @@ const selectedBank = ref('all_bank')
 
 // selectedBank 값이 변경될 때마다 데이터 갱신
 watch(selectedBank, (newValue) => {
-  if (newValue === 'all') {
+  // 오타 확인
+  if (newValue === 'all_bank') {
     depositStore.getAll()
   } else {
     depositStore.selectBank(selectedBank.value)
   }
 })
 
-// selectedBank 값이 변경될 때마다 데이터 갱신
-watch(selectedBank, (newValue) => {
-  if (newValue === 'all') {
-    depositStore.getAll()
-  } else {
-    depositStore.selectBank(selectedBank.value)
-  }
-})
 
 
 // 기간 선택 시 정렬
@@ -386,6 +379,7 @@ onMounted(() => {
 
 // 관심상품 저장하고 있는지 판단
 const isSaved = computed(() => {
+  console.log(depositStore.savedDeposit.length)
   if (depositStore.savedDeposit.length === 0) {
     return false
   } 
@@ -399,7 +393,7 @@ const isSaved = computed(() => {
 
 // 관심상품 저장
 const addSave = (prd) => {
-  depositStore.savedDeposit.push(prd)
+  // depositStore.savedDeposit.push(prd)
 
   axios({
       method: 'post',
@@ -412,6 +406,8 @@ const addSave = (prd) => {
       }
     })
       .then(response => {
+        depositStore.savedDeposit.push(prd)
+        console.log(depositStore.savedDeposit)
       })
       .catch(error => {
         console.log(error)

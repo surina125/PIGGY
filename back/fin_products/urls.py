@@ -6,7 +6,7 @@ app_name = "fin_products"
 urlpatterns = [
     path('financial_products/', views.financial_products),
  
-#    path('recommend_two/<str:username>/', views.recommend_two, name='recommend_two'), # 추천
+    path('recommend_two/', views.recommend_two, name='recommend_two'), # 추천
  
     # 예금
     path('deposit/<fin_prdt_cd>/', views.deposit_detail),                                    # 단일 예금 상품 조회
@@ -35,14 +35,14 @@ urlpatterns = [
     path('savings/<kor_co_nm>/<rsrv_type_nm>/sort/<save_trm>/', views.get_bank_type_reverse_savings),   # 특정 금융기관, 특정 적금유형, 기간 선택 시 금리 내림차순 정렬
     
     # 대출
-    path('loan/<fin_prdt_cd>/', views.loan_detail),                                          # 단일 대출상품 조회
-    path('loan/<fin_prdt_cd>/option_list/', views.loanoption_list),                          # 단일 대출상품 옵션 목록 조회
-    path('loan/<fin_prdt_cd>/option_list/<option_pk>/', views.loanoption_detail),        # 단일 대출상품 옵션 조회   
+    path('loans/<fin_prdt_cd>/', views.loan_detail),                                          # 단일 대출상품 조회
+    path('loans/<fin_prdt_cd>/option_list/', views.loanoption_list),                          # 단일 대출상품 옵션 목록 조회
+    path('loans/<fin_prdt_cd>/option_list/<option_pk>/', views.loanoption_detail),        # 단일 대출상품 옵션 조회   
 
-    path('loan/all_bank/all_type/', views.loan_list),                      # 전체 대출 목록 조회
-    path('loan/all_bank/<mrtg_type>/', views.get_all_bank_type_loans),     # 전체 금융기관에서 담보유형별 조회
-    path('loan/<kor_co_nm>/all_type/', views.get_bank_all_type_loans),     # 전체 담보유형에서 금융기관별 조회
-    path('loan/<kor_co_nm>/<mrtg_type>/', views.get_bank_type_loans),      # 담보유형별, 금융기관별 조회
+    path('loans/all_bank/all_type/', views.loan_list),                      # 전체 대출 목록 조회
+    path('loans/all_bank/<mrtg_type>/', views.get_all_bank_type_loans),     # 전체 금융기관에서 담보유형별 조회
+    path('loans/<kor_co_nm>/all_type/', views.get_bank_all_type_loans),     # 전체 담보유형에서 금융기관별 조회
+    path('loans/<kor_co_nm>/<mrtg_type>/', views.get_bank_type_loans),      # 담보유형별, 금융기관별 조회
     
 
     # 상품 가입/취소 + 조회

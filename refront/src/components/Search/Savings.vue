@@ -307,7 +307,7 @@ const isContracted = computed(() => {
   if (savingStore.contractedSaving.length === 0) {
     return false
   } 
-  console.log(savingStore.contractedSaving)
+  // console.log(savingStore.contractedSaving)
   const findPrd = savingStore.contractedSaving.findIndex((prd) => prd.fin_prdt_cd === saving.value.fin_prdt_cd)
   if (findPrd !== -1) {
     return true
@@ -386,6 +386,8 @@ const getSave = function(fin_prdt_cd) {
 
 // 관심상품 저장하고 있는지 판단
 const isSaved = computed(() => {
+  // console.log(123)
+  // console.log(savingStore.savedSaving)
   if (savingStore.savedSaving.length === 0) {
     return false
   } 
@@ -399,7 +401,7 @@ const isSaved = computed(() => {
 
 // 관심상품 저장
 const addSave = (prd) => {
-  savingStore.savedSaving.push(prd)
+  // savingStore.savedSaving.push(prd)
 
   axios({
       method: 'post',
@@ -412,7 +414,7 @@ const addSave = (prd) => {
       }
     })
       .then(response => {
-        savingStore.savedSaving.push(saving)
+        savingStore.savedSaving.push(prd)
       })
       .catch(error => {
         console.log(error)

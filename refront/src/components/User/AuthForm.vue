@@ -94,7 +94,7 @@ const handleFormSubmit = () => {
   if (isSignUpRoute) {
     // 회원가입 시 추가적인 유효성 검사
     if (password.value !== password2.value) {
-      errors.value.password2 = 'Passwords do not match';
+      errors.value = 'Passwords do not match';
     }
   }
 

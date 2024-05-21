@@ -22,6 +22,12 @@ import Exchange from '@/components/Service/Exchange.vue'
 import Map from '@/components/Service/Map.vue'
 import ReTachInfo from '@/components/Service/ReTachInfo.vue'
 
+import Recommend2 from '@/components/Recommend/Recommend2.vue'
+import twoResult from '@/components/Recommend/twoResult.vue'
+import Deposit2 from '@/components/Recommend/Deposit2.vue'
+import Saving2 from '@/components/Recommend/Saving2.vue'
+import Loan2 from '@/components/Recommend/Loan2.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -34,6 +40,32 @@ const router = createRouter({
       path: '/recommend/:username',
       name: 'recommend',
       component: RecommendView
+    },
+    {
+      path: '/recommend/:username/two',
+      name: 'two',
+      component: Recommend2
+    },
+    {
+      path: '/recommend/:username/two_result',
+      component: twoResult,
+      children: [
+        {
+          path: 'deposit2',
+          name: 'deposit2',
+          component: Deposit2
+        },
+        {
+          path: 'saving2',
+          name: 'saving2',
+          component: Saving2
+        },
+        {
+          path: 'loan2',
+          name: 'loan2',
+          component: Loan2
+        },
+      ]
     },
     {
       path: '/search',

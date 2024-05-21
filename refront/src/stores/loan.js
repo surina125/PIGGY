@@ -10,6 +10,7 @@ export const useLoanStore = defineStore('loan', () => {
   const Aloans = ref([])
   const Eloans = ref([])
 
+
   // dcls_month = ref("")                                                       
   // fin_co_no = ref("")                                                    
   // kor_co_nm = ref("")                                         
@@ -29,7 +30,7 @@ export const useLoanStore = defineStore('loan', () => {
   const getAll = function() {
     axios({
       method: 'get',
-      url: `${API_URL}/fin_products/loan/all_bank/all_type/`
+      url: `${API_URL}/fin_products/loans/all_bank/all_type/`
     })
       .then(response => {
         loans.value = response.data
@@ -57,7 +58,7 @@ export const useLoanStore = defineStore('loan', () => {
           if (loan.loanoption_set) {
             loan.loanoption_set.forEach(option => {
               // 각 옵션에 대해 필요한 작업 수행
-              console.log(option)
+              // console.log(option)
 
               if (option.mrtg_type_nm==="아파트") {
                 // lend_rate_type_nm.value = option.lend_rate_type_nm
@@ -75,7 +76,9 @@ export const useLoanStore = defineStore('loan', () => {
                   join_way: loan.join_way,
                   erly_rpay_fee: loan.erly_rpay_fee,
                   dly_rate: loan.dly_rate,
+                  // loan_lmt: loan.loan_lmt,
                   mrtg_type_nm: option.mrtg_type_nm,
+                  // rpay_type_nm: option.rpay_type_nm,
                   lend_rate_type_nm: option.lend_rate_type_nm,
                   lend_rate_min: option.lend_rate_min,
                   lend_rate_max: option.lend_rate_max,
@@ -98,7 +101,9 @@ export const useLoanStore = defineStore('loan', () => {
                   join_way: loan.join_way,
                   erly_rpay_fee: loan.erly_rpay_fee,
                   dly_rate: loan.dly_rate,
+                  // loan_lmt: loan.loan_lmt,
                   mrtg_type_nm: option.mrtg_type_nm,
+                  // rpay_type_nm: option.rpay_type_nm,
                   lend_rate_type_nm: option.lend_rate_type_nm,
                   lend_rate_min: option.lend_rate_min,
                   lend_rate_max: option.lend_rate_max,
@@ -122,6 +127,8 @@ export const useLoanStore = defineStore('loan', () => {
   // 관심 예금 저장
   const savedLoan = ref([])
 
+  const selectedLoans = ref([])
 
-  return { API_URL, loans, Aloans, Eloans, getAll, banks, contractedLoan, savedLoan }
+
+  return { API_URL, loans, Aloans, Eloans, getAll, banks, contractedLoan, savedLoan, selectedLoans }
 }, { persist: true })
