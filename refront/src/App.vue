@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="app">
     <header>
       <AppNav />
     </header>
@@ -15,7 +15,16 @@ import AppNav from '@/components/Common/AppNav.vue'
 </script>
 
 <style scoped>
+#app {
+  width: 100vw;
+  height: 100vh;
+  padding-right: 100px;
+  padding-left: 100px;
+  border: solid 1px red;
+  background-color: #f1f5ff;
+}
+
 .main-content {
-  padding-top: 70px; /* Adjust this value according to the height of your fixed navbar */
+  padding-top: 80px; 
 }
 </style>

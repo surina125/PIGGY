@@ -11,7 +11,9 @@ export const useRecommendStore = defineStore('recommend', () => {
   const savings_type = ref("")
   const savings_period = ref("")
 
+  const loas = ref([])
 
 
-  return { deposits, deposits_period, savings, savings_type, savings_period }
+
+  return { deposits, deposits_period, savings, savings_type, savings_period, loas }
 }, { persist: true })

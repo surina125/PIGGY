@@ -67,7 +67,7 @@ export const useLoanStore = defineStore('loan', () => {
                 // lend_rate_avg.value = option.lend_rate_avg
 
                 Aloans.value.push({
-                  name: bankName,
+                  mrtg_type_nm: bankName,
                   dcls_month: loan.dcls_month,
                   fin_co_no: loan.fin_co_no,
                   fin_prdt_nm: loan.fin_prdt_nm,
@@ -77,7 +77,7 @@ export const useLoanStore = defineStore('loan', () => {
                   erly_rpay_fee: loan.erly_rpay_fee,
                   dly_rate: loan.dly_rate,
                   // loan_lmt: loan.loan_lmt,
-                  mrtg_type_nm: option.mrtg_type_nm,
+                  // mrtg_type_nm: option.mrtg_type_nm,
                   // rpay_type_nm: option.rpay_type_nm,
                   lend_rate_type_nm: option.lend_rate_type_nm,
                   lend_rate_min: option.lend_rate_min,
@@ -92,7 +92,7 @@ export const useLoanStore = defineStore('loan', () => {
                 // lend_rate_avg.value = option.lend_rate_avg
 
                 Eloans.value.push({
-                  name: bankName,
+                  mrtg_type_nm: bankName,
                   dcls_month: loan.dcls_month,
                   fin_co_no: loan.fin_co_no,
                   kor_co_nm: loan.kor_co_nm,
@@ -102,7 +102,7 @@ export const useLoanStore = defineStore('loan', () => {
                   erly_rpay_fee: loan.erly_rpay_fee,
                   dly_rate: loan.dly_rate,
                   // loan_lmt: loan.loan_lmt,
-                  mrtg_type_nm: option.mrtg_type_nm,
+                  // mrtg_type_nm: option.mrtg_type_nm,
                   // rpay_type_nm: option.rpay_type_nm,
                   lend_rate_type_nm: option.lend_rate_type_nm,
                   lend_rate_min: option.lend_rate_min,

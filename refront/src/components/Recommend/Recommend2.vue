@@ -85,7 +85,8 @@
       </div>
 
       <!-- 대출을 선택했을 경우 -->
-      <div v-if="selectedProduct === '대출'">
+       <!-- 대출을 선택했을 경우 -->
+       <div v-if="selectedProduct === '대출'">
         <label for="type-select">담보유형을 선택하세요</label>
         <select v-model="type" id="type-select" class="form-select form-select-lg mb-3" aria-label="유형 선택">
           <option value="" disabled selected>담보 유형</option>
@@ -93,7 +94,7 @@
           <option value="아파트외">아파트외</option>
         </select>
 
-        <label>선호하는 금융회사을 선택하세요:</label>
+        <label>선호하는 금융회사를 선택하세요:</label>
         <div class="bank-buttons">
           <button
             v-for="bank in loanStore.banks"
@@ -107,7 +108,6 @@
           </button>
         </div>
       </div>
-
     </div>
 
     <button type="submit" class="btn btn-primary">제출</button>
@@ -396,50 +396,54 @@ const submitForm = () => {
       console.log("Form Data:", formData)
       alert('폼이 제출되었습니다!')
 } else {
-  // 대출을 선택
-  loanStore.getAll();
-  const loans = loanStore.loans;
+    // 대출을 선택
+    loanStore.getAll();
 
-  // 선호 은행이 선택되지 않았을 경우 모든 은행을 포함하도록 설정
-  const banks = selectedBanks.value.length > 0 ? selectedBanks.value : loanStore.banks;
+    let loans; // 여기서 loans 변수를 선언합니다.
 
-  // 1. 은행과 담보 유형을 고려하여 필터링
-  let filteredLoans = loans.filter((loan) => {
-    return banks.includes(loan.kor_co_nm) && loan.loanoption_set.some(
-      (option) => option.mrtg_type_nm === type.value
-    );
-  });
+    if (type.value === '아파트') {
+      loans = loanStore.Aloans;
+    } else {
+      loans = loanStore.Eloans;
+    }
 
-  // 금리가 낮은 순으로 정렬하고 상위 10개 선택
-  filteredLoans.sort((a, b) => a.lend_rate_avg - b.lend_rate_avg);
-  filteredLoans = filteredLoans.slice(0, 10);
+    // 선호 은행이 선택되지 않았을 경우 모든 은행을 포함하도록 설정
+    const banks = selectedBanks.value.length > 0 ? selectedBanks.value : loanStore.banks;
 
-  // 2. 1번째 방법의 결과가 10개 이하이면 담보 유형과 금리를 고려해서 낮은 것 10개 추가
-  if (filteredLoans.length < 10) {
-    let additionalLoans = loans.filter((loan) => {
-      return loan.loanoption_set.some(
-        (option) => option.mrtg_type_nm === type.value
-      );
+    // 1. 은행과 담보 유형을 고려하여 필터링
+    let filteredLoans = loans.filter((loan) => {
+      return banks.includes(loan.kor_co_nm) && loan.mrtg_type_nm === type.value;
     });
 
-    // 금리가 낮은 순으로 정렬
-    additionalLoans.sort((a, b) => a.lend_rate_avg - b.lend_rate_avg);
 
-    // 중복 제거 후 추가
-    const uniqueLoans = new Set(filteredLoans.map(l => l.id));
-    additionalLoans.forEach(loan => {
-      if (!uniqueLoans.has(loan.id) && filteredLoans.length < 10) {
-        filteredLoans.push(loan);
-        uniqueLoans.add(loan.id);
-      }
-    });
+    // 금리가 낮은 순으로 정렬하고 상위 10개 선택
+    filteredLoans.sort((a, b) => a.lend_rate_avg - b.lend_rate_avg);
+    filteredLoans = filteredLoans.slice(0, 10);
+
+    // 2. 1번째 방법의 결과가 10개 이하이면 담보 유형과 금리를 고려해서 낮은 것 10개 추가
+    if (filteredLoans.length < 10) {
+      let additionalLoans = loans.filter((loan) => {
+        return loan.mrtg_type_nm === type.value;
+      });
+
+      // 금리가 낮은 순으로 정렬
+      additionalLoans.sort((a, b) => a.lend_rate_avg - b.lend_rate_avg);
+
+      // 중복 제거 후 추가
+      const uniqueLoans = new Set(filteredLoans.map(l => l.fin_prdt_cd));
+      additionalLoans.forEach(loan => {
+        if (!uniqueLoans.has(loan.fin_prdt_cd) && filteredLoans.length < 10) {
+          filteredLoans.push(loan);
+          uniqueLoans.add(loan.fin_prdt_cd);
+        }
+      });
+    }
+
+    // 필터링된 대출 정보를 recommendStore.loans에 저장
+    recommendStore.loas = filteredLoans;
+    
   }
-
-  // recommendStore에 loans 배열 안에다가 추천받은 대출 목록들을 저장
-  recommendStore.loans = filteredLoans;
-  console.log(recommendStore.loans);
-
-  }
+  console.log(recommendStore.loas)
   router.push({ name: 'deposit2', params: {username: authStore.userData.username} });
 }
 </script>

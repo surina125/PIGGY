@@ -9,7 +9,7 @@
         <RouterLink class="nav-link" :to="{name: 'saving2', params: {username: authStore.userData.username}}">적금</RouterLink>
       </li>
       <li class="nav-item">
-        <!-- <RouterLink class="nav-link" :to="{name: 'loan2', params: {username: authStore.userData.username}}">대출</RouterLink> -->
+        <RouterLink class="nav-link" :to="{name: 'loan2', params: {username: authStore.userData.username}}">대출</RouterLink>
       </li>
     </ul>
 

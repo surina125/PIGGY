@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <RouterLink class="navbar-brand" :to="{ name: 'home' }">
         <img src="@/assets/logo.png" alt="logo_img" class="logo-img">
-        PIGGY
+        <strong>PIGGY</strong>
       </RouterLink>
       <button
         class="navbar-toggler"
@@ -144,17 +144,22 @@ onUnmounted(() => {
 
 <style scoped>
 nav {
-  background-color: #f1f5ff;
-  transition: border-bottom 0.3s ease;
-  height: 70px; /* 고정 높이 설정 */
+  height: 80px; /* 높이 지정 */
+  transition: border-bottom 0.3s ease; /* 스크롤 내릴 때 0.3초 뒤 바닥선 생김 */
+  background-color: #f1f5ff; /* 네비바 지금 투명하게 적용되서 배경색 지정해줘야 함 */
+
+  padding-right: 100px; /* 네비바도 #App이랑 똑같이 패딩 지정 */
+  padding-left: 80px; /* 로고 이미지가 있어서그런지 넘 들어가 보여서 80px로 바꿈 */
 }
 
 nav.scroll-border {
-  border-bottom: 2px solid #dee2e6; /* 스크롤 시 하단 경계선 */
+  border-bottom: 2px solid #dee2e6; /* 바닥선 색깔 지정 */
 }
 
 .logo-img {
-  height: 50px; /* 로고 크기 조정 */
+  height: 42px; /* 로고 크기 조정 */
+  padding-bottom: 5px;
+  margin-right: 10px; 
 }
 
 .navbar-nav .nav-link {
@@ -170,7 +175,7 @@ nav.scroll-border {
 
 .dropdown-menu {
   display: none;
-  background-color: #f1f5ff; /* 네비게이션 바와 동일한 배경색 */
+  /* background-color: #f1f5ff; 네비게이션 바와 동일한 배경색 */
   border: none; /* 테두리 제거 */
 }
 

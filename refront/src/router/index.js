@@ -28,6 +28,8 @@ import Deposit2 from '@/components/Recommend/Deposit2.vue'
 import Saving2 from '@/components/Recommend/Saving2.vue'
 import Loan2 from '@/components/Recommend/Loan2.vue'
 
+import Recommend1 from '@/components/Recommend/Recommend1.vue'
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -40,6 +42,11 @@ const router = createRouter({
       path: '/recommend/:username',
       name: 'recommend',
       component: RecommendView
+    },
+    {
+      path: '/recommend/:username/one',
+      name: 'one',
+      component: Recommend1
     },
     {
       path: '/recommend/:username/two',

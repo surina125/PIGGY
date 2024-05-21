@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="box" @click="navigateTo('page1')">
+    <div class="box" @click="navigateTo('one')">
       <h2>Explore Page 1</h2>
       <p>Click here to see more details on Page 1</p>
     </div>
