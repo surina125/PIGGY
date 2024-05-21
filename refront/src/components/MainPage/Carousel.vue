@@ -98,6 +98,7 @@ const handleSearchClick = () => {
 .carousel-image2 {
   width: auto;
   height: 90%;
+  margin-right: 20px;
 }
 .carousel-image1 {
   width: auto;
@@ -136,7 +137,7 @@ p {
 
 .second-carousel-text {
   text-align: right; /* 두 번째 카루셀 텍스트를 왼쪽 정렬 */
-  margin-right: 60px;
+  margin-right: 130px;
   font-size: 120px; /* 텍스트 크기 조정 */
   margin-bottom: 20px;
   color: #333;
