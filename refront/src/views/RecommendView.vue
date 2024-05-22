@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="box" @click="navigateTo('recommendationBySimilarity')">
+    <div class="box" @click="navigateTo('one')">
       <h2>Find Similar People</h2>
       <p>Discover products used by people like you in terms of age, assets, and salary.</p>
     </div>
-    <div class="box" @click="navigateTo('recommendationBySurvey')">
+    <div class="box" @click="navigateTo('two')">
       <h2>Answer Survey Questions</h2>
       <p>Choose your preferences and get tailored product recommendations.</p>
     </div>
