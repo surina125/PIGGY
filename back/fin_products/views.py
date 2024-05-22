@@ -15,17 +15,16 @@ from .models import *
 # from accounts.serializers import *
 
 
-# @api_view(['POST', 'GET'])
-# @permission_classes([IsAuthenticated])
-# def recommend_two(request, obj):
-#     if request.method == 'POST':
-#         data = request.data
-#         product = data.get('product')
-#         interest_rate = data.get('interestRate')
-#         period = data.get('period')
-#         banks = data.get('banks')
-#         # 필요에 따라 추가 데이터를 처리합니다
-#         return Response({'message': 'Data received', 'product': product, 'interestRate': interest_rate, 'period': period, 'banks': banks}, status=status.HTTP_200_OK)
+@api_view(['POST', 'GET'])
+def recommend_two(request, obj):
+    if request.method == 'POST':
+        data = request.data
+        product = data.get('product')
+        interest_rate = data.get('interestRate')
+        period = data.get('period')
+        banks = data.get('banks')
+        # 필요에 따라 추가 데이터를 처리합니다
+        return Response({'message': 'Data received', 'product': product, 'interestRate': interest_rate, 'period': period, 'banks': banks}, status=status.HTTP_200_OK)
         
 
 # 금융상품 데이터 DB 저장
@@ -280,7 +279,6 @@ def get_all_deposits(request, save_trm):
     return Response(serializer.data)
 
 
-
 # 금융기관별 예금
 @api_view(['GET'])
 def get_bank_deposits(request, kor_co_nm):
@@ -457,7 +455,34 @@ def loan_contract(request, fin_prdt_cd):
             'action': action,
         }
         return Response(response_data)
+
+
+# 가입한 예금 조회
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def deposit_contract_list(request):
+    contracted_deposits = Deposit.objects.filter(contract_user=request.user)
+    serializer = DepositSerializer(contracted_deposits, many=True)
+    return Response(serializer.data)
+
     
+# 가입한 적금 조회
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def saving_contract_list(request):
+    contracted_savings = Saving.objects.filter(contract_user=request.user)
+    serializer = SavingSerializer(contracted_savings, many=True)
+    return Response(serializer.data)
+
+
+# 가입한 대출 조회
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def loan_contract_list(request):
+    contracted_loans = Loan.objects.filter(contract_user=request.user)
+    serializer = LoanSerializer(contracted_loans, many=True)
+    return Response(serializer.data)
+            
 
 
 # 관심 예금 조회 및 가입
@@ -538,3 +563,27 @@ def loan_like(request, fin_prdt_cd):
             'action': action,
         }
         return Response(response_data)
+
+# 관심 예금 조회
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def deposit_like_list(request):
+    liked_deposits = Deposit.objects.filter(like_user=request.user)
+    serializer = DepositSerializer(liked_deposits, many=True)
+    return Response(serializer.data)
+
+# 관심 적금 조회
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def saving_like_list(request):
+    liked_savings = Saving.objects.filter(like_user=request.user)
+    serializer = SavingSerializer(liked_savings, many=True)
+    return Response(serializer.data)
+
+# 관심 대출 조회
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def loan_like_list(request):
+    liked_loans = Loan.objects.filter(like_user=request.user)
+    serializer = LoanSerializer(liked_loans, many=True)
+    return Response(serializer.data)

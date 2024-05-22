@@ -6,7 +6,7 @@ app_name = "fin_products"
 urlpatterns = [
     path('financial_products/', views.financial_products),
  
-    # path('recommend_two/', views.recommend_two, name='recommend_two'), # 추천
+    path('recommend_two/', views.recommend_two, name='recommend_two'), # 추천
  
     # 예금
     path('deposit/<fin_prdt_cd>/', views.deposit_detail),                                    # 단일 예금 상품 조회
@@ -43,15 +43,27 @@ urlpatterns = [
     # path('loans/all_bank/<mrtg_type>/', views.get_all_bank_type_loans),     # 전체 금융기관에서 담보유형별 조회
     # path('loans/<kor_co_nm>/all_type/', views.get_bank_all_type_loans),     # 전체 담보유형에서 금융기관별 조회
     # path('loans/<kor_co_nm>/<mrtg_type>/', views.get_bank_type_loans),      # 담보유형별, 금융기관별 조회
-    
 
-    # 상품 가입/취소 + 조회
+    # 상품 가입/취소/조회 
     path('deposit/contract/<fin_prdt_cd>/', views.deposit_contract),   # 예금 
     path('saving/contract/<fin_prdt_cd>/', views.saving_contract),     # 적금 
     path('loan/contract/<fin_prdt_cd>/', views.loan_contract),         # 대출
-    # 관심상품 저장/취소 + 조회
+   
+   # 상품 가입 조회
+    path('dep/contract/search/', views.deposit_contract_list),      # 예금 
+    path('sav/contract/search/', views.saving_contract_list),        # 적금 
+    path('loa/contract/search/', views.loan_contract_list),            # 대출 
+
+    # 관심상품 저장/취소/조회
     path('deposit/like/<fin_prdt_cd>/', views.deposit_like),           # 예금 
     path('saving/like/<fin_prdt_cd>/', views.saving_like),             # 적금 
     path('loan/like/<fin_prdt_cd>/', views.loan_like),                 # 대출 
+
+
+    # 관심상품 조회 조회
+    path('dep/like/search/', views.deposit_like_list),             # 예금 
+    path('sav/like/search/', views.saving_like_list),              # 적금 
+    path('loa/like/search/', views.loan_like_list),                # 대출 
+
 
     ]
