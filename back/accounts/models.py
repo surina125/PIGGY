@@ -4,7 +4,6 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.account.utils import user_email, user_field, user_username
 
 class User(AbstractUser):
-    username = models.CharField(max_length=50,unique=True)
     email = models.EmailField(max_length=300, blank=True, null=True)                                     # 이메일
     age = models.IntegerField()                                                                          # 나이
     profile_img = models.ImageField(upload_to='image/', default='image/user.png')                        # 프로필 이미지
