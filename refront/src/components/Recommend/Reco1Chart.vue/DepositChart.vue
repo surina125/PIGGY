@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1>정기예금</h1>
-
+    
     <!-- 표 -->
     <table class="table table-hover">
       <thead>

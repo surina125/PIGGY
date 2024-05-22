@@ -31,7 +31,6 @@ onMounted(() => {
   height: 100vh;
   padding-right: 100px;
   padding-left: 100px;
-  border: solid 1px red;
   background-color: #f1f5ff;
 }
 
