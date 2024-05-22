@@ -43,7 +43,7 @@ onMounted(() => {
 
 const createChart = () => {
   if (exchangeChart) {
-    exchangeChart.destroy(
+    exchangeChart.destroy()
   }
 
   // 데이터를 내림차순으로 정렬

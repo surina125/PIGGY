@@ -6,12 +6,26 @@
 
     <main class="main-content">
       <RouterView />
+
+      <ChatIcon @toggle-chat="toggleChat" />
+      <Chatbot :isVisible="isChatVisible" @close-chat="toggleChat" />
     </main>
+
   </div>
 </template>
 
 <script setup>
 import AppNav from '@/components/Common/AppNav.vue'
+import ChatIcon from '@/components/Service/ChatIcon.vue';
+import Chatbot from '@/components/Service/Chatbot.vue';
+import { ref } from 'vue'
+
+
+const isChatVisible = ref(false);
+
+const toggleChat = () => {
+  isChatVisible.value = !isChatVisible.value;
+};
 </script>
 
 <style scoped>
