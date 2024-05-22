@@ -417,7 +417,7 @@ const submitForm = () => {
 
 
     // 금리가 낮은 순으로 정렬하고 상위 10개 선택
-    filteredLoans.sort((a, b) => a.lend_rate_avg - b.lend_rate_avg);
+    filteredLoans.sort((a, b) => a.lend_rate_min - b.lend_rate_min);
     filteredLoans = filteredLoans.slice(0, 10);
 
     // 2. 1번째 방법의 결과가 10개 이하이면 담보 유형과 금리를 고려해서 낮은 것 10개 추가
@@ -427,7 +427,7 @@ const submitForm = () => {
       });
 
       // 금리가 낮은 순으로 정렬
-      additionalLoans.sort((a, b) => a.lend_rate_avg - b.lend_rate_avg);
+      additionalLoans.sort((a, b) => a.lend_rate_min - b.lend_rate_min);
 
       // 중복 제거 후 추가
       const uniqueLoans = new Set(filteredLoans.map(l => l.fin_prdt_cd));
