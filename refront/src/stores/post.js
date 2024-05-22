@@ -129,6 +129,7 @@ const commentUpdate = function(post_pk, comment_pk, updateData) {
     data : updateData
   })
   .then((response) => {
+    
     return response.data;
     
   })

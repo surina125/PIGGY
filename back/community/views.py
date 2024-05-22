@@ -11,14 +11,14 @@ from .models import *
 def post_list(request):
     if request.method == 'GET':
         posts = Post.objects.all()
-        serializer = PostListSerializer(posts, many=True)
+        serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
 
 # 단일 게시글 create
 @permission_classes([IsAuthenticated])
 @api_view(['POST'])
 def post_create(request):
-    serializer = PostListSerializer(data=request.data)
+    serializer = PostSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save(user=request.user)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -7,7 +7,6 @@ import CommunityView from '@/views/CommunityView.vue'
 import PostCreate from '@/components/Community/PostCreate.vue'
 import PostDetail from '@/components/Community/PostDetail.vue'
 import PostUpdate from '@/components/Community/PostUpdate.vue'
-import CommentUpdate from '@/components/Community/CommentUpdate.vue'
 
 import SignUpView from '@/views/SignUpView.vue'
 import LogInView from '@/views/LogInView.vue'
@@ -138,12 +137,6 @@ const router = createRouter({
       path: '/update/:postId',
       name: 'postupdate',
       component: PostUpdate,
-     
-    },
-    {
-      path: '/update/:commentId',
-      name: 'commentupdate',
-      component: CommentUpdate,
      
     },
     {

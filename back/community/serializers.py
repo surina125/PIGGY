@@ -10,30 +10,38 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username',)
 
-class PostListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Post
-        fields = '__all__'
-        read_only_fields = ('user',)
-
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
-    class CommentSerialzer(serializers.ModelSerializer):
+
+    class CommentSerializer(serializers.ModelSerializer):
         user = UserSerializer(read_only=True)
 
         class Meta:
             model = Comment
             fields = '__all__'
 
-    comment_set = CommentSerialzer(many=True, read_only=True)
+    comment_set = CommentSerializer(many=True, read_only=True)
+    formatted_created_at = serializers.SerializerMethodField()  
+
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ['id', 'title', 'content', 'user', 'formatted_created_at', 'comment_set']
+
+    def get_formatted_created_at(self, obj):
+        return obj.created_at.strftime('%Y-%m-%d')
     
 class CommentSerialzer(serializers.ModelSerializer):
+    class PostListSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Post
+            fields = '__all__'
+            read_only_fields = ('user',)
     user = UserSerializer(read_only=True)
     post = PostListSerializer(read_only=True)
+    created_at = serializers.DateTimeField(format='%Y.%m.%d. %H:%M', read_only=True)
+
+
     class Meta:
         model = Comment
         fields = '__all__'
