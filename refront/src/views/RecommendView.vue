@@ -19,9 +19,31 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useRecommendStore } from '@/stores/recommend'
+// import { useLoanStore } from '@/stores/loan'
+import { onMounted } from 'vue'
+
+
+// 만명 sort돌리는 거라 속도가 늦어서 이 페이지에 놓아둠
+onMounted(() => {
+  const recommendStore = useRecommendStore()
+  recommendStore.reco1D = []
+  recommendStore.reco1S = []
+  recommendStore.reco1L = []
+
+  recommendStore.reco1Result()
+})
+
+// onMounted(() => {
+//   const loanStore = useLoanStore()
+//   loanStore.Aloans = []
+//   loanStore.Eloans = []
+//   loanStore.getAll()
+// })
 
 const authStore = useAuthStore()
 const router = useRouter()
+
 
 const navigateTo = (page) => {
   router.push({ name: page, params: {username: authStore.userData.username} })

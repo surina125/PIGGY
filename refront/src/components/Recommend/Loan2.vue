@@ -12,9 +12,9 @@
           <th scope="col">상품명</th>
           <th scope="col">담보유형</th>
           <th scope="col">대출금리유형</th>
-          <th scope="col" @click="sort('min')">최저 대출금리</th>
-          <th scope="col" @click="sort('max')">최고 대출금리 </th>
-          <th scope="col" @click="sort('avg')">전월 취급 평균금리 </th>
+          <th scope="col">최저 대출금리</th>
+          <th scope="col">최고 대출금리 </th>
+          <th scope="col">전월 취급 평균금리 </th>
         </tr>
       </thead>
 

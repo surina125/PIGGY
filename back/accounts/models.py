@@ -4,12 +4,7 @@ from allauth.account.adapter import DefaultAccountAdapter
 from allauth.account.utils import user_email, user_field, user_username
 
 class User(AbstractUser):
-    SAVING_PROPENSITY_CHOICES = [
-        ('알뜰형', '알뜰형'),
-        ('도전형', '도전형'),
-        ('성실형', '성실형'),
-    ]
-
+    username = models.CharField(max_length=50,unique=True)
     email = models.EmailField(max_length=300, blank=True, null=True)                                     # 이메일
     age = models.IntegerField()                                                                          # 나이
     profile_img = models.ImageField(upload_to='image/', default='image/user.png')                        # 프로필 이미지
@@ -17,7 +12,6 @@ class User(AbstractUser):
     annual_income = models.IntegerField(blank=True, null=True)                                           # 연봉
     property = models.IntegerField(blank=True, null=True)                                                # 자산  
     main_bank = models.CharField(max_length=50, blank=True, null=True)                                   # 주거래 은행
-    saving_propensity = models.CharField(max_length=20, choices=SAVING_PROPENSITY_CHOICES)               # 성향
     D_products = models.TextField(blank=True, null=True) # 아래랑 겹치지만 필수요구사항에 있어서 우선 필드는 만들어 놓음
     S_products = models.TextField(blank=True, null=True) # 아래랑 겹치지만 필수요구사항에 있어서 우선 필드는 만들어 놓음
     L_products = models.TextField(blank=True, null=True) # 아래랑 겹치지만 필수요구사항에 있어서 우선 필드는 만들어 놓음
@@ -40,7 +34,6 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         annual_income = data.get("annual_income")
         property = data.get("property")
         main_bank = data.get("main_bank")
-        saving_propensity = data.get("saving_propensity")
         D_products = data.get("D_products")
         S_products = data.get("S_products")
         L_products = data.get("L_products")
@@ -60,8 +53,6 @@ class CustomAccountAdapter(DefaultAccountAdapter):
             user.annual_income = annual_income
         if property:
             user.property = property
-        if saving_propensity:
-            user.saving_propensity = saving_propensity
         if D_products:
             user.D_products = D_products
         if S_products:

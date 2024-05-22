@@ -23,14 +23,6 @@
         <label for="main_bank">주 은행</label>
         <input type="text" v-model="user.main_bank" class="form-control" id="main_bank" />
       </div>
-      <div class="form-group">
-        <label for="saving_propensity">저축 성향</label>
-        <select v-model="user.saving_propensity" class="form-control" id="saving_propensity">
-          <option value="알뜰형">알뜰형</option>
-          <option value="도전형">도전형</option>
-          <option value="성실형">성실형</option>
-        </select>
-      </div>
       <div class="text-center mb-4">
         <button type="submit" class="btn btn-primary">프로필 수정</button>
       </div>
@@ -77,7 +69,6 @@ const updateProfile = () => {
   formData.append('annual_income', user.value.annual_income)
   formData.append('property', user.value.property)
   formData.append('main_bank', user.value.main_bank)
-  formData.append('saving_propensity', user.value.saving_propensity)
 
   axios.patch(`http://localhost:8000/users/user/${user.value.username}/`, formData, {
     headers: {

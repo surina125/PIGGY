@@ -11,10 +11,10 @@
           <th scope="col">공시제출일</th>
           <th scope="col">금융회사명</th>
           <th scope="col">상품명</th>
-          <th v-if="recommendStore.deposits_period==='6'" scope="col" @click="sort('6')">6개월 저축 금리</th>
-          <th v-if="recommendStore.deposits_period==='12'" scope="col" @click="sort('12')">12개월 저축 금리</th>
-          <th v-if="recommendStore.deposits_period==='24'" scope="col" @click="sort('24')">24개월 저축 금리</th>
-          <th v-if="recommendStore.deposits_period==='36'" scope="col" @click="sort('36')">36개월 저축 금리</th>
+          <th v-if="recommendStore.deposits_period==='6'" scope="col">6개월 저축 금리</th>
+          <th v-if="recommendStore.deposits_period==='12'" scope="col">12개월 저축 금리</th>
+          <th v-if="recommendStore.deposits_period==='24'" scope="col">24개월 저축 금리</th>
+          <th v-if="recommendStore.deposits_period==='36'" scope="col">36개월 저축 금리</th>
         </tr>
       </thead>
       <tbody>

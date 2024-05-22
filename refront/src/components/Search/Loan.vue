@@ -181,14 +181,11 @@ import {
 } from 'chart.js'
 import { Bar } from 'vue-chartjs'
 
-const loanStore = useLoanStore()
 const authStore = useAuthStore()
+const loanStore = useLoanStore()
 
-onMounted(() => {
-  loanStore.getAll()
-})
 
-console.log(loanStore.Aloans)
+// console.log(loanStore.Aloans)
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 

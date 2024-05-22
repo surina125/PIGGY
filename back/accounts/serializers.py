@@ -24,7 +24,6 @@ class CustomRegisterSerializer(RegisterSerializer):
     age = serializers.IntegerField(
         required=False,
     )
-    saving_propensity = serializers.ChoiceField(choices=User.SAVING_PROPENSITY_CHOICES)
     profile_img = serializers.ImageField(required=False)
     
     # 해당 필드도 저장 시 함께 사용하도록 설정합니다.
@@ -39,7 +38,6 @@ class CustomRegisterSerializer(RegisterSerializer):
         'email': self.validated_data.get('email', ''),
         'property': self.validated_data.get('property', ''),
         'main_bank': self.validated_data.get('main_bank', ''),
-        'saving_propensity': self.validated_data.get('saving_propensity', ''),
         'profile_img': self.validated_data.get('profile_img', ''),
         }
     
@@ -68,8 +66,6 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
             extra_fields.append('property')
         if hasattr(UserModel, 'main_bank'):
             extra_fields.append('main_bank')
-        if hasattr(UserModel, 'saving_propensity'):
-            extra_fields.append('saving_propensity')
         if hasattr(UserModel, 'profile_img'):
             extra_fields.append('profile_img')
 

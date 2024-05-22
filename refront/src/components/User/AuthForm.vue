@@ -39,14 +39,6 @@
           <label for="main_bank">주거래 은행 : </label>
           <input type="text" v-model.trim="main_bank" id="main_bank">
         </div>
-        <div>
-          <label for="saving_propensity">저축 성향 :</label>
-          <select v-model="saving_propensity" id="saving_propensity">
-            <option value="알뜰형" selected>알뜰형</option>
-            <option value="도전형">도전형</option>
-            <option value="성실형">성실형</option>
-          </select>
-        </div>
         </div>
         <button class="submit-button">{{ buttonLabel }}</button>
       <span v-if="errorMessage" class="error">{{ errorMessage }}</span>
@@ -71,7 +63,6 @@ const email = ref('');
 const annual_income = ref('');
 const property = ref('');
 const main_bank = ref('');
-const saving_propensity = ref('');
 const age = ref('');
 const nickname = ref('');
 
@@ -102,7 +93,7 @@ const handleFormSubmit = () => {
   // 폼이 유효한지 확인
   if (Object.keys(errors.value).length === 0) {
     if (isSignUpRoute) {
-      store.signUp(username.value, password.value, password2.value, age.value, nickname.value, email.value, annual_income.value, property.value, main_bank.value, saving_propensity.value)
+      store.signUp(username.value, password.value, password2.value, age.value, nickname.value, email.value, annual_income.value, property.value, main_bank.value)
         .then(() => {
         })
         .catch(error => {

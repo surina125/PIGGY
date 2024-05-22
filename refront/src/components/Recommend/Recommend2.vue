@@ -397,53 +397,60 @@ const submitForm = () => {
       alert('폼이 제출되었습니다!')
 } else {
     // 대출을 선택
-    loanStore.getAll();
+    loanStore.getAll()
 
     let loans; // 여기서 loans 변수를 선언합니다.
 
     if (type.value === '아파트') {
-      loans = loanStore.Aloans;
+      loans = loanStore.Aloans
     } else {
-      loans = loanStore.Eloans;
+      loans = loanStore.Eloans
     }
 
+    console.log("Selected loans based on type:", loans)
+
     // 선호 은행이 선택되지 않았을 경우 모든 은행을 포함하도록 설정
-    const banks = selectedBanks.value.length > 0 ? selectedBanks.value : loanStore.banks;
+    const banks = selectedBanks.value.length > 0 ? selectedBanks.value : loanStore.banks
+
+    console.log("Selected banks:", banks)
 
     // 1. 은행과 담보 유형을 고려하여 필터링
     let filteredLoans = loans.filter((loan) => {
-      return banks.includes(loan.kor_co_nm) && loan.mrtg_type_nm === type.value;
+      return banks.includes(loan.kor_co_nm)
     });
 
 
     // 금리가 낮은 순으로 정렬하고 상위 10개 선택
-    filteredLoans.sort((a, b) => a.lend_rate_min - b.lend_rate_min);
-    filteredLoans = filteredLoans.slice(0, 10);
+    filteredLoans.sort((a, b) => a.lend_rate_min - b.lend_rate_min)
+    filteredLoans = filteredLoans.slice(0, 10)
+
 
     // 2. 1번째 방법의 결과가 10개 이하이면 담보 유형과 금리를 고려해서 낮은 것 10개 추가
     if (filteredLoans.length < 10) {
       let additionalLoans = loans.filter((loan) => {
-        return loan.mrtg_type_nm === type.value;
-      });
+        return loan.mrtg_type_nm === type.value
+      })
 
       // 금리가 낮은 순으로 정렬
-      additionalLoans.sort((a, b) => a.lend_rate_min - b.lend_rate_min);
+      additionalLoans.sort((a, b) => a.lend_rate_min - b.lend_rate_min)
 
       // 중복 제거 후 추가
-      const uniqueLoans = new Set(filteredLoans.map(l => l.fin_prdt_cd));
+      const uniqueLoans = new Set(filteredLoans.map(l => l.fin_prdt_cd))
       additionalLoans.forEach(loan => {
         if (!uniqueLoans.has(loan.fin_prdt_cd) && filteredLoans.length < 10) {
-          filteredLoans.push(loan);
-          uniqueLoans.add(loan.fin_prdt_cd);
+          filteredLoans.push(loan)
+          uniqueLoans.add(loan.fin_prdt_cd)
         }
-      });
+      })
+
     }
 
     // 필터링된 대출 정보를 recommendStore.loans에 저장
     recommendStore.loas = filteredLoans;
+    recommendStore.loas_type = type.value;
+
     
   }
-  console.log(recommendStore.loas)
   router.push({ name: 'deposit2', params: {username: authStore.userData.username} });
 }
 </script>

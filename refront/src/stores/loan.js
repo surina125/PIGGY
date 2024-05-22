@@ -44,15 +44,6 @@ export const useLoanStore = defineStore('loan', () => {
             banks.value.push(bankName)
           }
         
-          // loan의 다른 속성 설정
-          // dcls_month.value = loan.dcls_month
-          // fin_co_no.value = loan.fin_co_no
-          // kor_co_nm.value = loan.kor_co_nm
-          // fin_prdt_cd.value = loan.fin_prdt_cd
-          // join_way.value = loan.join_way
-          // erly_rpay_fee.value = loan.erly_rpay_fee
-          // dly_rate.value = loan.dly_rate
-          // loan_lmt.value = loan.loan_lmt
 
           // loanoption_set 배열을 순회
           if (loan.loanoption_set) {

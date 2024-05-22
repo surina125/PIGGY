@@ -12,6 +12,17 @@
 
 <script setup>
 import AppNav from '@/components/Common/AppNav.vue'
+import { onMounted } from 'vue'
+import { useLoanStore } from '@/stores/loan'
+
+onMounted(() => {
+  const loanStore = useLoanStore()
+
+  loanStore.Aloans = []
+  loanStore.Eloans = []
+  loanStore.getAll()
+})
+
 </script>
 
 <style scoped>

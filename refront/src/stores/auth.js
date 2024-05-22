@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', () => {
 
 
   // 회원가입
-  const signUp = async function (username, password1, password2, age, nickname, email, annual_income, property, main_bank, saving_propensity) {
+  const signUp = async function (username, password1, password2, age, nickname, email, annual_income, property, main_bank) {
     try {
       const response = await axios.post('http://127.0.0.1:8000/accounts/registration/', {
         username,
@@ -43,8 +43,7 @@ export const useAuthStore = defineStore('auth', () => {
         annual_income,
         property,
         main_bank,
-        saving_propensity
-      });
+      })
       console.log('회원가입 성공!')
       const password = password1
       logIn(username, password)

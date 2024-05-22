@@ -15,16 +15,17 @@ from .models import *
 # from accounts.serializers import *
 
 
-@api_view(['POST', 'GET'])
-def recommend_two(request, obj):
-    if request.method == 'POST':
-        data = request.data
-        product = data.get('product')
-        interest_rate = data.get('interestRate')
-        period = data.get('period')
-        banks = data.get('banks')
-        # 필요에 따라 추가 데이터를 처리합니다
-        return Response({'message': 'Data received', 'product': product, 'interestRate': interest_rate, 'period': period, 'banks': banks}, status=status.HTTP_200_OK)
+# @api_view(['POST', 'GET'])
+# @permission_classes([IsAuthenticated])
+# def recommend_two(request, obj):
+#     if request.method == 'POST':
+#         data = request.data
+#         product = data.get('product')
+#         interest_rate = data.get('interestRate')
+#         period = data.get('period')
+#         banks = data.get('banks')
+#         # 필요에 따라 추가 데이터를 처리합니다
+#         return Response({'message': 'Data received', 'product': product, 'interestRate': interest_rate, 'period': period, 'banks': banks}, status=status.HTTP_200_OK)
         
 
 # 금융상품 데이터 DB 저장

@@ -54,6 +54,13 @@ params = {
     'pageNo': 1,
 }
 
+params2 = {
+    'auth': API_KEY,
+    # 금융회사 코드 020000(은행), 030200(여신전문), 030300(저축은행), 050000(보험), 060000(금융투자)
+    'topFinGrpNo': '050000',
+    'pageNo': 1,
+}
+
 # 정기예금 목록 저장
 response1 = requests.get(DP_URL, params=params).json()
 baseList1 = response1.get('result').get('baseList')  # 상품 목록
@@ -61,7 +68,7 @@ baseList1 = response1.get('result').get('baseList')  # 상품 목록
 response2 = requests.get(SP_URL, params=params).json()
 baseList2 = response2.get('result').get('baseList')  # 상품 목록
 # 주택담보대출 목록 저장
-response3 = requests.get(LP_URL, params=params).json()
+response3 = requests.get(LP_URL, params=params2).json()
 baseList3 = response3.get('result').get('baseList')  # 상품 목록
 
 
@@ -133,7 +140,7 @@ with open(save_dir, 'w', encoding="utf-8") as f:
             'annual_income': random.randrange(0, 100000000, 100000),  # 현재 가진 금액
             'property': random.randrange(0, 1500000000, 1000000),  # 연봉
             'password': '1234',
-            'nickname': None,
+            'nickname': 'someone',
             'is_active': True,
             'is_staff': False,
             'is_superuser': False,
