@@ -17,7 +17,7 @@
         <tr 
           v-for="(prd, index) in recommendStore.reco1L"
           :key="index"
-          data-bs-toggle="modal" data-bs-target="#exampleModal"
+          data-bs-toggle="modal" data-bs-target="#loanModal"
           @click="modal_click(prd)"
         >
           <th scope="row">{{ index + 1 }}</th>
@@ -32,14 +32,15 @@
 
 
     <!-- 모달 -->
-    <div v-if="loan" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div v-if="loan" class="modal fade loan" id="loanModal" tabindex="-1" aria-labelledby="loanModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">{{loan.fin_prdt_nm}}</h5>
+            <h5 class="modal-title" id="loanModalLabel">{{loan.fin_prdt_nm}}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
+
             <table class="table table-hover">
               <tbody>
                 <tr>
@@ -74,8 +75,9 @@
                 <tr>
                   <!-- 차트 -->
                   <td v-if="loan" colspan="7">
-                    <Bar class="chart-page" :data="chartData" :options="options"/>
-                  </td>                  
+                    <Bar v-if="recommendStore.loas_type === '아파트'" class="chart-page" :data="apartmentChartData" :options="options"/>
+                    <Bar v-else class="chart-page" :data="nonApartmentChartData" :options="options"/>
+                  </td>               
                 </tr>
               </tbody>
             </table>
@@ -145,47 +147,126 @@ const modal_click = function(prd) {
   getContract()
   getSave()
 
-  // 모달창 열리면 차트 안에 데이터 갱신
-  chartData.value = {
-    labels: ['최저 대출금리', '최고 대출금리', '전월 취급 평균금리'],
+  // 아파트 담보 유형 차트 데이터 업데이트
+  const apartmentData = loan.value.loanoption_set.filter(option => option.mrtg_type_nm === '아파트')
+  const apartmentFixedRate = apartmentData.find(option => option.lend_rate_type_nm === '고정금리')
+  const apartmentVariableRate = apartmentData.find(option => option.lend_rate_type_nm === '변동금리')
+
+  apartmentChartData.value = {
+    labels: ['고정금리', '변동금리'],
     datasets: [
       {
-        label: '대출 금리',
+        label: '최저 금리',
         backgroundColor: '#f87979',
         data: [
-          loan.value.lend_rate_min || 0,
-          loan.value.lend_rate_max || 0,
-          loan.value.lend_rate_avg || 0,
+          apartmentFixedRate ? apartmentFixedRate.lend_rate_min : 0,
+          apartmentVariableRate ? apartmentVariableRate.lend_rate_min : 0
         ]
       },
+      {
+        label: '최고 금리',
+        backgroundColor: '#aad1e6',
+        data: [
+          apartmentFixedRate ? apartmentFixedRate.lend_rate_max : 0,
+          apartmentVariableRate ? apartmentVariableRate.lend_rate_max : 0
+        ]
+      },
+      {
+        label: '전월 취급 평균금리',
+        backgroundColor: '#82ca9d',
+        data: [
+          apartmentFixedRate ? apartmentFixedRate.lend_rate_avg : 0,
+          apartmentVariableRate ? apartmentVariableRate.lend_rate_avg : 0
+        ]
+      }
+    ]
+  }
+
+  // 아파트 외 담보 유형 차트 데이터 업데이트
+  const nonApartmentData = loan.value.loanoption_set.filter(option => option.mrtg_type_nm !== '아파트')
+  const nonApartmentFixedRate = nonApartmentData.find(option => option.lend_rate_type_nm === '고정금리')
+  const nonApartmentVariableRate = nonApartmentData.find(option => option.lend_rate_type_nm === '변동금리')
+
+  nonApartmentChartData.value = {
+    labels: ['고정금리', '변동금리'],
+    datasets: [
+      {
+        label: '최저 금리',
+        backgroundColor: '#f87979',
+        data: [
+          nonApartmentFixedRate ? nonApartmentFixedRate.lend_rate_min : 0,
+          nonApartmentVariableRate ? nonApartmentVariableRate.lend_rate_min : 0
+        ]
+      },
+      {
+        label: '최고 금리',
+        backgroundColor: '#aad1e6',
+        data: [
+          nonApartmentFixedRate ? nonApartmentFixedRate.lend_rate_max : 0,
+          nonApartmentVariableRate ? nonApartmentVariableRate.lend_rate_max : 0
+        ]
+      },
+      {
+        label: '전월 취급 평균금리',
+        backgroundColor: '#82ca9d',
+        data: [
+          nonApartmentFixedRate ? nonApartmentFixedRate.lend_rate_avg : 0,
+          nonApartmentVariableRate ? nonApartmentVariableRate.lend_rate_avg : 0
+        ]
+      }
     ]
   }
 }
 
-
 // 차트 초기설정
-const chartData = ref({
-      labels: [
-        '최저 대출금리',
-        '최고 대출금리',
-        '24개월',
-        '전월 취급 평균금리',
-      ],
-      datasets: [
-        {
-          label: '대출 금리',
-          backgroundColor: '#f87979',
-          data: [0,0,0]
-        },
-      ]
-    });
+const apartmentChartData = ref({
+  labels: ['고정금리', '변동금리'],
+  datasets: [
+    {
+      label: '최저 금리',
+      backgroundColor: '#f87979',
+      data: [0, 0]
+    },
+    {
+      label: '최고 금리',
+      backgroundColor: '#aad1e6',
+      data: [0, 0]
+    },
+    {
+      label: '전월 취급 평균금리',
+      backgroundColor: '#82ca9d',
+      data: [0, 0]
+    }
+  ]
+})
 
-    // 차트 옵션 설정
-    const options = {
-      responsive: true,
-      maintainAspectRatio: true, // 세로 길이를 고정
-      aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
-      scales: {
+const nonApartmentChartData = ref({
+  labels: ['고정금리', '변동금리'],
+  datasets: [
+    {
+      label: '최저 금리',
+      backgroundColor: '#f87979',
+      data: [0, 0]
+    },
+    {
+      label: '최고 금리',
+      backgroundColor: '#aad1e6',
+      data: [0, 0]
+    },
+    {
+      label: '전월 취급 평균금리',
+      backgroundColor: '#82ca9d',
+      data: [0, 0]
+    }
+  ]
+})
+
+// 차트 옵션 설정
+const options = {
+  responsive: true,
+  maintainAspectRatio: true, // 세로 길이를 고정
+  aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
+  scales: {
     x: {
       ticks: {
         autoSkip: false
@@ -197,9 +278,7 @@ const chartData = ref({
       display: true
     }
   },
-  barThickness: 80, // 막대의 두께를 10px로 설정
-};
-
+}
 
 // 가입한 상품 조회
 const getContract = function(fin_prdt_cd) {

@@ -1,5 +1,7 @@
 <template>
   <div>
+    <h1>정기예금</h1>
+
     <!-- 표 -->
     <table class="table table-hover">
       <thead>
@@ -18,7 +20,7 @@
         <tr 
           v-for="(prd, index) in recommendStore.reco1D"
           :key="index"
-          data-bs-toggle="modal" data-bs-target="#exampleModal"
+          data-bs-toggle="modal" data-bs-target="#depositModal"
           @click="modal_click(prd)"
         >
           <th scope="row">{{ index + 1 }}</th>
@@ -35,11 +37,11 @@
 
 
     <!-- 모달 -->
-    <div v-if="deposit" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"  @show="drawChart">
+    <div v-if="deposit" class="modal fade deposit" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true"  @show="drawChart">
       <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">{{deposit.fin_prdt_nm}}</h5>
+            <h5 class="modal-title" id="depositModalLabel">{{deposit.fin_prdt_nm}}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">

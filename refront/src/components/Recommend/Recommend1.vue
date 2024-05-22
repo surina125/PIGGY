@@ -1,10 +1,13 @@
 <template>
   <div>
     <h1>블라블라</h1>
+
     <h3>예금</h3>
     <DepositChart/>
+
     <h3>적금</h3>
     <SavingChart/>
+    
     <h3>주택담보대출</h3>
     <LoanChart/>
   </div>

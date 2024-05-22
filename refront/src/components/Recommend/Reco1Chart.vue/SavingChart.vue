@@ -18,7 +18,7 @@
         <tr 
           v-for="(prd, index) in recommendStore.reco1S"
           :key="index"
-          data-bs-toggle="modal" data-bs-target="#exampleModal"
+          data-bs-toggle="modal" data-bs-target="#savingModal"
           @click="modal_click(prd)"
         >
           <th scope="row">{{ index + 1 }}</th>
@@ -35,11 +35,11 @@
 
 
     <!-- 모달 -->
-    <div v-if="saving" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div v-if="saving" class="modal fade saving" id="savingModal" tabindex="-1" aria-labelledby="savingModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">{{saving.fin_prdt_nm}}</h5>
+            <h5 class="modal-title" id="savingModalLabel">{{saving.fin_prdt_nm}}</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
@@ -53,10 +53,6 @@
                   <th scope="row">금융회사명</th>
                   <td>{{ saving.kor_co_nm }}</td>
                 </tr>
-                <!-- <tr>
-                  <th scope="row">적립유형</th>
-                  <td>{{ saving.savingoption_set[0].rsrv_type_nm }}</td>
-                </tr> -->
                 <tr>
                   <th scope="row">가입방법</th>
                   <td>{{ saving.join_way }}</td>
