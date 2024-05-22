@@ -1,9 +1,11 @@
 <template>
   <div class="chatbot" v-if="isVisible">
-    <button class="close-button" @click="closeChat">X</button>
+    <div class="chatbot-header">
+      <button class="close-button" @click="closeChat">X</button>
+    </div>
     <div class="chat-area">
       <div v-for="(chat, index) in chats" :key="index" :class="['chat', chat.type + '-chat']">
-        {{ chat.message }}
+        <div class="message">{{ chat.message }}</div>
       </div>
     </div>
     <input
@@ -17,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue';
+import { ref, nextTick, watch } from 'vue';
 import axios from 'axios';
 
 const props = defineProps({
@@ -80,19 +82,31 @@ const closeChat = () => {
 .chatbot {
   position: fixed;
   bottom: 80px;
-  right: 20px;
-  width: 300px;
+  right: 70px;
+  width: 320px;
   height: 400px;
   border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+}
+
+.chatbot-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
 }
 
 .close-button {
-  align-self: flex-end;
-  margin: 10px;
-  padding: 5px;
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -107,17 +121,42 @@ const closeChat = () => {
   padding: 10px;
   width: 100%;
   box-sizing: border-box;
+  border: none;
+  outline: none;
+  font-size: 14px;
 }
 
 .chat {
-  margin: 5px 0;
+  display: flex;
+  margin: 10px 0;
 }
 
 .send-chat {
-  text-align: right;
+  justify-content: flex-end;
 }
 
 .receive-chat {
-  text-align: left;
+  justify-content: flex-start;
+}
+
+.message {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.send-chat .message {
+  background-color: #dcf8c6;
+  color: #000;
+  border-top-right-radius: 0;
+}
+
+.receive-chat .message {
+  background-color: #f1f0f0;
+  color: #000;
+  border-top-left-radius: 0;
 }
 </style>

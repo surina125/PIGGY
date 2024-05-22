@@ -7,10 +7,11 @@
     <main class="main-content">
       <RouterView />
 
-      <ChatIcon @toggle-chat="toggleChat" />
-      <Chatbot :isVisible="isChatVisible" @close-chat="toggleChat" />
     </main>
 
+    <!-- 챗봇 -->
+    <ChatIcon @toggle-chat="toggleChat" />
+    <Chatbot :isVisible="isChatVisible" @close-chat="toggleChat" />
   </div>
 </template>
 
