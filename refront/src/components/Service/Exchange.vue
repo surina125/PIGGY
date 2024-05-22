@@ -36,12 +36,19 @@
    </div>
 
 
+   <!-- 그래프 -->
+   <ExchangeChart
+    v-if="exchange_infos.length"
+    :exchange-infos="exchange_infos"
+   />
+
  </div>
 </template>
 
 <script setup>
 import axios from 'axios';
 import { ref, onMounted, computed } from 'vue';
+import ExchangeChart from './ExchangeChart.vue';
 
 // State variables
 const exchange_infos = ref([]);
@@ -50,19 +57,23 @@ const amountKRW = ref(0);
 const amountForeign = ref(0);
 const selectedStandardCurrency = ref(null)
 // Fetch exchange rates on component mount
+
 onMounted(() => {
  fetchExchangeRates();
 });
 
 const fetchExchangeRates = () => {
- axios.get("http://127.0.0.1:8000/exchange/exchange_info/")
+ return axios.get("http://127.0.0.1:8000/exchange/exchange_info/")
    .then(response => {
      exchange_infos.value = response.data;
+     console.log('dsdf', exchange_infos.value)
    })
    .catch(error => {
      console.error(error);
    });
 };
+
+
 
 // 원화 > 외화 (환율기준에 따라)
 const convertToForeign = () => {
@@ -93,7 +104,6 @@ const convertToKRW = () => {
  }
  
 };
-
 
 </script>
 
