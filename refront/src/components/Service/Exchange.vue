@@ -37,10 +37,7 @@
 
 
    <!-- 그래프 -->
-   <ExchangeChart
-    v-if="exchange_infos.length"
-    :exchange-infos="exchange_infos"
-   />
+   <ExchangeChart/>
 
  </div>
 </template>
