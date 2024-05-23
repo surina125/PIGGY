@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <h1>정기예금</h1>
+  <div class="deposit-page">
+    <h1 class="mb-4">정기예금</h1>
 
     <!-- 은행 선택 버튼 -->
-    <select class="form-select form-select-lg mb-3" aria-label="Large select example" v-model="selectedBank">
+    <select class="form-select form-select-lg mt-4 mb-4" aria-label="Large select example" v-model="selectedBank">
       <option class="selected" value="all_bank">전체 은행</option>
       <option 
         v-for="bank in depositStore.banks"
@@ -443,6 +443,12 @@ const delSave = (fin_prdt_cd) => {
 
 
 <style scoped>
+.deposit-page {
+  margin-top: 30px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 50px;
+}
 .modal_row {
   width: 150px;
 }

@@ -1,21 +1,18 @@
 <template>
-  <div>
-    <h1>주택담보대출</h1>
+  <div class="loan-page">
+    <h1 class="mb-4">주택담보대출</h1>
 
     <!-- 대출 타입 선택 버튼 -->
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-      <!-- <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="all_type" v-model="selectedType">
-      <label class="btn btn-outline-primary" for="btnradio1">전체</label> -->
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off" value="아파트" v-model="selectedType" selected>
+      <label class="btn btn-custom" for="btnradio4">아파트</label>
 
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="아파트" v-model="selectedType" selected>
-      <label class="btn btn-outline-primary" for="btnradio2">아파트</label>
-
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="아파트외" v-model="selectedType">
-      <label class="btn btn-outline-primary" for="btnradio3">아파트외</label>
+      <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off" value="아파트외" v-model="selectedType">
+      <label class="btn btn-custom" for="btnradio5">아파트외</label>
     </div>
 
     <!-- 은행 선택 버튼 -->
-    <select class="form-select form-select-lg mb-3" aria-label="Large select example" v-model="selectedBank">
+    <select class="form-select form-select-lg mt-4 mb-4" aria-label="Large select example" v-model="selectedBank">
       <option class="selected" value="all_bank">전체 은행</option>
       <option 
         v-for="(bank, index) in loanStore.banks"
@@ -548,10 +545,36 @@ const delSave = (fin_prdt_cd) => {
 
 
 <style scoped>
+.loan-page {
+  margin-top: 30px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 50px;
+}
 .modal_row {
   width: 150px;
 }
 .no-border {
   border: none;
+}
+.btn-custom {
+  color: #333;
+  background-color: transparent;
+  border: 1px solid #333;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 18px; /* Increase the font size */
+  padding: 12px 24px; /* Increase the padding */
+}
+
+.btn-custom:hover,
+.btn-custom:focus {
+  color: #fff;
+  background-color: #333;
+}
+
+.btn-check:checked + .btn-custom {
+  color: #fff;
+  background-color: #333;
+  border-color: #333;
 }
 </style>

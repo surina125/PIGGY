@@ -1,21 +1,21 @@
 <template>
-  <div>
-    <h1>적금</h1>
+   <div class="saving-page">
+    <h1 class="mb-4">적금</h1>
 
     <!-- 적금 타입 선택 버튼 -->
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
       <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="all_type" v-model="selectedType">
-      <label class="btn btn-outline-primary" for="btnradio1">전체</label>
+      <label class="btn btn-custom" for="btnradio1">전체</label>
 
       <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="정액적립식" v-model="selectedType">
-      <label class="btn btn-outline-primary" for="btnradio2">정기 적금</label>
+      <label class="btn btn-custom" for="btnradio2">정기 적금</label>
 
       <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="자유적립식" v-model="selectedType">
-      <label class="btn btn-outline-primary" for="btnradio3">자유 적금</label>
+      <label class="btn btn-custom" for="btnradio3">자유 적금</label>
     </div>
 
     <!-- 은행 선택 버튼 -->
-    <select class="form-select form-select-lg mb-3" aria-label="Large select example" v-model="selectedBank">
+    <select class="form-select form-select-lg mt-4 mb-4" aria-label="Large select example" v-model="selectedBank">
       <option class="selected" value="all_bank">전체 은행</option>
       <option 
         v-for="(bank, index) in savingStore.banks"
@@ -80,10 +80,6 @@
                   <th scope="row">금융회사명</th>
                   <td>{{ saving.kor_co_nm }}</td>
                 </tr>
-                <!-- <tr>
-                  <th scope="row">적립유형</th>
-                  <td>{{ saving.savingoption_set[0].rsrv_type_nm }}</td>
-                </tr> -->
                 <tr>
                   <th scope="row">가입방법</th>
                   <td>{{ saving.join_way }}</td>
@@ -451,14 +447,36 @@ const delSave = (fin_prdt_cd) => {
 
 
 <style scoped>
+.saving-page {
+  margin-top: 30px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 50px;
+}
 .modal_row {
   width: 150px;
 }
 .no-border {
   border: none;
 }
-/* .chart-page {
-  width: 100%;
-  height: 30px;
-} */
+.btn-custom {
+  color: #333;
+  background-color: transparent;
+  border: 1px solid #333;
+  transition: background-color 0.3s, color 0.3s;
+  font-size: 18px; /* Increase the font size */
+  padding: 12px 24px; /* Increase the padding */
+}
+
+.btn-custom:hover,
+.btn-custom:focus {
+  color: #fff;
+  background-color: #333;
+}
+
+.btn-check:checked + .btn-custom {
+  color: #fff;
+  background-color: #333;
+  border-color: #333;
+}
 </style>

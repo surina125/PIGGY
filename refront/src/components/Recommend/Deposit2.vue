@@ -443,10 +443,6 @@ const delSave = (fin_prdt_cd) => {
 .no-border {
   border: none;
 }
-/* .chart-page {
-  width: 100%;
-  height: 30px;
-} */
 
 .reco2-depsit-page {
   background-color: #fff;

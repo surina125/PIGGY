@@ -1,32 +1,31 @@
 <template>
-  <h1 class="searchbox">Bank Search</h1>
-  <div class="box">
+  <div class="box custom-box">
     <div>
-      <label for="city"></label>
-      <select id="city" v-model="selectedCity" @change="updateCountries">
+      <label for="city" class="custom-label"></label>
+      <select id="city" v-model="selectedCity" @change="updateCountries" class="custom-select">
         <option disabled value="">광역시/도를 선택하세요</option>
         <option v-for="city in mapInfo" :key="city.name" :value="city.name">{{ city.name }}</option>
       </select>
     </div>
 
     <div>
-      <label for="country"></label>
-      <select id="country" v-model="selectedCountry">
+      <label for="country" class="custom-label"></label>
+      <select id="country" v-model="selectedCountry" class="custom-select">
         <option disabled value="">시/군/구를 선택하세요</option>
         <option v-for="country in selectedCountries" :key="country">{{ country }}</option>
       </select>
     </div>
 
     <div>
-      <label for="bank"></label>
-      <select id="bank" v-model="selectedBank">
+      <label for="bank" class="custom-label"></label>
+      <select id="bank" v-model="selectedBank" class="custom-select">
         <option value="">은행을 선택하세요</option>
         <option v-for="bank in bankInfo" :key="bank">{{ bank }}</option>
       </select>
     </div>
-    <button @click="findBanks">찾기</button>
+    <button @click="findBanks" class="custom-button">찾기</button>
   </div>
-  <div class="map" ref="map"></div>
+  <div class="map custom-map" ref="map"></div>
 </template>
 
 <script>
@@ -152,28 +151,56 @@ export default {
 };
 </script>
 
-<style>
-.box {
+<style scoped>
+.custom-box {
   display: flex;
   justify-content: center;
-  align-content: center;
+  align-items: center;
   flex-wrap: wrap;
+  padding: 20px;
+  /* background-color: #f8f9fa; */
+  border-radius: 10px;
+  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
+  margin-bottom: 20px;
 }
 
-.searchbox {
-  text-align: center;
-  padding-bottom: 10px;
+.custom-label {
+  margin-right: 10px;
+  font-weight: bold;
 }
 
-select {
-  margin-right: 7px;
+.custom-select {
+  margin: 5px 10px;
+  padding: 10px;
+  border-radius: 5px;
+  /* border: 1px solid #ced4da; */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  /* background-color: #fff; */
 }
 
-.map {
+.custom-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #333;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.custom-button:hover {
+  background-color: #1a1a1a;
+}
+
+.custom-map {
   margin-left: auto;
   margin-right: auto;
   margin-top: 20px;
-  width: 500px;
-  height: 400px;
+  width: 100%;
+  max-width: 800px;
+  height: 500px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 </style>

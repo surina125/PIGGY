@@ -1,9 +1,5 @@
 <template>
-  <div>
-    <h1 v-if="recommendStore.savings_type==='all_type'">전체 적금(정기/자유)</h1>
-    <h1 v-if="recommendStore.savings_type==='정액적립식'">정기 적금</h1>
-    <h1 v-if="recommendStore.savings_type==='자유적립식'">자유 적금</h1>
-
+  <div class="reco2-saving-page">
 
     <!-- 표 -->
     <table class="table table-hover">
@@ -12,11 +8,12 @@
           <th scope="col">번호</th>
           <th scope="col">공시제출일</th>
           <th scope="col">금융회사명</th>
+          <th scope="col">적금유형</th>
           <th scope="col">상품명</th>
-          <th v-if="recommendStore.deposits_period==='6'" scope="col" @click="sort('6')">6개월 저축 금리</th>
-          <th v-if="recommendStore.deposits_period==='12'" scope="col" @click="sort('12')">12개월 저축 금리</th>
-          <th v-if="recommendStore.deposits_period==='24'" scope="col" @click="sort('24')">24개월 저축 금리</th>
-          <th v-if="recommendStore.deposits_period==='36'" scope="col" @click="sort('36')">36개월 저축 금리</th>
+          <th v-if="recommendStore.savings_period==='6'" scope="col" @click="sort('6')">6개월 저축 금리</th>
+          <th v-if="recommendStore.savings_period==='12'" scope="col" @click="sort('12')">12개월 저축 금리</th>
+          <th v-if="recommendStore.savings_period==='24'" scope="col" @click="sort('24')">24개월 저축 금리</th>
+          <th v-if="recommendStore.savings_period==='36'" scope="col" @click="sort('36')">36개월 저축 금리</th>
         </tr>
       </thead>
       <tbody>
@@ -29,15 +26,19 @@
           <th scope="row">{{ index + 1 }}</th>
           <td>{{ prd.dcls_month }}</td>
           <td>{{ prd.kor_co_nm }}</td>
+          <td>
+            <span v-if="recommendStore.savings_type==='all_type'">전체 적금 &nbsp;&nbsp; (정기/자유)</span>
+            <span v-if="recommendStore.savings_type==='정액적립식'">정기 적금</span>
+            <span v-if="recommendStore.savings_type==='자유적립식'">자유 적금</span>
+          </td>
           <td>{{ prd.fin_prdt_nm }}</td>
-          <td v-if="recommendStore.deposits_period==='6'">{{ getInterestRate(prd, '6') }}</td>
-          <td v-if="recommendStore.deposits_period==='12'">{{ getInterestRate(prd, '12') }}</td>
-          <td v-if="recommendStore.deposits_period==='24'">{{ getInterestRate(prd, '24') }}</td>
-          <td v-if="recommendStore.deposits_period==='36'">{{ getInterestRate(prd, '36') }}</td>
+          <td v-if="recommendStore.savings_period==='6'">{{ getInterestRate(prd, '6') }}</td>
+          <td v-if="recommendStore.savings_period==='12'">{{ getInterestRate(prd, '12') }}</td>
+          <td v-if="recommendStore.savings_period==='24'">{{ getInterestRate(prd, '24') }}</td>
+          <td v-if="recommendStore.savings_period==='36'">{{ getInterestRate(prd, '36') }}</td>
         </tr>
       </tbody>
     </table>
-
 
     <!-- 모달 -->
     <div v-if="saving" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -90,8 +91,6 @@
                 </tr>
               </tbody>
             </table>
-
-
           </div>
 
           <!-- 가입신청 / 관심상품 저장 버튼 -->
@@ -110,13 +109,10 @@
               관심상품 저장
             </button>
           </div>
-
         </div>
       </div>
     </div>
-
   </div>
-  
 </template>
 
 <script setup>
@@ -138,7 +134,6 @@ import { Bar } from 'vue-chartjs'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-
 // 기간별로 저축금리 가져오기
 const getInterestRate = (prd, term) => {
   if (!prd || !prd.savingoption_set) return '-';
@@ -158,7 +153,6 @@ const getInterestRate2 = (prd, term) => {
 const savingStore = useSavingStore()
 const authStore = useAuthStore()
 const recommendStore = useRecommendStore()
-
 
 // 모달
 const saving = ref({})
@@ -197,62 +191,57 @@ const modal_click = function(prd) {
   }
 }
 
-
 // 차트 초기설정
 const chartData = ref({
-      labels: [
-        '6개월',
-        '12개월',
-        '24개월',
-        '36개월',
-      ],
-      datasets: [
-        {
-          label: '저축 금리',
-          backgroundColor: '#f87979',
-          data: [0,0,0,0]
-        },
-        {
-          label: '최고 우대 금리',
-          backgroundColor: '#aad1e6',
-          data: [0,0,0,0]
-        },
-      ]
-    });
+  labels: [
+    '6개월',
+    '12개월',
+    '24개월',
+    '36개월',
+  ],
+  datasets: [
+    {
+      label: '저축 금리',
+      backgroundColor: '#f87979',
+      data: [0,0,0,0]
+    },
+    {
+      label: '최고 우대 금리',
+      backgroundColor: '#aad1e6',
+      data: [0,0,0,0]
+    },
+  ]
+})
 
-    // 차트 옵션 설정
-    const options = {
-      responsive: true,
-      maintainAspectRatio: true, // 세로 길이를 고정
-      aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
-    }
-
+// 차트 옵션 설정
+const options = {
+  responsive: true,
+  maintainAspectRatio: true, // 세로 길이를 고정
+  aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
+}
 
 // 가입한 상품 조회
 const getContract = function(fin_prdt_cd) {
-    axios({
-      method: 'get',
-      url: `${savingStore.API_URL}/fin_products/saving/contract/${saving.value.fin_prdt_cd}/`,
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        savingStore.contractedSaving = response.data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
+  axios({
+    method: 'get',
+    url: `${savingStore.API_URL}/fin_products/saving/contract/${saving.value.fin_prdt_cd}/`,
+    headers: {
+      Authorization: `Token ${authStore.token}`
+    }
+  })
+  .then(response => {
+    savingStore.contractedSaving = response.data
+  })
+  .catch(error => {
+    console.log(error)
+  })
+}
 
 // 상품이 계약됐는지 판단
 const isContracted = computed(() => {
-  console.log(savingStore.contractedSaving.value)
   if (!Array.isArray(savingStore.contractedSaving)) {
     return false
   } 
-  console.log(savingStore.contractedSaving)
   const findPrd = savingStore.contractedSaving.findIndex((prd) => prd.fin_prdt_cd === saving.value.fin_prdt_cd)
   if (findPrd !== -1) {
     return true
@@ -260,35 +249,31 @@ const isContracted = computed(() => {
   return false
 })
 
-
 // 상품 계약
 const addContract = (prd) => {
   savingStore.contractedSaving.push(prd)
 
   axios({
-      method: 'post',
-      url: `${savingStore.API_URL}/fin_products/saving/contract/${saving.value.fin_prdt_cd}/`,
-      data: {
-        fin_prdt_cd: saving.value.fin_prdt_cd
-      },
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-  }
-  
+    method: 'post',
+    url: `${savingStore.API_URL}/fin_products/saving/contract/${saving.value.fin_prdt_cd}/`,
+    data: {
+      fin_prdt_cd: saving.value.fin_prdt_cd
+    },
+    headers: {
+      Authorization: `Token ${authStore.token}`
+    }
+  })
+  .then(response => {
+  })
+  .catch(error => {
+    console.log(error)
+  })
+}
 
 // 상품 계약 취소
 const delContract = (fin_prdt_cd) => {
   const idx = savingStore.contractedSaving.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
   if (idx !== -1) {
-
     axios({
       method: 'post',
       url: `${savingStore.API_URL}/fin_products/saving/contract/${saving.value.fin_prdt_cd}/`,
@@ -299,42 +284,37 @@ const delContract = (fin_prdt_cd) => {
         Authorization: `Token ${authStore.token}`
       }
     })
-      .then(response => {
-        savingStore.contractedSaving.splice(idx, 1) 
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    .then(response => {
+      savingStore.contractedSaving.splice(idx, 1) 
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 }
 
-
-
 // 관심상품 조회
 const getSave = function(fin_prdt_cd) {
-    axios({
-      method: 'get',
-      url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        console.log(1234)
-        console.log(response.data.message)
-        if (!response.data.message) {
-          savingStore.savedSaving = response.data
-        }
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
+  axios({
+    method: 'get',
+    url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,
+    headers: {
+      Authorization: `Token ${authStore.token}`
+    }
+  })
+  .then(response => {
+    if (!response.data.message) {
+      savingStore.savedSaving = response.data
+    }
+  })
+  .catch(error => {
+    console.log(error)
+  })
+}
 
 // 관심상품 저장하고 있는지 판단
 const isSaved = computed(() => {
-  if (!Array.isArray(savingStore.contractedSaving)) {
+  if (!Array.isArray(savingStore.savedSaving)) {
     return false
   } 
   const findPrd = savingStore.savedSaving.findIndex((prd) => prd.fin_prdt_cd === saving.value.fin_prdt_cd)
@@ -344,36 +324,32 @@ const isSaved = computed(() => {
   return false
 })
 
-
 // 관심상품 저장
 const addSave = (prd) => {
   savingStore.savedSaving.push(prd)
 
   axios({
-      method: 'post',
-      url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,
-      data: {
-        fin_prdt_cd: saving.value.fin_prdt_cd
-      },
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        savingStore.savedSaving.push(saving)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-  }
-  
+    method: 'post',
+    url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,
+    data: {
+      fin_prdt_cd: saving.value.fin_prdt_cd
+    },
+    headers: {
+      Authorization: `Token ${authStore.token}`
+    }
+  })
+  .then(response => {
+    savingStore.savedSaving.push(saving)
+  })
+  .catch(error => {
+    console.log(error)
+  })
+}
 
 // 관심상품 저장 취소
 const delSave = (fin_prdt_cd) => {
   const idx = savingStore.savedSaving.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
   if (idx !== -1) {
-
     axios({
       method: 'post',
       url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,
@@ -384,17 +360,15 @@ const delSave = (fin_prdt_cd) => {
         Authorization: `Token ${authStore.token}`
       }
     })
-      .then(response => {
-        savingStore.savedSaving.splice(idx, 1) 
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    .then(response => {
+      savingStore.savedSaving.splice(idx, 1) 
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
 }
-
 </script>
-
 
 <style scoped>
 .modal_row {
@@ -404,4 +378,11 @@ const delSave = (fin_prdt_cd) => {
   border: none;
 }
 
+.reco2-saving-page {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
 </style>

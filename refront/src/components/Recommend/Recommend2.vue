@@ -1,4 +1,5 @@
 <template>
+
   <form @submit.prevent="submitForm" class="form-container">
     <div class="question-page">
       <label for="product-type" class="question-label">예금, 적금, 주택담보대출 중에 원하는 상품을 선택하세요:</label>
@@ -146,6 +147,9 @@ watch(selectedProduct, (newValue, oldValue) => {
   } else if (newValue === "적금") {
     savingStore.getAll()
   } else if (newValue === "주택담보대출") {
+    loanStore.loans = []
+    loanStore.Aloans = []
+    loanStore.Eloans = []
     loanStore.getAll()
   }
 })
@@ -334,11 +338,7 @@ const submitForm = () => {
     recommendStore.savings_type = type.value
     recommendStore.savings_period = period.value
 
-    router.push({name: 'recommend'})  
-    alert('폼이 제출되었습니다!')
   } else {
-    loanStore.getAll()
-
     let loans;
 
     if (type.value === '아파트') {
@@ -372,9 +372,12 @@ const submitForm = () => {
       })
     }
 
+
     recommendStore.loans = filteredLoans;
-    recommendStore.loans_type = type.value;
+    recommendStore.loas_type = type.value;
   }
+
+  alert('폼이 제출되었습니다!')
   router.push({ name: 'deposit2', params: {username: authStore.userData.username} });
 }
 </script>

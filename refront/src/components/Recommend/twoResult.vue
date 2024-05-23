@@ -27,7 +27,7 @@
         :class="{ active: $route.name === 'loan2' }" 
         :to="{name: 'loan2', params: {username: authStore.userData.username}}">
         <div class="nav-card-content">
-          <h4>대출</h4>
+          <h4>주택담보대출</h4>
           <p>유리한 조건의 대출 상품을 확인하세요.</p>
         </div>
       </RouterLink>

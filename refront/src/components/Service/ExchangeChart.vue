@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div style="width: 80%; height: 600px; margin: auto;">
+  <div class="mt-1">
+    <div style="width: 100%; height: 600px; margin: auto;">
       <canvas id="exchangeChart"></canvas>
     </div>
   </div>

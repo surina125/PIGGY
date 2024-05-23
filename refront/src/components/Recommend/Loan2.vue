@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1>주택담보대출</h1>
-
+    <div class="reco2-loan-page">
     <!-- 표 -->
     <table class="table table-hover">
       <thead>
@@ -29,7 +28,7 @@
           <td>{{ prd.dcls_month }}</td>
           <td>{{ prd.kor_co_nm }}</td>
           <td>{{ prd.fin_prdt_nm }}</td>
-          <td>{{ prd.mrtg_type_nm }}</td>
+          <td>{{ recommendStore.loas_type }}</td>
           <td>{{ prd.lend_rate_type_nm }}</td>
           <td>{{ prd.lend_rate_min }}</td>
           <td>{{ prd.lend_rate_max }}</td>
@@ -112,6 +111,7 @@
         </div>
       </div>
     </div>
+    </div>
 
   </div>
   
@@ -139,6 +139,9 @@ const authStore = useAuthStore()
 const recommendStore = useRecommendStore()
 
 onMounted(() => {
+  loanStore.loans = []
+  loanStore.Aloans = []
+  loanStore.Eloans = []
   loanStore.getAll()
 })
 
@@ -383,6 +386,15 @@ const delSave = (fin_prdt_cd) => {
 
 
 <style scoped>
+
+.reco2-loan-page {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
 .modal_row {
   width: 150px;
 }
