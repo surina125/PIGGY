@@ -4,30 +4,6 @@
     <h1 v-if="recommendStore.savings_type==='정액적립식'">정기 적금</h1>
     <h1 v-if="recommendStore.savings_type==='자유적립식'">자유 적금</h1>
 
-    <!-- 적금 타입 선택 버튼
-    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="all_type" v-model="selectedType">
-      <label class="btn btn-outline-primary" for="btnradio1">전체</label>
-
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="정액적립식" v-model="selectedType">
-      <label class="btn btn-outline-primary" for="btnradio2">정기 적금</label>
-
-      <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off" value="자유적립식" v-model="selectedType">
-      <label class="btn btn-outline-primary" for="btnradio3">자유 적금</label>
-    </div> -->
-
-    <!-- 은행 선택 버튼
-    <select class="form-select form-select-lg mb-3" aria-label="Large select example" v-model="selectedBank">
-      <option class="selected" value="all_bank">전체 은행</option>
-      <option 
-        v-for="(bank, index) in savingStore.banks"
-        :key="index"
-        :bank="bank.kor_co_nm"
-      >
-        {{ bank }}
-      </option>
-    </select> -->
-
 
     <!-- 표 -->
     <table class="table table-hover">
@@ -82,10 +58,6 @@
                   <th scope="row">금융회사명</th>
                   <td>{{ saving.kor_co_nm }}</td>
                 </tr>
-                <!-- <tr>
-                  <th scope="row">적립유형</th>
-                  <td>{{ saving.savingoption_set[0].rsrv_type_nm }}</td>
-                </tr> -->
                 <tr>
                   <th scope="row">가입방법</th>
                   <td>{{ saving.join_way }}</td>
@@ -166,9 +138,6 @@ import { Bar } from 'vue-chartjs'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 
-// onMounted(() => {
-//   savingStore.getAll()
-// })
 
 // 기간별로 저축금리 가져오기
 const getInterestRate = (prd, term) => {
@@ -189,34 +158,6 @@ const getInterestRate2 = (prd, term) => {
 const savingStore = useSavingStore()
 const authStore = useAuthStore()
 const recommendStore = useRecommendStore()
-
-// const selectedBank = ref('all_bank')
-// const selectedType = ref('all_type')
-
-// const fetchData = () => {
-//   axios.get(`${savingStore.API_URL}/fin_products/savings/${selectedBank.value}/${selectedType.value}/`)
-//     .then(response => {
-//       savingStore.savings = response.data
-//       console.log(`Data fetched from: ${savingStore.API_URL}/fin_products/savings/${selectedBank.value}/${selectedType.value}/`)
-//     })
-//     .catch(error => {
-//       console.log(error)
-//     })
-// }
-
-// watchEffect(() => {
-//   fetchData()
-// })
-
-// const sort = (num) => {
-//   axios.get(`${savingStore.API_URL}/fin_products/savings/${selectedBank.value}/${selectedType.value}/sort/${num}/`)
-//     .then(response => {
-//       savingStore.savings = response.data
-//     })
-//     .catch(error => {
-//       console.log(error)
-//     })
-// }
 
 
 // 모달
@@ -322,8 +263,6 @@ const isContracted = computed(() => {
 
 // 상품 계약
 const addContract = (prd) => {
-  console.log(123)
-  console.log(savingStore.contractedSaving.message)
   savingStore.contractedSaving.push(prd)
 
   axios({
@@ -337,7 +276,6 @@ const addContract = (prd) => {
       }
     })
       .then(response => {
-        // savingStore.contractedSaving.push(saving)
       })
       .catch(error => {
         console.log(error)
@@ -465,8 +403,5 @@ const delSave = (fin_prdt_cd) => {
 .no-border {
   border: none;
 }
-/* .chart-page {
-  width: 100%;
-  height: 30px;
-} */
+
 </style>

@@ -2,7 +2,7 @@
   <div class="recommend1-page">
     <h3>설문조사 기반으로 추천받기</h3>
     <!-- 탭 -->
-    <div class="nav-container mt-3">
+    <div class="nav-container mt-4 mb-4">
       <RouterLink 
         class="nav-card" 
         :class="{ active: $route.name === 'deposit2' }" 
@@ -52,6 +52,7 @@ const authStore = useAuthStore()
   font-family: 'Roboto', sans-serif;
   color: #333;
   height: 100%;
+  margin-bottom: 100%;
 }
 
 h3 {
@@ -102,7 +103,7 @@ h3 {
 }
 
 .nav-card.active {
-  border: 3px solid #a89aaa;
+  border: 4px solid #a89aaa;
   /* background-color: #f1f5ff; */
 }
 </style>
