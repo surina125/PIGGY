@@ -7,7 +7,7 @@
             <div class="carousel-box">
               <img class="carousel-image1" src="@/assets/carousel1.png" alt="recommend_img">
               <div class="carousel-text first-carousel-text">
-                <h3 class="first-font">회원가입하고<br><strong>내게 딱─ 맞는</strong> 상품 찾기</h3>
+                <h2 class="first-font">회원가입하고<br><strong>내게 딱─ 맞는</strong> 상품 찾기</h2>
                 <p>PIGGY에서 추천 서비스를 이용해 보세요.</p>
                 <button @click="handleRecommendationClick" class="recommend-link">
                   금융상품 추천받기
@@ -23,7 +23,7 @@
           <div class="carousel-container">
             <div class="carousel-box second-carousel-box">
               <div class="carousel-text second-carousel-text">
-                <h3 class="second-font"><span>예적금, 주택담보대출</span>을<br><strong>한 곳에 싹─ </strong>모아</h3>
+                <h2 class="second-font"><span>예적금, 주택담보대출</span>을<br><strong>한 곳에 싹─ </strong>모아</h2>
                 <p>PIGGY에서 편하게 금리비교 하세요.</p>
                 <button @click="handleSearchClick" class="search-link">
                   금리 비교하기
@@ -34,11 +34,6 @@
           </div>
         </div>
       </div>
-      <!-- 다른 캐러셀 아이템들 -->
-      <!-- <div class="carousel-item">
-        <img src="@/assets/carousel2.png" class="d-block w-100" alt="...">
-      </div> -->
-      <!-- 추가 캐러셀 아이템들 -->
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -86,7 +81,7 @@ const handleSearchClick = () => {
   width: 100%;
   max-width: 1200px;
   overflow: hidden;
-  height: 70vh;
+  height: 60vh;
 }
 
 .carousel-box.second-carousel-box {
@@ -109,10 +104,19 @@ const handleSearchClick = () => {
   width: 50%;
   padding: 20px;
 
+.first-font {
+  font-size: 40px;
+  margin-bottom:10px;
+}
+.second-font {
+  font-size: 40px;
+  margin-bottom:10px;
+}
  
 p {
-  font-size: 18px; /* 텍스트 크기 조정 */
-  margin-bottom: 15px;
+  font-size: 22px; /* 텍스트 크기 조정 */
+  margin-top: 35px;
+  /* margin-bottom: 30px; */
   color: #666; /* 회색상 */
 }
 
