@@ -45,10 +45,9 @@ const goDetail = (pk) => {
 </script>
 
 <style scoped>
-/* .community-page {
-  margin-bottom: 100%;
+.community-page {
   padding-bottom: 100%;
-} */
+}
 
 .table-container {
   padding: 20px;

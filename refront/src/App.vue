@@ -52,6 +52,7 @@ html, body {
   height: 100%;
   width: 100%;
   font-family: 'Noto Sans KR', sans-serif;
+  background-color: #f1f5ff;
 }
 
 .main-content {
@@ -59,5 +60,6 @@ html, body {
   width: 100%;
   padding-top: 80px;
   background: #f1f5ff; /* 원하는 배경색으로 설정 */
+  height: 100%;
 }
 </style>

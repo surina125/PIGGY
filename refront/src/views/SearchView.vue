@@ -34,7 +34,7 @@ const isActive = (name) => {
 .search-page {
   padding-right: 100px;
   padding-left: 100px;
-  height: 100%;
+  padding-bottom: 100%;
 }
 
 .nav {
