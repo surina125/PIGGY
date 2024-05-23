@@ -1,404 +1,268 @@
 <template>
-  <div>
-    <div class="reco2-loan-page">
-    <!-- 표 -->
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th scope="col">번호</th>
-          <th scope="col">공시제출일</th>
-          <th scope="col">금융회사명</th>
-          <th scope="col">상품명</th>
-          <th scope="col">담보유형</th>
-          <th scope="col">대출금리유형</th>
-          <th scope="col">최저 대출금리</th>
-          <th scope="col">최고 대출금리 </th>
-          <th scope="col">전월 취급 평균금리 </th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr 
-          v-for="(prd, index) in recommendStore.loas"
-          :key="index"
-          data-bs-toggle="modal" data-bs-target="#exampleModal"
-          @click="modal_click(prd)"
-        >
-          <th scope="row">{{ index + 1 }}</th>
-          <td>{{ prd.dcls_month }}</td>
-          <td>{{ prd.kor_co_nm }}</td>
-          <td>{{ prd.fin_prdt_nm }}</td>
-          <td>{{ recommendStore.loas_type }}</td>
-          <td>{{ prd.lend_rate_type_nm }}</td>
-          <td>{{ prd.lend_rate_min }}</td>
-          <td>{{ prd.lend_rate_max }}</td>
-          <td v-if="prd.lend_rate_avg">{{ prd.lend_rate_avg }}</td>
-          <td v-else>-</td>
-        </tr>
-      </tbody>
-    </table>
-
-
-    <!-- 모달 -->
-    <div v-if="loan" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">{{loan.fin_prdt_nm}}</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <table class="table table-hover">
-              <tbody>
-                <tr>
-                  <th class="modal_row" scope="row">공시제출일</th>
-                  <td>{{ loan.dcls_month }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">금융회사명</th>
-                  <td>{{ loan.kor_co_nm }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">담보유형</th>
-                  <td>{{ loan.mrtg_type_nm }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">대출금리유형</th>
-                  <td>{{ loan.lend_rate_type_nm }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">가입방법</th>
-                  <td>{{ loan.join_way }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">중도상환수수료</th>
-                  <td>{{ loan.erly_rpay_fee }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">연체 이자율</th>
-                  <td>{{ loan.dly_rate }}</td>
-                </tr>
-
-                <tr>
-                  <!-- 차트 -->
-                  <td v-if="loan" colspan="7">
-                    <Bar class="chart-page" :data="chartData" :options="options"/>
-                  </td>                  
-                </tr>
-              </tbody>
-            </table>
-
-
-          </div>
-
-          <!-- 가입신청 / 관심상품 저장 버튼 -->
-          <div v-if="authStore.isAuthenticated" class="modal-footer no-border">
-            <button type="button" class="btn btn-danger" v-if="isContracted" @click="delContract(loan.fin_prdt_cd)">
-              가입 취소
-            </button>
-            <button type="button" class="btn btn-primary" v-else @click="addContract(loan)">
-              가입 신청
-            </button>
-
-            <button type="button" class="btn btn-danger" v-if="isSaved" @click="delSave(loan.fin_prdt_cd)">
-              저장 취소
-            </button>
-            <button type="button" class="btn btn-primary" v-else @click="addSave(loan)">
-              관심상품 저장
-            </button>
-          </div>
-
-        </div>
+  <div class="chatbot" v-if="isVisible">
+    <div class="chatbot-header">
+      <button class="close-button" @click="closeChat">X</button>
+    </div>
+    <div class="chat-area">
+      <div v-for="(chat, index) in chats" :key="index" :class="['chat', chat.type + '-chat']">
+        <div class="message">{{ chat.message }}</div>
       </div>
     </div>
-    </div>
-
+    <input
+      type="text"
+      v-model="userInput"
+      @keyup.enter="sendMessage"
+      class="chat-input"
+      placeholder="메시지를 입력하세요..."
+    />
   </div>
-  
 </template>
 
 <script setup>
-import { useLoanStore } from '@/stores/loan.js'
-import { useRecommendStore } from '@/stores/recommend.js'
-import { useAuthStore } from '@/stores/auth.js'
-import { ref, watchEffect, onMounted, computed } from 'vue'
-import axios from 'axios'
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-} from 'chart.js'
-import { Bar } from 'vue-chartjs'
+import { ref, nextTick } from 'vue';
+import axios from 'axios';
+import { useDepositStore } from '@/stores/deposit';
+import { useLoanStore } from '@/stores/loan';
+import { useSavingStore } from '@/stores/saving';
 
-const loanStore = useLoanStore()
-const authStore = useAuthStore()
-const recommendStore = useRecommendStore()
+const depositStore = useDepositStore();
+const loanStore = useLoanStore();
+const savingStore = useSavingStore();
 
-onMounted(() => {
-  loanStore.loans = []
-  loanStore.Aloans = []
-  loanStore.Eloans = []
-  loanStore.getAll()
-})
+const props = defineProps({
+  isVisible: Boolean,
+});
 
-if (recommendStore.loans_value === '아파트') {
-  recommendStore.loans = loanStore.Aloans
-} else {
-  recommendStore.loans = loanStore.Eloans
-}
+const emit = defineEmits(['close-chat']);
+const chats = ref([]);
+const userInput = ref('');
+const context = ref([]);
+const selectedProductType = ref('');
+const selectedInsuranceCompany = ref('');
 
+const OPEN_API_URL = 'https://api.openai.com/v1/chat/completions';
+const API_KEY = 'sk-proj-2y5MeZ5AwEShg3zqkkbET3BlbkFJMURTlOkcUQlACUtQ8OdU';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
-
-
-
-// 모달
-const loan = ref({})
-
-const modal_click = function(prd) {
-  loan.value = prd
-
-  getContract()
-  getSave()
-
-  // 모달창 열리면 차트 안에 데이터 갱신
-  chartData.value = {
-    labels: ['최저 대출금리', '최고 대출금리', '전월 취급 평균금리'],
-    datasets: [
-      {
-        label: '대출 금리',
-        backgroundColor: '#f87979',
-        data: [
-          loan.value.lend_rate_min || 0,
-          loan.value.lend_rate_max || 0,
-          loan.value.lend_rate_avg || 0,
-        ]
-      },
-    ]
-  }
-}
-
-
-// 차트 초기설정
-const chartData = ref({
-      labels: [
-        '최저 대출금리',
-        '최고 대출금리',
-        '24개월',
-        '전월 취급 평균금리',
-      ],
-      datasets: [
-        {
-          label: '대출 금리',
-          backgroundColor: '#f87979',
-          data: [0,0,0]
-        },
-      ]
-    });
-
-    // 차트 옵션 설정
-    const options = {
-      responsive: true,
-      maintainAspectRatio: true, // 세로 길이를 고정
-      aspectRatio: 2, // 세로길이 2로 설정함, 가로는 부모에 따라 조정됨
-      scales: {
-    x: {
-      ticks: {
-        autoSkip: false
-      }
-    }
-  },
-  plugins: {
-    legend: {
-      display: true
-    }
-  },
-  barThickness: 80, // 막대의 두께를 10px로 설정
+const addChat = async (type, message) => {
+  chats.value.push({ type, message });
+  await nextTick(() => {
+    const chatArea = document.querySelector('.chat-area');
+    chatArea.scrollTop = chatArea.scrollHeight;
+  });
 };
 
+const extractInsuranceCompany = (message) => {
+  const words = message.split(' ');
+  for (const word of words) {
+    if (word.includes('보험')) {
+      return word.split('보험')[0] + '보험';
+    }
+  }
+  return '';
+};
 
-// 가입한 상품 조회
-const getContract = function(fin_prdt_cd) {
-    axios({
-      method: 'get',
-      url: `${loanStore.API_URL}/fin_products/loan/contract/${loan.value.fin_prdt_cd}/`,
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        loanStore.contractedLoan = response.data
-      })
-      .catch(error => {
-        console.log(error)
-      })
+const getTopLoanProduct = (company) => {
+  const filteredLoans = loanStore.loans.filter(loan => loan.kor_co_nm.includes(company));
+  const topLoan = filteredLoans.reduce((max, loan) => (loan.like_user.length > max.like_user.length ? loan : max), filteredLoans[0]);
+
+  if (topLoan) {
+    const details = `
+      상품명: ${topLoan.fin_prdt_nm}
+      가입 방법: ${topLoan.join_way}
+      중도상환 수수료: ${topLoan.erly_rpay_fee}
+      연체 이자율: ${topLoan.dly_rate}
+      대출 한도: ${topLoan.loan_lmt}
+    `;
+    return { 
+      message: `${company}에서 가장 인기가 많은 대출 상품은 "${topLoan.fin_prdt_nm}"입니다.`,
+      details: details
+    };
+  } else {
+    return { message: `${company}에서 추천할 수 있는 대출 상품이 없습니다.`, details: '' };
+  }
+};
+
+const getTopDepositOrSavingProduct = (type, bank) => {
+  let products = [];
+  if (type === '예금') {
+    products = depositStore.deposits;
+  } else if (type === '적금') {
+    products = savingStore.savings;
   }
 
+  const filteredProducts = products.filter(product => product.kor_co_nm.includes(bank));
+  const topProduct = filteredProducts.reduce((max, product) => (product.like_user.length > max.like_user.length ? product : max), filteredProducts[0]);
 
-
-// 상품이 계약됐는지 판단
-const isContracted = computed(() => {
-  if (loanStore.contractedLoan.length === 0) {
-    return false
-  } 
-  const findPrd = loanStore.contractedLoan.findIndex((prd) => prd.fin_prdt_cd === loan.value.fin_prdt_cd)
-  if (findPrd !== -1) {
-    return true
+  if (topProduct) {
+    const details = `
+      상품명: ${topProduct.fin_prdt_nm}
+      가입 방법: ${topProduct.join_way}
+      만기 후 이자: ${topProduct.mtrt_int}
+      특이 조건: ${topProduct.spcl_cnd}
+      가입 가능 대상: ${topProduct.join_member}
+      기타 정보: ${topProduct.etc_note}
+    `;
+    return { 
+      message: `${bank}에서 가장 인기가 많은 ${type} 상품은 "${topProduct.fin_prdt_nm}"입니다.`,
+      details: details
+    };
+  } else {
+    return { message: `${bank}에서 추천할 수 있는 ${type} 상품이 없습니다.`, details: '' };
   }
-  return false
-})
+};
 
+const sendMessage = async () => {
+  const userMsg = userInput.value;
+  if (!userMsg) return;
 
-// 상품 계약
-const addContract = (prd) => {
-  loanStore.contractedLoan.push(prd)
+  addChat('send', userMsg);
+  userInput.value = '';
 
-  axios({
-      method: 'post',
-      url: `${loanStore.API_URL}/fin_products/loan/contract/${loan.value.fin_prdt_cd}/`,
-      data: {
-        fin_prdt_cd: loan.value.fin_prdt_cd
-      },
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        loanStore.contractedLoan.push(loan)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+  context.value.push({ role: 'user', content: userMsg });
 
+  if (userMsg.includes('추천')) {
+    if (userMsg.includes('예금')) {
+      selectedProductType.value = '예금';
+      addChat('receive', '선호하는 은행이 있나요? 은행 이름을 입력해 주세요.');
+    } else if (userMsg.includes('적금')) {
+      selectedProductType.value = '적금';
+      addChat('receive', '선호하는 은행이 있나요? 은행 이름을 입력해 주세요.');
+    } else if (userMsg.includes('대출')) {
+      selectedProductType.value = '대출';
+      addChat('receive', '선호하는 보험사가 있나요? 보험사 이름을 입력해 주세요.');
+    } else {
+      addChat('receive', '어떤 금융 상품을 추천받고 싶으신가요? 예금, 적금, 대출 중에 선택해 주세요.');
+      return;
+    }
+  } else if (selectedProductType.value && selectedProductType.value !== '대출') {
+    const bank = userMsg.split(' ').find(word => word.includes('은행'));
+    if (bank) {
+      const bankName = bank.split('은행')[0] + '은행';
+      const { message, details } = getTopDepositOrSavingProduct(selectedProductType.value, bankName);
+      addChat('receive', message);
+      addChat('receive', details);
+    } else {
+      addChat('receive', '유효한 은행 이름을 입력해 주세요.');
+    }
+  } else if (selectedProductType.value === '대출' && !selectedInsuranceCompany.value) {
+    selectedInsuranceCompany.value = extractInsuranceCompany(userMsg);
+    if (selectedInsuranceCompany.value) {
+      const { message, details } = getTopLoanProduct(selectedInsuranceCompany.value);
+      addChat('receive', message);
+      addChat('receive', details);
+    } else {
+      addChat('receive', '유효한 보험사 이름을 입력해 주세요.');
+    }
+  } else {
+    const prompt = [
+      { role: 'system', content: "당신은 금융상품 추천 챗봇입니다. 사용자가 입력한 메시지에 따라 적절한 금융상품을 추천하세요." },
+      ...context.value,
+    ];
+
+    try {
+      const response = await axios.post(OPEN_API_URL, {
+        model: 'gpt-4o',
+        messages: prompt,
+      }, {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const responseMessage = response.data.choices[0].message.content;
+      addChat('receive', responseMessage);
+      context.value.push({ role: 'assistant', content: responseMessage });
+    } catch (error) {
+      console.error(error.response.data);
+    }
   }
-  
+};
 
-// 상품 계약 취소
-const delContract = (fin_prdt_cd) => {
-  const idx = loanStore.contractedLoan.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
-  if (idx !== -1) {
-
-    axios({
-      method: 'post',
-      url: `${loanStore.API_URL}/fin_products/loan/contract/${loan.value.fin_prdt_cd}/`,
-      data: {
-        fin_prdt_cd: loan.value.fin_prdt_cd
-      },
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        loanStore.contractedLoan.splice(idx, 1) 
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-}
-
-
-
-// 관심상품 조회
-const getSave = function(fin_prdt_cd) {
-    axios({
-      method: 'get',
-      url: `${loanStore.API_URL}/fin_products/loan/like/${loan.value.fin_prdt_cd}/`,
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        loanStore.savedLoan = response.data
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-
-
-// 관심상품 저장하고 있는지 판단
-const isSaved = computed(() => {
-  if (loanStore.savedLoan.length === 0) {
-    return false
-  } 
-  const findPrd = loanStore.savedLoan.findIndex((prd) => prd.fin_prdt_cd === loan.value.fin_prdt_cd)
-  if (findPrd !== -1) {
-    return true
-  }
-  return false
-})
-
-
-// 관심상품 저장
-const addSave = (prd) => {
-  loanStore.savedLoan.push(prd)
-
-  axios({
-      method: 'post',
-      url: `${loanStore.API_URL}/fin_products/loan/like/${loan.value.fin_prdt_cd}/`,
-      data: {
-        fin_prdt_cd: loan.value.fin_prdt_cd
-      },
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        loanStore.savedLoan.push(loan)
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-  }
-  
-
-// 관심상품 저장 취소
-const delSave = (fin_prdt_cd) => {
-  const idx = loanStore.savedLoan.findIndex((prd) => prd.fin_prdt_cd === fin_prdt_cd)
-  if (idx !== -1) {
-
-    axios({
-      method: 'post',
-      url: `${loanStore.API_URL}/fin_products/loan/like/${loan.value.fin_prdt_cd}/`,
-      data: {
-        fin_prdt_cd: loan.value.fin_prdt_cd
-      },
-      headers: {
-        Authorization: `Token ${authStore.token}`
-      }
-    })
-      .then(response => {
-        loanStore.savedLoan.splice(idx, 1) 
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  }
-}
-
+const closeChat = () => {
+  emit('close-chat');
+};
 </script>
 
-
 <style scoped>
-
-.reco2-loan-page {
-  background-color: #fff;
-  padding: 20px;
+.chatbot {
+  position: fixed;
+  bottom: 80px;
+  right: 70px;
+  width: 400px;
+  height: 700px;
+  border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
 }
 
-.modal_row {
-  width: 150px;
+.chatbot-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
 }
-.no-border {
+
+.close-button {
+  background-color: transparent;
   border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.chat-area {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.chat-input {
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.chat {
+  display: flex;
+  margin: 10px 0;
+}
+
+.send-chat {
+  justify-content: flex-end;
+}
+
+.receive-chat {
+  justify-content: flex-start;
+}
+
+.message {
+  max-width: 70%;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.send-chat .message {
+  background-color: #dcf8c6;
+  color: #000;
+  border-top-right-radius: 0;
+}
+
+.receive-chat .message {
+  background-color: #f1f0f0;
+  color: #000;
+  border-top-left-radius: 0;
 }
 </style>

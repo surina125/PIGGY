@@ -147,7 +147,6 @@ watch(selectedProduct, (newValue, oldValue) => {
   } else if (newValue === "적금") {
     savingStore.getAll()
   } else if (newValue === "주택담보대출") {
-    loanStore.loans = []
     loanStore.Aloans = []
     loanStore.Eloans = []
     loanStore.getAll()
