@@ -20,6 +20,9 @@ import Loan from '@/components/Search/Loan.vue'
 import Exchange from '@/components/Service/Exchange.vue'
 import Map from '@/components/Service/Map.vue'
 import ReTachInfo from '@/components/Service/ReTachInfo.vue'
+import ReTachPost1 from '@/components/Service/ReTachPost1.vue'
+import ReTachPost2 from '@/components/Service/ReTachPost2.vue'
+
 
 import Recommend2 from '@/components/Recommend/Recommend2.vue'
 import twoResult from '@/components/Recommend/twoResult.vue'
@@ -113,6 +116,16 @@ const router = createRouter({
           name: 'reTachInfo',
           component: ReTachInfo
         },
+        {
+          path: 're_tack_info_post1',
+          name: 'reTachPost1',
+          component: ReTachPost1
+        },
+        {
+          path: 're_tack_info_post2',
+          name: 'reTachPost2',
+          component: ReTachPost2
+        },
       ]
     },
     {
@@ -143,11 +156,23 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignUpView,
+      // beforeEnter: (to, from) => {
+      //   const store = useAuthStore()
+      //   if (store.isAuthenticated) {
+      //     return { name: 'home' }
+      //   }
+      // }
     },
     {
       path: '/login',
       name: 'login',
       component: LogInView,
+      // beforeEnter: (to, from) => {
+      //   const store = useAuthStore()
+      //   if (store.isAuthenticated) {
+      //     return { name: 'home' }
+      //   }
+      // }
     },
     {
       path: '/logout',
@@ -155,14 +180,12 @@ const router = createRouter({
       component: LogOutView
     },
     {
-      path: '/profile/:userId',
+      path: '/user/profile/:userId',
       name: 'profile',
       component: ProfileView,
-    },
-    {
-      path: '/update/:userId',
-      name: 'info',
-      component: UserInfo,
+      children: [
+        { path: 'info', name: 'userInfo', component: UserInfo },
+      ]
     },
   ]
 })
