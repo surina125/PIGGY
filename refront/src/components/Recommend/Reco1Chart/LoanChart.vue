@@ -8,7 +8,6 @@
           <th scope="col">공시제출일</th>
           <th scope="col">금융회사명</th>
           <th scope="col">상품명</th>
-          <th scope="col">담보유형</th>
         </tr>
       </thead>
 
@@ -24,7 +23,6 @@
           <td>{{ prd.dcls_month }}</td>
           <td>{{ prd.kor_co_nm }}</td>
           <td>{{ prd.fin_prdt_nm }}</td>
-          <td>{{ recommendStore.loas_type }}</td>
 
         </tr>
       </tbody>
@@ -52,10 +50,6 @@
                   <td>{{ loan.kor_co_nm }}</td>
                 </tr>
                 <tr>
-                  <th scope="row">담보유형</th>
-                  <td>{{ recommendStore.loas_type }}</td>
-                </tr>
-                <tr>
                   <th scope="row">가입방법</th>
                   <td>{{ loan.join_way }}</td>
                 </tr>
@@ -75,8 +69,10 @@
                 <tr>
                   <!-- 차트 -->
                   <td v-if="loan" colspan="7">
-                    <Bar v-if="recommendStore.loas_type === '아파트'" class="chart-page" :data="apartmentChartData" :options="options"/>
-                    <Bar v-else class="chart-page" :data="nonApartmentChartData" :options="options"/>
+                    <h5 class="text-center mt-2"> <담보유형: 아파트> </h5>
+                      <Bar class="chart-page" :data="apartmentChartData" :options="options"/>
+                    <h5 class="text-center"> <담보유형: 아파트 외> </h5>
+                      <Bar class="chart-page" :data="nonApartmentChartData" :options="options"/>
                   </td>               
                 </tr>
               </tbody>
