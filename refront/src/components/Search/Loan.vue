@@ -61,27 +61,6 @@
           <td v-else>-</td>
         </tr>
       </tbody>
-      <!-- 담보유형 아파트외인 경우 -->
-      <!-- <tbody v-if="selectedType === '아파트외'">
-        <tr 
-          v-for="(prd, index) in loanStore.Eloans"
-          :key="index"
-          data-bs-toggle="modal" data-bs-target="#exampleModal"
-          @click="modal_click(prd)"
-        >
-          <th scope="row">{{ index + 1 }}</th>
-          <td>{{ prd.dcls_month }}</td>
-          <td>{{ prd.kor_co_nm }}</td> -->
-          <!-- 상품명 찍히는 것도 있고 안찍히는 것도 있음(확인필요) -->
-          <!-- <td v-if="prd.fin_prdt_nm">{{ prd.fin_prdt_nm }}</td>
-          <td v-else>-</td>
-          <td>{{ prd.mrtg_type_nm }}</td>
-          <td>{{ prd.lend_rate_type_nm }}</td>
-          <td>{{ prd.lend_rate_min }}</td>
-          <td>{{ prd.lend_rate_max }}</td>
-          <td>{{ prd.lend_rate_avg }}</td>
-        </tr>
-      </tbody> -->
     </table>
 
 
@@ -182,25 +161,11 @@ const authStore = useAuthStore()
 const loanStore = useLoanStore()
 
 
-// console.log(loanStore.Aloans)
+onMounted(() => {
+  loanStore.getAll()
+})
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
-
-// 기간별로 저축금리 가져오기
-// const getInterestRate = (prd, term) => {
-//   if (!prd || !prd.loanoption_set) return '-';
-
-//   const option = prd.loanoption_set.find(option => option.save_trm === term);
-//   return option ? option.intr_rate : '-';
-// }
-
-// // 기간별로 최고 우대금리 가져오기
-// const getInterestRate2 = (prd, term) => {
-//   if (!prd || !prd.loanoption_set) return '-';
-
-//   const option = prd.loanoption_set.find(option => option.save_trm === term);
-//   return option ? option.intr_rate2 : '-';
-// }
 
 const selectedBank = ref('all_bank')
 const selectedType = ref('아파트')
