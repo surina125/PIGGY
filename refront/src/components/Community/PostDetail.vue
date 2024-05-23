@@ -6,7 +6,7 @@
       <hr>
       <p class="post-content post-preview">{{ postStore.detailInfos.content }}</p>
 
-      <div v-if="authStore.isAuthenticated && authStore.userData.username === postStore.detailInfos.user.username">
+      <div v-if="authStore.isAuthenticated && postStore.detailInfos.user && authStore.userData.username === postStore.detailInfos.user.username">
         <button type="button" class="btn btn-outline-dark" @click="postUpdate(postStore.detailInfos.id)">게시물 수정</button>
         <button type="button" class="btn btn-outline-dark" @click="postStore.postDelete(postStore.detailInfos.id)">게시물 삭제</button>
       </div>
@@ -14,10 +14,10 @@
       <hr>
       <div v-if="authStore.isAuthenticated">
         <form @submit.prevent="createComment">
-        <div class="commentbox">
-          <input type="text" id="comment" v-model="commentText" class="form-control" placeholder="댓글을 입력하세요" style="margin-right: 10px;"/>
-          <button type="submit" class="btn btn-outline-dark">작성</button>
-        </div>
+          <div class="commentbox">
+            <input type="text" id="comment" v-model="commentText" class="form-control" placeholder="댓글을 입력하세요" style="margin-right: 10px;"/>
+            <button type="submit" class="btn btn-outline-dark">작성</button>
+          </div>
         </form>
         <hr>
       </div>
@@ -27,8 +27,6 @@
       <div style="text-align: center;">
         <button class="btn btn-outline-dark" @click="goToList">목록</button>
       </div>
-      
-
     </div>
   </div>
 </template>
@@ -59,7 +57,8 @@ const createComment = () => {
 const goToList = () => {
   router.push({ name: 'community' });
 }
-onMounted( () => {
+
+onMounted(() => {
   postStore.postDetail(postId);
 });
 </script>
@@ -111,12 +110,12 @@ h2 {
   border-color: #333;
 }
 
-.commentbox{
+.commentbox {
   display: flex;
   align-content: center;
   justify-content: center;
-
 }
+
 .post-preview {
   margin-top: 20px;
   white-space: pre-wrap; /* 줄바꿈과 공백을 유지합니다 */

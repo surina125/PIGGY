@@ -23,7 +23,6 @@ import ReTachInfo from '@/components/Service/ReTachInfo.vue'
 import ReTachPost1 from '@/components/Service/ReTachPost1.vue'
 import ReTachPost2 from '@/components/Service/ReTachPost2.vue'
 
-
 import Recommend2 from '@/components/Recommend/Recommend2.vue'
 import twoResult from '@/components/Recommend/twoResult.vue'
 import Deposit2 from '@/components/Recommend/Deposit2.vue'
@@ -156,23 +155,11 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignUpView,
-      // beforeEnter: (to, from) => {
-      //   const store = useAuthStore()
-      //   if (store.isAuthenticated) {
-      //     return { name: 'home' }
-      //   }
-      // }
     },
     {
       path: '/login',
       name: 'login',
       component: LogInView,
-      // beforeEnter: (to, from) => {
-      //   const store = useAuthStore()
-      //   if (store.isAuthenticated) {
-      //     return { name: 'home' }
-      //   }
-      // }
     },
     {
       path: '/logout',
@@ -180,14 +167,20 @@ const router = createRouter({
       component: LogOutView
     },
     {
-      path: '/user/profile/:userId',
+      path: '/profile/:userId',
       name: 'profile',
       component: ProfileView,
-      children: [
-        { path: 'info', name: 'userInfo', component: UserInfo },
-      ]
+    },
+    {
+      path: '/update/:userId',
+      name: 'info',
+      component: UserInfo,
     },
   ]
 })
 
 export default router
+
+
+
+
