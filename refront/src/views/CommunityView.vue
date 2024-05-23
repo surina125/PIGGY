@@ -1,5 +1,5 @@
 <template>
-  <div class="table-container">
+  <div class="table-container mt-4 mb-3 community-page">
     <h2>금융상품 추천 게시판</h2>
     <table class="table">
       <thead>
@@ -19,11 +19,9 @@
         </tr>
       </tbody>
     </table>
-    <div>    
+    <div class="writebox">    
       <RouterLink :to="{name:'postcreate'}">
-        <div class="writebox">
-          <button type="button" class="btn btn-outline-secondary" v-if="authStore.isAuthenticated" >글쓰기</button>
-        </div>
+        <button type="button" class="btn btn-outline-secondary" v-if="authStore.isAuthenticated" >글쓰기</button>
       </RouterLink>
     </div>
   </div>
@@ -47,16 +45,69 @@ const goDetail = (pk) => {
 </script>
 
 <style scoped>
+/* .community-page {
+  margin-bottom: 100%;
+  padding-bottom: 100%;
+} */
 
-h2{
-  margin-bottom: 20px;
-}
 .table-container {
-  width: 70%; 
-  margin: 0 auto; 
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 70%;
+  margin: 0 auto;
 }
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.table {
+  width: 100%;
+  margin-bottom: 20px;
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  text-align: center;
+  padding: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.table-group-divider tr:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
 .writebox {
   text-align: right;
+  margin-top: 10px;
+}
 
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-outline-secondary {
+  color: #333;
+  border-color: #333;
+}
+
+.btn-outline-secondary:hover {
+  color: #fff;
+  background-color: #333;
 }
 </style>
