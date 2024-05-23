@@ -20,7 +20,7 @@ import { onMounted } from 'vue'
 
 onMounted(() => {
   const recommendStore = useRecommendStore()
-  recommendStore.reco1D = [] // Initialize empty array for recommendations
+  recommendStore.reco1D = [] // 프로필 변경했을 경우 다시 업데이트 되야 하므로 빈배열로 바꿔줌
   recommendStore.reco1S = []
   recommendStore.reco1L = []
   recommendStore.reco1Result()

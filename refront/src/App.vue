@@ -19,6 +19,16 @@ import AppNav from '@/components/Common/AppNav.vue'
 import ChatIcon from '@/components/Service/ChatIcon.vue';
 import Chatbot from '@/components/Service/Chatbot.vue';
 import { ref } from 'vue'
+import { useRecommendStore } from '@/stores/recommend'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  const recommendStore = useRecommendStore()
+  recommendStore.reco1D = [] 
+  recommendStore.reco1S = []
+  recommendStore.reco1L = []
+  recommendStore.reco1Result()
+})
 
 const isChatVisible = ref(false);
 
