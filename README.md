@@ -4,22 +4,46 @@
 #### 결혼 후 자가마련을 위해 재테크 계획을 세우려고 합니다.
 #### 그런데, 신입사원이라 은행에 갈 시간이 없어 금융 정보를 한 곳에 알 수 있는 웹 애플리케이션을 직접 만들어 보려고 합니다.
 
-### 필수 요구 사항
-1. 메인 페이지
-2. 회원 커스터마이징     -완료
-3. 예적금 금리 비교     -5/17 (detail페이지 - 상품가입/관심 상품 저장)
-4. 환율 계산기          - 5/16 집가서 확인
-5. 근처 은행 검색
-6. 커뮤니티(게시판)
-7. 프로필 페이지         - 5/17
-8. 금융 상품 추천 알고리즘
-9. README
-10. 기타
 
+
+
+# 팀명 및 프로젝트 간략 설명
+
+**목차**
+1. 팀원 정보 및 분담 내역
+2. 설계 내용(아키텍처 등) 및 실제 구현정도
+3. 데이터베이스 모델링(ERD)
+4. 금융 상품 추천 알고리즘에 대한 기술적 설명
+5. 서비스 대표 기능들에 대한 설명
+6. 프로젝트 후기(느낀점)
+
+## 팀원 정보 밑 업무 분담 내역
+
+- 프로젝트 기간 : 2024/05/16 ~2024/05/24(약 9일)
+
+### 팀 프로젝트 구성 및 역할
+
+| 이름       | 역할 및 구현기능 |
+|------------|------------------|
+| 정현수<br>(팀장) | **Back End** - 회원 커스터마이징, 추천 알고리즘 구현, 금융상품 URL(최종수정)<br>**Front End** - 메인페이지, 회원가입, 로그인, 프로필 페이지, 금융상품 비교, 금융상품 추천, AI 챗봇 |
+| 고도연     | **Back End** - ERD, 금융상품 + 환율 데이터 저장, 금융상품 + 환율 + 게시판 RESTful 구현<br>**Front End** - 게시판 CRUD, 근처 은행 검색, 환율 계산기 |
+
+## 설계 내용 (아키텍처 등) 및 실제 구현 정도
+
+### 기술 스택
+
+| 구분   | 기술 스택 |
+|--------|------------|
+| **front** | language - JavaScript<br>framework - Vue3, pinia (+pinia-plugin-persistedstate), axios, chart.js |
+| **back**  | language - Python<br>framework - Django, Flask, OAuthlib, Requests-OAuthlib, drf-spectacular, Django-extensions, Jupyter, IPython |
+
+## 데이터베이스 모델링(ERD)
 <br>
 
+
+
 ## error
-#### 현수
+
 ```
 // accounts/serializers.py - 현수
 from dj_rest_auth.serializers import UserDetailsSerializer
