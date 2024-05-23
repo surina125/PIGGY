@@ -4,7 +4,7 @@
       <p class="post-title">{{ postStore.detailInfos.title }}</p>
       <hr>
       <div class="post-content">
-        <p>{{ postStore.detailInfos.content }}</p>
+        <p v-for="line in formatContent(postStore.detailInfos.content)" :key="line">{{ line }}</p>
       </div>
       <div v-if="authStore.isAuthenticated && postStore.detailInfos.user.username && authStore.userData.username === postStore.detailInfos.user.username">
         <button type="button" class="btn btn-outline-secondary" @click="postUpdate(postStore.detailInfos.id)">게시물 수정</button>
@@ -58,9 +58,13 @@ const goToList = () => {
   router.push({ name: 'community' });
 }
 
+const formatContent = (content) => {
+  return content.split('\n');
+}
+
 onMounted(() => {
   postStore.postDetail(postId);
-  postStore.commentList(postId)
+  postStore.commentList(postId);
 });
 </script>
 
