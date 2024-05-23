@@ -14,7 +14,8 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 
 const emit = defineEmits(['toggle-chat']);
-const position = ref({ x: 20, y: 20 });
+// 돼지 처음 위치 조정함
+const position = ref({ x: 1750, y: 800 });
 
 let isDragging = false;
 let offset = { x: 0, y: 0 };

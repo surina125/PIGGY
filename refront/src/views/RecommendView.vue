@@ -1,19 +1,15 @@
 <template>
   <div class="container">
     <div class="box" @click="navigateTo('one')">
-      <h2>Find Similar People</h2>
-      <p>Discover products used by people like you in terms of age, assets, and salary.</p>
+      <h2>내 정보 기반으로 추천받기</h2>
+      <p>프로필에 입력된 나이, 자산, 연봉을 기반으로 유사한 사람이 가입한 금융상품들을 추천해 드립니다.</p>
     </div>
     <div class="box" @click="navigateTo('two')">
-      <h2>Answer Survey Questions</h2>
-      <p>Choose your preferences and get tailored product recommendations.</p>
+      <h2>설문조사 기반으로 추천받기</h2>
+      <p>원하는 상품 종류와 유형, 금리, 선호하는 은행을 선택하시면 이를 바탕으로 금융상품들을 추천해 드립니다.</p>
     </div>
+    <button class="result-button" @click="navigateTo('deposit2')">결과 다시 보기</button>
   </div>
-  <div class="result-buttons">
-    <button class="result-button" @click="navigateTo('recommendationsFromSimilarity')">View Recommendations from Similar People</button>
-    <button class="result-button" @click="navigateTo('recommendationsFromSurvey')">View Recommendations from Survey</button>
-  </div>
-  {{ authStore.userData }}
 </template>
 
 <script setup>
@@ -34,73 +30,87 @@ const authStore = useAuthStore()
 const router = useRouter()
 
 const navigateTo = (page) => {
-  router.push({ name: page, params: { username: authStore.userData.username } })
+  if (page === 'one' && (authStore.userData.age === null || authStore.userData.annual_income === null || authStore.userData.property === null)) {
+    router.push({ name: 'info', params: { username: authStore.userData.username } })
+  } else {
+    router.push({ name: page, params: { username: authStore.userData.username } })
+  }
 }
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 .container {
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  padding-top: 160px;
+  /* justify-content: center; */
   align-items: center;
-  height: 80vh;
-  background-color: #f1f5ff;
-  padding: 20px;
+  width: 100vw;
+  height: 100vh;
+  background: #f1f5ff;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .box {
-  width: 300px;
-  height: 300px;
-  background-color: rgba(0, 123, 255, 0.8);
-  color: white;
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  background: #ffffff;
+  border: 2px solid #333;
+  color: #333;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border-radius: 15px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
   text-align: center;
-  padding: 20px;
+  padding: 40px;
   margin: 20px;
 }
 
 .box:hover {
-  background-color: rgba(0, 123, 255, 1);
-  transform: translateY(-10px);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 h2 {
   margin: 0;
   font-size: 24px;
+  font-weight: 700;
+  color: #333;
 }
 
 p {
-  margin: 10px 0 0;
-  font-size: 16px;
-}
-
-.result-buttons {
-  display: flex;
-  justify-content: space-around;
-  padding: 20px;
+  margin: 20px 0 0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #333;
 }
 
 .result-button {
-  background-color: #28a745;
+  background-color: #333;
   color: white;
   border: none;
-  padding: 15px 30px;
-  font-size: 16px;
-  border-radius: 5px;
+  padding: 15px 50px;
+  font-size: 18px;
+  border-radius: 30px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
+  margin-top: 20px;
 }
 
 .result-button:hover {
-  background-color: #218838;
+  background-color: #555;
   transform: translateY(-5px);
 }
 </style>

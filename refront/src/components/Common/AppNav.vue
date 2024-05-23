@@ -83,6 +83,12 @@
             </RouterLink>
           </li>
           <li class="nav-item" v-if="authStore.isAuthenticated">
+            <RouterLink :to="{ name: 'info', params: { userId: authStore.userData.pk } }" class="nav-link"
+              active-class="active-tab">
+              정보수정
+            </RouterLink>
+          </li>
+          <li class="nav-item" v-if="authStore.isAuthenticated">
             <RouterLink :to="{ name: 'logout' }" class="nav-link" active-class="active-tab">
               로그아웃
             </RouterLink>

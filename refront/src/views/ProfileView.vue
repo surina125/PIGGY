@@ -59,11 +59,7 @@
       </p>
     </div>
   </div>
-  <RouterLink :to="{ name: 'userInfo', params: { userId: authStore.userData.pk }}">
-    <h3>회원정보</h3>
-  </RouterLink>
 
-  <RouterView/>
 </template>
 
 <script setup>

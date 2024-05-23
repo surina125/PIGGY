@@ -6,7 +6,6 @@
 
     <main class="main-content">
       <RouterView />
-
     </main>
 
     <!-- 챗봇 -->
@@ -21,7 +20,6 @@ import ChatIcon from '@/components/Service/ChatIcon.vue';
 import Chatbot from '@/components/Service/Chatbot.vue';
 import { ref } from 'vue'
 
-
 const isChatVisible = ref(false);
 
 const toggleChat = () => {
@@ -30,15 +28,26 @@ const toggleChat = () => {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+/* 
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+} */
+
 #app {
-  width: 100vw;
-  height: 100vh;
-  padding-right: 100px;
-  padding-left: 100px;
-  background-color: #f1f5ff;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
 .main-content {
-  padding-top: 80px; 
+  flex: 1;
+  width: 100%;
+  padding-top: 80px;
+  background: #f1f5ff; /* 원하는 배경색으로 설정 */
 }
 </style>

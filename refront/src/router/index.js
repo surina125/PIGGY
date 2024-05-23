@@ -143,23 +143,11 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignUpView,
-      // beforeEnter: (to, from) => {
-      //   const store = useAuthStore()
-      //   if (store.isAuthenticated) {
-      //     return { name: 'home' }
-      //   }
-      // }
     },
     {
       path: '/login',
       name: 'login',
       component: LogInView,
-      // beforeEnter: (to, from) => {
-      //   const store = useAuthStore()
-      //   if (store.isAuthenticated) {
-      //     return { name: 'home' }
-      //   }
-      // }
     },
     {
       path: '/logout',
@@ -167,12 +155,14 @@ const router = createRouter({
       component: LogOutView
     },
     {
-      path: '/user/profile/:userId',
+      path: '/profile/:userId',
       name: 'profile',
       component: ProfileView,
-      children: [
-        { path: 'info', name: 'userInfo', component: UserInfo },
-      ]
+    },
+    {
+      path: '/update/:userId',
+      name: 'info',
+      component: UserInfo,
     },
   ]
 })
