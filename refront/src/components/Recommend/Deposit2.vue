@@ -1,8 +1,7 @@
 <template>
   <div>
-    <h1>정기예금</h1>
 
-
+    <div class="reco2-depsit-page">
     <!-- 표 -->
     <table v-if="recommendStore.deposits" class="table table-hover">
       <thead>
@@ -35,6 +34,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
 
 
     <!-- 모달 -->
@@ -447,4 +447,12 @@ const delSave = (fin_prdt_cd) => {
   width: 100%;
   height: 30px;
 } */
+
+.reco2-depsit-page {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
 </style>

@@ -52,7 +52,7 @@
           <option value="자유적립식">자유적금</option>
         </select>
 
-        <label for="period-select" class="question-label">**예금의 기간을 선택하세요**</label>
+        <label for="period-select" class="question-label">적금의 기간을 선택하세요</label>
         <select v-model="period" id="period-select" class="form-select form-select-lg mb-4" aria-label="기간 선택">
           <option value="" disabled selected>기간 선택</option>
           <option value="6">6개월</option>
@@ -61,7 +61,7 @@
           <option value="36">36개월</option>
         </select>
 
-        <label for="interest-rate" class="question-label">원하는 최소한의 금리를 입력하세요:</label>
+        <label for="interest-rate" class="question-label mt-4 mb-5">원하는 최소한의 금리를 입력하세요:</label>
         <div class="slider-container mb-4">
           <span class="range-value">{{ interestRate }}%</span>
           <input type="range" v-model="interestRate" id="interest-rate" min="0" max="10" step="0.1" class="form-range">
@@ -91,7 +91,7 @@
           <option value="아파트외">아파트외</option>
         </select>
 
-        <label class="question-label">선호하는 금융회사를 선택하세요:</label>
+        <label class="question-label mt-4">선호하는 금융회사를 선택하세요:</label>
         <div class="bank-buttons mb-4">
           <button
             v-for="bank in loanStore.banks"

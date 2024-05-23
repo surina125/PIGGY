@@ -30,6 +30,7 @@ import LoanChart from './Reco1Chart/LoanChart.vue'
   font-family: 'Roboto', sans-serif;
   color: #333;
   height: 100%;
+  margin-bottom: 100%;
 }
 
 .reco1-page {
