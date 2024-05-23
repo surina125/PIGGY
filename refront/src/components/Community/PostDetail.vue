@@ -6,7 +6,7 @@
       <hr>
       <p class="post-content post-preview">{{ postStore.detailInfos.content }}</p>
 
-      <div v-if="authStore.isAuthenticated && postStore.detailInfos.user && authStore.userData.username === postStore.detailInfos.user.username">
+      <div v-if="authStore.isAuthenticated && authStore.userData.username === postStore.detailInfos.user.username">
         <button type="button" class="btn btn-outline-dark" @click="postUpdate(postStore.detailInfos.id)">게시물 수정</button>
         <button type="button" class="btn btn-outline-dark" @click="postStore.postDelete(postStore.detailInfos.id)">게시물 삭제</button>
       </div>
@@ -60,6 +60,7 @@ const goToList = () => {
 
 onMounted(() => {
   postStore.postDetail(postId);
+  postStore.commentList(postId)
 });
 </script>
 

@@ -22,8 +22,8 @@
         <span>{{ comment.content }}</span>
         <br>
         <span class="commentedit">
-          <button class="btn btn-outline-dark btn-sm" v-if="authStore.userData.username === comment.user.username" @click="startEdit(comment.id)" style="margin-right: 10px;">댓글 수정</button>
-          <button class="btn btn-outline-dark btn-sm" v-if="authStore.userData.username === comment.user.username" @click="commentDelete(comment.id)">댓글 삭제</button>
+          <button class="btn btn-outline-dark btn-sm" v-if="authStore.isAuthenticated && authStore.userData.username === comment.user.username" @click="startEdit(comment.id)" style="margin-right: 10px;">댓글 수정</button>
+          <button class="btn btn-outline-dark btn-sm" v-if="authStore.isAuthenticated && authStore.userData.username === comment.user.username" @click="commentDelete(comment.id)">댓글 삭제</button>
         </span>
       </div>
       <hr>
