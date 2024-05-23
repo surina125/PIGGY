@@ -28,7 +28,7 @@
 
 ## 설계 내용 (아키텍처 등) 및 실제 구현 정도
 
-https://www.figma.com/design/O4745s6D3r4uUoqON62SS4/Untitled?m=dev&node-id=0-1
+!(피그마)[https://github.com/surina125/Financial-project/blob/master/%ED%94%BC%EA%B7%B8%EB%A7%88.png?raw=true]
 
 
 처음에 기획한 페이지 레이아웃 구성과 기능들을 다 구현하였습니다.
