@@ -9,19 +9,19 @@
     <div class="card mb-4">
       <div class="card-body">
         <div class="form-group">
-          <label for="age"><strong>나이:</strong></label>
+          <label for="age"><strong>나이</strong></label>
           <p>{{ authStore.userData.age }}</p>
         </div>
         <div class="form-group">
-          <label for="annual_income"><strong>연간 소득:</strong></label>
+          <label for="annual_income"><strong>연간 소득</strong></label>
           <p>{{ authStore.userData.annual_income }}</p>
         </div>
         <div class="form-group">
-          <label for="property"><strong>자산:</strong></label>
+          <label for="property"><strong>자산</strong></label>
           <p>{{ authStore.userData.property }}</p>
         </div>
         <div class="form-group">
-          <label for="main_bank"><strong>주 은행:</strong></label>
+          <label for="main_bank"><strong>주 은행</strong></label>
           <p>{{ authStore.userData.main_bank }}</p>
         </div>
       </div>
