@@ -151,7 +151,6 @@ const contractDepositList = () => {
   })
     .then((response) => {
       contractDepositProduct.value = response.data
-      console.log(contractDepositProduct.value)
     })
     .catch((error) => {
       console.log(error)
@@ -167,7 +166,6 @@ const contractSavingList = () => {
   })
     .then((response) => {
       contractSavingProduct.value = response.data
-      console.log(contractSavingProduct.value)
     })
     .catch((error) => {
       console.log(error)
@@ -184,7 +182,6 @@ const contractLoanList = () => {
   })
     .then((response) => {
       contractLoanProduct.value = response.data
-      console.log(contractLoanProduct.value)
     })
     .catch((error) => {
       console.log(error)
@@ -205,7 +202,6 @@ const delDepositContract = (fin_prdt_cd) => {
       }
     })
       .then(response => {
-        console.log(response.data)
         contractDepositProduct.value.splice(idx, 1)
         contractDepositList()
 
@@ -277,7 +273,6 @@ const likeDepositList = () => {
   })
     .then((response) => {
       likeDepositProduct.value = response.data
-      console.log(likeDepositProduct.value)
     })
     .catch((error) => {
       console.log(error)
@@ -294,7 +289,6 @@ const likeSavingList = () => {
   })
     .then((response) => {
       likeSavingProduct.value = response.data
-      console.log(likeSavingProduct.value)
     })
     .catch((error) => {
       console.log(error)
@@ -311,7 +305,6 @@ const likeLoanList = () => {
   })
     .then((response) => {
       likeLoanProduct.value = response.data
-      console.log(likeLoanProduct.value)
     })
     .catch((error) => {
       console.log(error)

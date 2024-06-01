@@ -52,7 +52,7 @@ const authStore = useAuthStore()
   font-family: 'Roboto', sans-serif;
   color: #333;
   height: 100%;
-  margin-bottom: 100%;
+  margin-bottom: 20%;
 }
 
 h3 {

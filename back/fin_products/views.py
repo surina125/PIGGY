@@ -8,11 +8,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-# from accounts.models import User
 import requests
 from .serializers import *
 from .models import *
-# from accounts.serializers import *
 
 
 @api_view(['POST', 'GET'])
@@ -87,8 +85,6 @@ def financial_products(request):
     saving_info = requests.get(SAVING_API_URL).json()   
     saving_baseList = saving_info.get('result').get('baseList')
     saving_optionList = saving_info.get('result').get('optionList')
-    # return Response(saving_optionList)
-
 
     for saving_base in saving_baseList:
 
@@ -204,13 +200,6 @@ def depositoption_list(request, fin_prdt_cd):
     serializer = DepositOptionSerializer(deposit_options, many=True)
     return Response(serializer.data)
 
-# 단일 예금상품 옵션 조회
-@api_view(['GET'])
-def depositoption_detail(request, fin_prdt_cd, option_pk):
-    deposit = get_object_or_404(Deposit, fin_prdt_cd=fin_prdt_cd)
-    deposit_option = get_object_or_404(DepositOption, pk=option_pk, deposit=deposit)
-    serializer = DepositOptionSerializer(deposit_option)
-    return Response(serializer.data)
     
 # 전체 적금 목록 조회
 @api_view(['GET'])
@@ -226,20 +215,6 @@ def saving_detail(request, fin_prdt_cd):
     serializer = SavingSerializer(saving)
     return Response(serializer.data)
 
-# 단일 적금상품 옵션 목록 조회    
-@api_view(['GET'])
-def savingoption_list(request, fin_prdt_cd):
-    saving = get_object_or_404(Saving, fin_prdt_cd=fin_prdt_cd)
-    saving_options = SavingOption.objects.filter(saving=saving)
-    serializer = SavingOptionSerializer(saving_options, many=True)
-    return Response(serializer.data)
-
-# 단일 적금상품 옵션 조회
-@api_view(['GET'])
-def savingoption_detail(request, fin_prdt_cd, option_pk):
-    savingOption = get_object_or_404(SavingOption, pk=option_pk)
-    serializer = SavingOptionSerializer(savingOption)
-    return Response(serializer.data)
     
 # 전체 대출 목록 조회
 @api_view(['GET'])
@@ -255,21 +230,6 @@ def loan_detail(request, fin_prdt_cd):
     serializer = LoanSerializer(loan)
     return Response(serializer.data) 
 
-# 단일 대출상품 옵션 목록 조회
-@api_view(['GET'])
-def loanoption_list(request, fin_prdt_cd):
-    loan = get_object_or_404(Loan, fin_prdt_cd=fin_prdt_cd)
-    loan_options = LoanOption.objects.filter(loan=loan)
-    serializer = LoanOptionSerializer(loan_options, many=True)
-    return Response(serializer.data)
-
-# 단일 대출상품 옵션 조회
-@api_view(['GET'])
-def loanoption_detail(request, fin_prdt_cd, option_pk):
-    loan = get_object_or_404(Loan, fin_prdt_cd=fin_prdt_cd)
-    loan_option = get_object_or_404(LoanOption, pk=option_pk, loan=loan)
-    serializer = LoanOptionSerializer(loan_option)
-    return Response(serializer.data)
 
 # 전체 금융기관 예금 금리 내림차순(예치기간 별)
 @api_view(['GET'])
@@ -353,32 +313,6 @@ def get_bank_type_reverse_savings(request, rsrv_type_nm, kor_co_nm, save_trm):
 
     serializer = SavingSerializer(savings, many=True)
     return Response(serializer.data)
-
-
-# 전체 금융기관 대출(담보유형별)
-@api_view(['GET'])
-def get_all_bank_type_loans(request, mrtg_type):
-    loans = Loan.objects.filter(loanoption__mrtg_type=mrtg_type).distinct()
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
-
-# 금융기관 별 대출
-@api_view(['GET'])
-def get_bank_all_type_loans(request, kor_co_nm):
-    if Loan.objects.filter(kor_co_nm=kor_co_nm).exists():
-        loans = Loan.objects.filter(kor_co_nm=kor_co_nm)
-        serializer = LoanSerializer(loans, many=True)
-        return Response(serializer.data)
-    else:
-        return Response({"no exist loan product"}, status=status.HTTP_204_NO_CONTENT)
-    
-# 금융기관 별 대출(담보유형별)
-@api_view(['GET'])
-def get_bank_type_loans(request, mrtg_type, kor_co_nm):
-    loans = Loan.objects.filter(Q(loanoption__mrtg_type=mrtg_type)&Q(kor_co_nm=kor_co_nm)).distinct()
-    serializer = LoanSerializer(loans, many=True)
-    return Response(serializer.data)
-
 
 
 # 예금 가입 및 가입한 예금 조회

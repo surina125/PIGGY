@@ -389,7 +389,7 @@ const submitForm = () => {
   border-radius: 15px;
   background-color: #ffffff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 100%;
+  margin-bottom: 20%;
 }
 
 .question-page {

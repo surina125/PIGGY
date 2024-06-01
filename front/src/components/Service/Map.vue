@@ -158,9 +158,7 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   padding: 20px;
-  /* background-color: #f8f9fa; */
   border-radius: 10px;
-  /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); */
   margin-bottom: 20px;
 }
 
@@ -173,9 +171,6 @@ export default {
   margin: 5px 10px;
   padding: 10px;
   border-radius: 5px;
-  /* border: 1px solid #ced4da; */
-  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
-  /* background-color: #fff; */
 }
 
 .custom-button {

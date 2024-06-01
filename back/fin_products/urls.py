@@ -10,9 +10,7 @@ urlpatterns = [
  
     # 예금
     path('deposit/<fin_prdt_cd>/', views.deposit_detail),                                    # 단일 예금 상품 조회
-    # path('deposit/<fin_prdt_cd>/option_list/', views.depositoption_list),                    # 단일 예금 상품 옵션 목록 조회
-    # path('deposit/<fin_prdt_cd>/option_list/<option_pk>/', views.depositoption_detail),  # 단일 예금 상품 옵션 조회
-    
+
     path('deposit/bank/all_bank/', views.deposit_list),                            # 전체 예금 목록 조회
     path('deposit/bank/<kor_co_nm>/', views.get_bank_deposits),                    # 금융기관별 예금상품 조회
     
@@ -21,9 +19,7 @@ urlpatterns = [
 
     # 적금
     path('savings/<fin_prdt_cd>/', views.saving_detail),                                      # 단일 적금상품 조회
-    path('savings/<fin_prdt_cd>/option_list/', views.savingoption_list),                      # 단일 적금상품 옵션 목록 조회   
-    path('savings/<fin_prdt_cd>/option_list/<option_pk>/', views.savingoption_detail),    # 단일 적금상품 옵션 조회
-    
+
     path('savings/all_bank/all_type/', views.saving_list),                        # 전체 적금 목록 조회
     path('savings/all_bank/<rsrv_type_nm>/', views.get_all_bank_savings),         # 전체 금융기관에서 적금유형별 조회
     path('savings/<kor_co_nm>/all_type/', views.get_bank_all_type_savings),       # 전체 적금유형에서 금융기관별 조회
@@ -36,13 +32,8 @@ urlpatterns = [
     
     # 대출
     path('loans/<fin_prdt_cd>/', views.loan_detail),                                          # 단일 대출상품 조회
-    # path('loans/<fin_prdt_cd>/option_list/', views.loanoption_list),                          # 단일 대출상품 옵션 목록 조회
-    # path('loans/<fin_prdt_cd>/option_list/<option_pk>/', views.loanoption_detail),        # 단일 대출상품 옵션 조회   
 
     path('loans/all_bank/all_type/', views.loan_list),                      # 전체 대출 목록 조회
-    # path('loans/all_bank/<mrtg_type>/', views.get_all_bank_type_loans),     # 전체 금융기관에서 담보유형별 조회
-    # path('loans/<kor_co_nm>/all_type/', views.get_bank_all_type_loans),     # 전체 담보유형에서 금융기관별 조회
-    # path('loans/<kor_co_nm>/<mrtg_type>/', views.get_bank_type_loans),      # 담보유형별, 금융기관별 조회
 
     # 상품 가입/취소/조회 
     path('deposit/contract/<fin_prdt_cd>/', views.deposit_contract),   # 예금 
@@ -59,11 +50,9 @@ urlpatterns = [
     path('saving/like/<fin_prdt_cd>/', views.saving_like),             # 적금 
     path('loan/like/<fin_prdt_cd>/', views.loan_like),                 # 대출 
 
-
     # 관심상품 조회 조회
     path('dep/like/search/', views.deposit_like_list),             # 예금 
     path('sav/like/search/', views.saving_like_list),              # 적금 
     path('loa/like/search/', views.loan_like_list),                # 대출 
-
 
     ]
