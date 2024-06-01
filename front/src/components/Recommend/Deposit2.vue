@@ -160,42 +160,6 @@ const getInterestRate2 = (prd, term) => {
   return option ? option.intr_rate2 : '-';
 }
 
-// 특정 은행 선택 시 조회
-// const selectedBank = ref('all_bank')
-
-// selectedBank 값이 변경될 때마다 데이터 갱신
-// watch(selectedBank, (newValue) => {
-//   if (newValue === 'all') {
-//     depositStore.getAll()
-//   } else {
-//     depositStore.selectBank(selectedBank.value)
-//   }
-// })
-
-// selectedBank 값이 변경될 때마다 데이터 갱신
-// watch(selectedBank, (newValue) => {
-//   if (newValue === 'all') {
-//     depositStore.getAll()
-//   } else {
-//     depositStore.selectBank(selectedBank.value)
-//   }
-// })
-
-
-// // 기간 선택 시 정렬
-// const sort = function(num) {
-//   axios({
-//     method: 'get',
-//     url: `${depositStore.API_URL}/fin_products/deposit/bank/${selectedBank.value}/sort/${num}/`,
-//   })
-//     .then(response => {
-//       depositStore.deposits = response.data
-//     })
-//     .catch(error => {
-//       console.log(error)
-//     })
-// }
-
 
 // 모달
 const deposit = ref({})

@@ -50,7 +50,6 @@ html, body {
   display: flex;
   flex-direction: column;
   padding-top: 160px;
-  /* justify-content: center; */
   align-items: center;
   width: 100vw;
   height: 100vh;

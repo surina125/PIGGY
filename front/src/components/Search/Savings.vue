@@ -392,8 +392,6 @@ const isSaved = computed(() => {
 
 // 관심상품 저장
 const addSave = (prd) => {
-  // savingStore.savedSaving.push(prd)
-
   axios({
       method: 'post',
       url: `${savingStore.API_URL}/fin_products/saving/like/${saving.value.fin_prdt_cd}/`,

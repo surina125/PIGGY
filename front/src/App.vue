@@ -19,16 +19,6 @@ import AppNav from '@/components/Common/AppNav.vue'
 import ChatIcon from '@/components/Service/ChatIcon.vue';
 import Chatbot from '@/components/Service/Chatbot.vue';
 import { ref } from 'vue'
-// import { useRecommendStore } from '@/stores/recommend'
-// import { onMounted } from 'vue'
-
-// onMounted(() => {
-//   const recommendStore = useRecommendStore()
-//   recommendStore.reco1D = [] 
-//   recommendStore.reco1S = []
-//   recommendStore.reco1L = []
-//   recommendStore.reco1Result()
-// })
 
 const isChatVisible = ref(false);
 
@@ -39,12 +29,6 @@ const toggleChat = () => {
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
-/* 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-} */
 
 #app {
   display: flex;

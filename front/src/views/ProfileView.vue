@@ -402,7 +402,6 @@ onMounted(() => {
   likeDepositList();
   likeSavingList();
   likeLoanList();
-  console.log(authStore.userData.age)
 });
 </script>
 
