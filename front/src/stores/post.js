@@ -107,8 +107,6 @@ const commentList = function(post_pk) {
   })
   .then((response) => {
     commentInfos.value = response.data
-    console.log(commentInfos.value )
-    
 
   })
   .catch((error) => {

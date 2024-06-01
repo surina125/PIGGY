@@ -1,12 +1,12 @@
 <template>
-  <div class="table-container mt-4 mb-3 community-page">
+  <div class="table-container mt-4 community-page">
     <div class="post-container">
       <p class="post-title">{{ postStore.detailInfos.title }}</p>
       <hr>
       <div class="post-content">
         <p v-for="line in formatContent(postStore.detailInfos.content)" :key="line">{{ line }}</p>
       </div>
-      <div v-if="authStore.isAuthenticated && postStore.detailInfos.user.username && authStore.userData.username === postStore.detailInfos.user.username">
+      <div v-if="authStore.isAuthenticated && authStore.userData.username === postStore.detailInfos.user.username">
         <button type="button" class="btn btn-outline-secondary" @click="postUpdate(postStore.detailInfos.id)">게시물 수정</button>
         <button type="button" class="btn btn-outline-secondary" @click="postStore.postDelete(postStore.detailInfos.id)">게시물 삭제</button>
       </div>
@@ -59,6 +59,9 @@ const goToList = () => {
 }
 
 const formatContent = (content) => {
+  if (content === undefined || content === null) {
+    return [];
+  }
   return content.split('\n');
 }
 
@@ -70,13 +73,14 @@ onMounted(() => {
 
 <style scoped>
 .table-container {
-  padding: 20px;
+  height: 100%;
+  padding: 50px;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 70%;
-  margin: 0 auto;
+  margin: 0 auto 200px auto;
 }
 
 .post-container {

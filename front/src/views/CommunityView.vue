@@ -1,5 +1,5 @@
 <template>
-  <div class="table-container mt-4 mb-3 community-page">
+  <div class="table-container mt-4 community-page">
     <h2>금융상품 추천 게시판</h2>
     <table class="table">
       <thead>
@@ -45,18 +45,15 @@ const goDetail = (pk) => {
 </script>
 
 <style scoped>
-.community-page {
-  padding-bottom: 100%;
-}
-
 .table-container {
-  padding: 20px;
+  height: 100%;
+  padding: 50px;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 70%;
-  margin: 0 auto;
+  margin: 0 auto 200px auto;
 }
 
 h2 {
