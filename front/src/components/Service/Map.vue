@@ -1,7 +1,7 @@
 <template>
   <div class="box custom-box">
     <div>
-      <label for="city" class="custom-label"></label>
+      <label for="city" class="custom-label">광역시/도</label>
       <select id="city" v-model="selectedCity" @change="updateCountries" class="custom-select">
         <option disabled value="">광역시/도를 선택하세요</option>
         <option v-for="city in mapInfo" :key="city.name" :value="city.name">{{ city.name }}</option>
@@ -9,7 +9,7 @@
     </div>
 
     <div>
-      <label for="country" class="custom-label"></label>
+      <label for="country" class="custom-label">시/군/구</label>
       <select id="country" v-model="selectedCountry" class="custom-select">
         <option disabled value="">시/군/구를 선택하세요</option>
         <option v-for="country in selectedCountries" :key="country">{{ country }}</option>
@@ -17,7 +17,7 @@
     </div>
 
     <div>
-      <label for="bank" class="custom-label"></label>
+      <label for="bank" class="custom-label">은행</label>
       <select id="bank" v-model="selectedBank" class="custom-select">
         <option value="">은행을 선택하세요</option>
         <option v-for="bank in bankInfo" :key="bank">{{ bank }}</option>
@@ -30,19 +30,19 @@
 
 <script>
 import data from "@/assets/data.json";
-
+const kakaoApiKey = import.meta.env.VITE_APP_KAKAO;
 export default {
   data() {
     return {
-      mapInfo: [], // 서버에서 불러올 데이터
+      mapInfo: [],
       bankInfo: [],
-      selectedCity: '', // 광역시/도
-      selectedCountry: '', // 시/군/구
+      selectedCity: '',
+      selectedCountry: '',
       selectedCountries: [],
-      selectedBank: '', // 은행
+      selectedBank: '',
       map: null,
       ps: null,
-      geocoder: null // Geocoder 추가
+      geocoder: null
     };
   },
   methods: {
@@ -68,7 +68,6 @@ export default {
           }
         });
       } else {
-        // 은행을 선택하지 않았을 때 지도 중심을 이동하고 카테고리 검색 사용
         const address = `${this.selectedCity} ${this.selectedCountry}`;
         this.geocoder.addressSearch(address, (result, status) => {
           if (status === kakao.maps.services.Status.OK) {
@@ -87,7 +86,7 @@ export default {
 
             this.ps.categorySearch('BK9', placesSearchCB, {
               location: coords,
-              radius: 5000 // 5km 반경 내 검색
+              radius: 5000
             });
           } else {
             alert('주소 검색 결과가 없습니다.');
@@ -115,28 +114,27 @@ export default {
         infowindow.open(this.map, marker);
       });
     },
-
     initMap() {
       const container = this.$refs.map;
       const options = {
-        center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울을 기본 중심으로 설정
+        center: new kakao.maps.LatLng(37.5665, 126.9780),
         level: 3
       };
       this.map = new kakao.maps.Map(container, options);
       this.ps = new kakao.maps.services.Places();
-      this.geocoder = new kakao.maps.services.Geocoder(); // Geocoder 초기화
+      this.geocoder = new kakao.maps.services.Geocoder();
     }
   },
   mounted() {
     this.mapInfo = data.mapInfo;
     this.bankInfo = data.bankInfo;
 
+  
     if (!window.kakao || !window.kakao.maps) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = '//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=6a8d3686446f65e79f77a519aa843879&libraries=services';
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${kakaoApiKey}&libraries=services`;
 
-      /* global kakao */
       script.addEventListener('load', () => {
         kakao.maps.load(() => {
           this.initMap();
@@ -144,7 +142,6 @@ export default {
       });
       document.head.appendChild(script);
     } else {
-      // 이미 카카오맵 API가 로딩되어 있다면 바로 지도를 생성한다.
       this.initMap();
     }
   }
