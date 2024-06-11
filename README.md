@@ -37,8 +37,8 @@
 
 | 구분   | 기술 스택 |
 |--------|------------|
-| **Front End** | language: JavaScript<br>framework: Vue3, Pinia (+Pinia-plugin-persistedstate), Axios, Chart.js |
-| **Back End**  | language: Python<br>framework: Django, Flask, OAuthlib, Requests-OAuthlib, drf-spectacular, Django-extensions, Jupyter, IPython |
+| **Front End** | language: JavaScript<br>framework: Vue 3.4.27, Pinia 2.1.7 (+Pinia-plugin-persistedstate), Axios 1.3.4, Chart.js 4.0.0 |
+| **Back End**  | language: Python 3.11.0<br>framework: Django 4.2.13, Pandas 2.0.3<br>database: SQLite 3.21.0 |
 
 <br>
 
