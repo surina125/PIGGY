@@ -1,4 +1,4 @@
-![image](https://github.com/surina125/Financial-project/assets/109744927/6fdd348f-22f8-4c6e-8ecb-1e0fd86ce8d7)# 🐷 PIGGY
+# 🐷 PIGGY
 
 ## 📚 목차
 1. [👥 팀원 정보 및 분담 내역](#-팀원-정보-및-분담-내역)
